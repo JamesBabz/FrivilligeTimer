@@ -10,23 +10,23 @@
 
 <AnchorPane id="AnchorPane" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
-      <TableView fx:id="tbhfrivillige" layoutX="220.0" layoutY="139.0" prefHeight="399.0" prefWidth="200.0">
+      <TableView fx:id="tbhFrivillige" layoutX="220.0" layoutY="139.0" prefHeight="399.0" prefWidth="200.0">
         <columns>
           <TableColumn prefWidth="75.0" text="Frivillige" />
         </columns>
       </TableView>
-      <TableView fx:id="tbhtovholdere" layoutX="462.0" layoutY="139.0" prefHeight="399.0" prefWidth="200.0">
+      <TableView fx:id="tbhTovholdere" layoutX="462.0" layoutY="139.0" prefHeight="399.0" prefWidth="200.0">
         <columns>
           <TableColumn prefWidth="75.0" text="Tovholdere" />
         </columns>
       </TableView>
-      <TableView fx:id="tbhlaug" layoutX="21.0" layoutY="139.0" prefHeight="399.0" prefWidth="126.0">
+      <TableView fx:id="tbhLaug" layoutX="21.0" layoutY="139.0" prefHeight="399.0" prefWidth="126.0">
         <columns>
           <TableColumn prefWidth="75.0" text="Laug" />
         </columns>
       </TableView>
-      <ImageView fitHeight="91.0" fitWidth="137.0" layoutX="10.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
-      <MenuBar fx:id="btnmenu" layoutY="-1.0" prefHeight="28.0" prefWidth="693.0">
+      <ImageView fx:id="imageLogo" fitHeight="91.0" fitWidth="137.0" layoutX="10.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
+      <MenuBar fx:id="btnMenu" layoutY="-1.0" prefHeight="28.0" prefWidth="693.0">
         <menus>
           <Menu mnemonicParsing="false" text="Menu">
             <items>
