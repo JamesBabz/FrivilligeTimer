@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * FXML Controller class
@@ -18,22 +20,32 @@ import javafx.scene.control.TableView;
  * @author Bruger
  */
 public class AdminViewController implements Initializable {
-
     @FXML
-    private TableView<?> tbhfrivillige;
+    private ImageView imageLogo;
     @FXML
-    private TableView<?> tbhtovholdere;
+    private TableView<?> tbhFrivillige;
     @FXML
-    private TableView<?> tbhlaug;
+    private TableView<?> tbhTovholdere;
     @FXML
-    private MenuBar btnmenu;
+    private TableView<?> tbhLaug;
+    @FXML
+    private MenuBar btnMenu;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+       setLogo();
+    } 
+    /**
+     * set the logo on AdimView
+     */
+    private void setLogo()
+    {
+        Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
+        imageLogo.setImage(imageMlogo);
+//        imageLogo.setFitHeight(80);
+//        imageLogo.setFitWidth(150);
+    }
 }
