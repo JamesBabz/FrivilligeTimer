@@ -46,7 +46,6 @@ public final class DBManager
         {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            System.out.println(rs);
             while (rs.next())
             {
                 int id = rs.getInt("ID");
@@ -63,7 +62,10 @@ public final class DBManager
             }
         }
     }
-
+/**
+ * Gets all the volunteers
+ * @return a list of all volunteers
+ */
     public List<Volunteer> getAllVolunteers()
     {
         return volunteers;

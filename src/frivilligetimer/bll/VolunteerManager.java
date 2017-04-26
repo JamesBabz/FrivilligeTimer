@@ -28,7 +28,10 @@ public class VolunteerManager
     {
         dbManager = new DBManager();
     }
-    
+    /**
+     * Gets all volunteers from DAO
+     * @return a list of all volunteers
+     */
     public List<Volunteer> getAllVolunteers()
     {
         return dbManager.getAllVolunteers();
