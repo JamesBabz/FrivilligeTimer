@@ -20,17 +20,16 @@ import javafx.scene.image.ImageView;
  * @author Bruger
  */
 public class AdminViewController implements Initializable {
-
-    @FXML
-    private TableView<?> tbhfrivillige;
-    @FXML
-    private TableView<?> tbhtovholdere;
-    @FXML
-    private TableView<?> tbhlaug;
-    @FXML
-    private MenuBar btnmenu;
     @FXML
     private ImageView imageLogo;
+    @FXML
+    private TableView<?> tbhFrivillige;
+    @FXML
+    private TableView<?> tbhTovholdere;
+    @FXML
+    private TableView<?> tbhLaug;
+    @FXML
+    private MenuBar btnMenu;
 
     /**
      * Initializes the controller class.
@@ -39,7 +38,9 @@ public class AdminViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        setLogo();
     } 
-    
+    /**
+     * set the logo on AdimView
+     */
     private void setLogo()
     {
         Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
