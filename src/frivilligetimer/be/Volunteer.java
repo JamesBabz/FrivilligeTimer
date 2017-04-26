@@ -6,17 +6,25 @@
 package frivilligetimer.be;
 
 /**
- *
- * @author James
+ * The Buisness entity of the volunteer.
+ * @author Stephan, Jacob, Jens, Simon, Thomas
  */
 public class Volunteer
 {
     private int id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String phoneNum;
     private String email;
-
+/**
+ * 
+ * @param id Gets the id of the volunteer
+ * @param firstName Gets the firstname of the volunteer
+ * @param lastName Gets the lastname of the volunteer
+ * @param phoneNum Gets the phonenumber of the volunteer
+ * @param email Gets the emailadress of the volunteer
+ */
     public Volunteer(int id, String firstName, String lastName, String phoneNum, String email)
     {
         this.id = id;
@@ -24,6 +32,7 @@ public class Volunteer
         this.lastName = lastName;
         this.phoneNum = phoneNum;
         this.email = email;
+        this.fullName = firstName + " " + lastName;
     }
 
     public int getId()
@@ -55,7 +64,12 @@ public class Volunteer
     {
         this.lastName = lastName;
     }
-
+    
+    public String getFullName()
+    {
+        return fullName;
+    }
+    
     public String getPhoneNum()
     {
         return phoneNum;

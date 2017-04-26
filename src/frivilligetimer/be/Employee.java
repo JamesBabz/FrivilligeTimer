@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frivilligetimer.gui.model;
+package frivilligetimer.be;
 
 /**
  *
- * @author James
+ * @author thomas
  */
-public class Volunteer
+public class Employee
 {
     
 }
