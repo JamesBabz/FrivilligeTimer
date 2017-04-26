@@ -25,7 +25,7 @@
           <TableColumn prefWidth="75.0" text="Laug" />
         </columns>
       </TableView>
-      <ImageView fitHeight="91.0" fitWidth="137.0" layoutX="10.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageLogo" fitHeight="91.0" fitWidth="137.0" layoutX="10.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
       <MenuBar fx:id="btnmenu" layoutY="-1.0" prefHeight="28.0" prefWidth="693.0">
         <menus>
           <Menu mnemonicParsing="false" text="Menu">
