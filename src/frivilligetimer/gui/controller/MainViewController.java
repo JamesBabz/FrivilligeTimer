@@ -5,7 +5,11 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.be.Volunteer;
+import frivilligetimer.dal.DBManager;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,10 +27,13 @@ public class MainViewController implements Initializable
     private Label label;
     
     @FXML
-    private void handleButtonAction(ActionEvent event)
+    private void handleButtonAction(ActionEvent event) throws IOException, SQLException
     {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        DBManager dbManager = new DBManager();
+        for (Volunteer allVolunteer : dbManager.getAllVolunteers())
+        {
+            System.out.println(allVolunteer.getFirstName());
+        }
     }
     
     @Override
