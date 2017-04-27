@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frivilligetimer.gui.view;
+package frivilligetimer.gui.controller;
 
+import frivilligetimer.gui.model.TileModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import javafx.scene.control.Label;
  *
  * @author James
  */
-public class VolunteerListCellController implements Initializable
+public class VolunteerSingleCellController implements Initializable
 {
 
     @FXML
@@ -25,6 +26,8 @@ public class VolunteerListCellController implements Initializable
     private Label lblEmail;
     @FXML
     private Label lblPhone;
+    
+    private TileModel model;
 
     /**
      * Initializes the controller class.
@@ -34,5 +37,16 @@ public class VolunteerListCellController implements Initializable
     {
         // TODO
     }    
+
+    public void setTileModel(TileModel model)
+    {
+        this.model = model;
+        lblName.textProperty().bind(model.nameProperty());
+        lblName.requestLayout();
+        lblEmail.textProperty().bind(model.emailProperty());
+        lblEmail.requestLayout();
+        lblPhone.textProperty().bind(model.phoneProperty());
+        lblPhone.requestLayout();
+    }
     
 }

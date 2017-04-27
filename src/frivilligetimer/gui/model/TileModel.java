@@ -6,6 +6,8 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Volunteer;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,29 +18,61 @@ import javafx.collections.ObservableList;
 public class TileModel
 {
 
-    private static TileModel INSTANCE;
-    private ObservableList<Volunteer> allVolunteers;
+    private final StringProperty name = new SimpleStringProperty();
+    private final StringProperty email = new SimpleStringProperty();
+    private final StringProperty phone = new SimpleStringProperty();
 
-    public static synchronized TileModel getInstance()
+    private Volunteer volunteer;
+
+    public TileModel(Volunteer volunteer){
+            this.volunteer = volunteer;
+            name.set(volunteer.getFullName());
+            email.set(volunteer.getEmail());
+            phone.set(volunteer.getPhoneNum());
+    }
+    public String getPhone()
     {
-        if (INSTANCE == null)
-        {
-            INSTANCE = new TileModel();
-        }
-        return INSTANCE;
+        return phone.get();
     }
 
-    private TileModel()
+    public void setPhone(String value)
     {
-        allVolunteers = FXCollections.observableArrayList();
+        phone.set(value);
     }
 
-    private void addVolunteerTile(){
-        
+    public StringProperty phoneProperty()
+    {
+        return phone;
+    }
+
+    public String getEmail()
+    {
+        return email.get();
+    }
+
+    public void setEmail(String value)
+    {
+        email.set(value);
+    }
+
+    public StringProperty emailProperty()
+    {
+        return email;
+    }
+
+    public String getName()
+    {
+        return name.get();
+    }
+
+    public void setName(String value)
+    {
+        name.set(value);
+    }
+
+    public StringProperty nameProperty()
+    {
+        return name;
     }
     
-    public ObservableList<Volunteer> getAllVolunteers()
-    {
-        return allVolunteers;
-    }
 }
