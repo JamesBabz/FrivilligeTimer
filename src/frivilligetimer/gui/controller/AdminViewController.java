@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -59,10 +61,14 @@ public class AdminViewController implements Initializable
     VolunteerModel volunteerModel;
     GuildModel guildModel;
     StaffModel staffModel;
-    
+
     private List<Employee> allVolunteers;
     private List<Employee> allEmployees;
     private List<Guild> allGuilds;
+    @FXML
+    private MenuItem Volunteradd;
+    @FXML
+    private MenuItem guildAdd;
 
     /**
      * Initializes the controller class.
@@ -84,7 +90,7 @@ public class AdminViewController implements Initializable
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
-        
+
         allVolunteers = new ArrayList<>();
         allEmployees = new ArrayList<>();
         allGuilds = new ArrayList<>();
@@ -110,11 +116,30 @@ public class AdminViewController implements Initializable
         tbhLaug.setItems(guildModel.getAllGuildForTable());
     }
 
+    @FXML
+    private void addVolunteer() 
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY, true);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     @FXML
-    private void addVolunteer(ActionEvent event) throws IOException {
+    private void addGuild()
+    {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY, true);
-        
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.UTILITY, true);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
