@@ -98,8 +98,6 @@ public class AdminViewController implements Initializable
     {
         Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
         imageLogo.setImage(imageMlogo);
-//        imageLogo.setFitHeight(80);
-//        imageLogo.setFitWidth(150);
     }
 
     /**
@@ -112,31 +110,11 @@ public class AdminViewController implements Initializable
         tbhLaug.setItems(guildModel.getAllGuildForTable());
     }
 
-    /**
-     * Sets all employees in the tableview "Tovholdere"
-     */
-    private void setGuildManagerTable()
-    {
-        for (Employee employee : model.getAllEmployees())
-        {
-            allEmployees.add(employee);
-        }
-        tbhTovholdere.setItems(allEmployees);
-    }
-    
-    private void setGuildTable()
-    {
-        for (Guild guild : model.getAllGuilds())
-        {
-            allGuilds.add(guild);
-        }
-        tbhLaug.setItems(allGuilds);
-    }
 
     @FXML
     private void addVolunteer(ActionEvent event) throws IOException {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY);
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY, true);
         
     }
 }
