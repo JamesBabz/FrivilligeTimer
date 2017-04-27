@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -21,9 +23,12 @@ import java.util.logging.Logger;
  */
 public class VolunteerModel
 {
-    VolunteerManager volunteerManager;
-    
-     private static VolunteerModel instance;
+
+    VolunteerManager manager;
+
+    private static VolunteerModel instance;
+
+    private final ObservableList<Volunteer> allVolunteers;
 
     public static VolunteerModel getInstance()
     {
@@ -33,14 +38,15 @@ public class VolunteerModel
         }
         return instance;
     }
-/**
- * The default contructor
- */
+
+    /**
+     * The default contructor
+     */
     private VolunteerModel()
     {
         try
         {
-            volunteerManager = new VolunteerManager();
+            manager = new VolunteerManager();
         } catch (IOException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,35 +54,25 @@ public class VolunteerModel
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        allVolunteers = FXCollections.observableArrayList();
+        
     }
-    
+
     /**
-     * Gets all volunteers from the VolunteerManager.
-     * @return all the volunteers
+     * Gets all volunteers in the tableview "Frivillige"
+     * @return a list of all volunteers
      */
-    public List<Volunteer> getAllVolunteers()
+    public ObservableList<Volunteer> getAllVolunteersForTable()
     {
-       return volunteerManager.getAllVolunteers();
+        for (Volunteer volunteer : manager.getAllVolunteers())
+        {
+            allVolunteers.add(volunteer);
+        }
+            return allVolunteers;
     }
-    
-    /**
-     * Gets all employees from the manager
-     * @return a list of all the employees
-     */
-    public List<Employee> getAllEmployees()
-    {
-        return volunteerManager.getAllEmployees();
-    }
-    
-    /**
-     * Gets all guilds from the manager
-     * @return a list of all guilds
-     */
-    public List<Guild> getAllGuilds()
-    {
-        return volunteerManager.getAllGuilds();
-    }
-    
-    
-    
+
+
+
+
 }
