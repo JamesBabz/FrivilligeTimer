@@ -38,13 +38,13 @@ public class VolunteerModel
         }
         return instance;
     }
+    private final ArrayList<Volunteer> volunteers;
 
     /**
      * The default contructor
      */
     private VolunteerModel()
     {
-        volunteers = new ArrayList<>();
         try
         {
             manager = new VolunteerManager();
@@ -57,7 +57,7 @@ public class VolunteerModel
         }
 
         allVolunteers = FXCollections.observableArrayList();
-        
+        volunteers = new ArrayList<>();
     }
 
     /**
