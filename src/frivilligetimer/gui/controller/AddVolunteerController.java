@@ -5,6 +5,7 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -18,6 +19,8 @@ import javafx.scene.control.TextField;
  */
 public class AddVolunteerController implements Initializable {
 
+    
+     private VolunteerModel model;
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -33,6 +36,22 @@ public class AddVolunteerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+        model = VolunteerModel.getInstance();    }    
+    
+    @FXML
+    private void addVolunteer()
+    {
+        String fName = txtFirstName.getText();
+        String email = txtEmail.getText();
+        String lName = txtLastName.getText();        
+        String pNumber = txtPhoneNummer.getText();
+        
+        model.addVolunteer(fName, email, lName, pNumber);
+        
+    }
+    
+    
+    
+    
     
 }

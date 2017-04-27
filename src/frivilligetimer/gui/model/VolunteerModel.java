@@ -11,6 +11,7 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class VolunteerModel
 {
+    private final ArrayList<Volunteer> volunteers;
     VolunteerManager volunteerManager;
     
      private static VolunteerModel instance;
@@ -38,6 +40,7 @@ public class VolunteerModel
  */
     private VolunteerModel()
     {
+        volunteers = new ArrayList<>();
         try
         {
             volunteerManager = new VolunteerManager();
@@ -77,6 +80,16 @@ public class VolunteerModel
         return volunteerManager.getAllGuilds();
     }
     
-    
-    
+
+    public void addVolunteer(String fName, String email, String lName, String pNumber) {
+        Volunteer volunteer = new Volunteer(0, fName, email, lName, pNumber, "", "");
+        
+        System.out.println(fName);
+        System.out.println(email);
+        System.out.println(lName);
+        System.out.println(pNumber);
+        volunteers.add(volunteer);
+    }
+       
 }
+
