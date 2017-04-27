@@ -2,6 +2,8 @@ package frivilligetimer.gui.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -34,5 +36,29 @@ public class AddVolunteerHoursController implements Initializable
     {
         // TODO
     }    
+
+    @FXML
+    private void handleSubtractHour(ActionEvent event)
+    {
+
+    }
+
+    @FXML
+    private void handleAddHour(ActionEvent event)
+    {
+    }
+
+    @FXML
+    private void handleSave(ActionEvent event)
+    {
+    }
+
+    @FXML
+    private void handleClose(ActionEvent event)
+    {
+    }
+    
+    
+    
     
 }
