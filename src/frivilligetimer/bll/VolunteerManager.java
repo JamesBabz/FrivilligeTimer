@@ -6,6 +6,7 @@
 package frivilligetimer.bll;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
@@ -55,6 +56,14 @@ public class VolunteerManager
         return dbManager.getAllManagers();
     }
     
+    /**
+     * Gets all guilds from DAO
+     * @return a list of guilds
+     */
+    public List<Guild> getAllGuilds()
+    {
+        return dbManager.getAllGuilds();
+    }
     
     
 }
