@@ -5,29 +5,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="131.0" prefWidth="259.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="131.0" prefWidth="259.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AddVolunteerHoursController">
    <children>
       <TextField fx:id="txtHours" layoutX="64.0" layoutY="14.0" prefHeight="58.0" prefWidth="131.0" promptText="Angiv timer">
          <font>
             <Font name="System Bold Italic" size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="btnDecrease" layoutX="2.0" layoutY="14.0" maxHeight="58.0" maxWidth="58.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" text="-">
+      <Button fx:id="btnDecrease" layoutX="2.0" layoutY="14.0" maxHeight="58.0" maxWidth="58.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleSubtractHour" prefHeight="58.0" prefWidth="58.0" text="-">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Button>
-      <Button fx:id="btnIncrease" layoutX="199.0" layoutY="14.0" maxHeight="58.0" maxWidth="58.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" text="+">
+      <Button fx:id="btnIncrease" layoutX="199.0" layoutY="14.0" maxHeight="58.0" maxWidth="58.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleAddHour" prefHeight="58.0" prefWidth="58.0" text="+">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Button>
-      <Button fx:id="btnSave" layoutX="2.0" layoutY="78.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="125.0" text="Gem">
+      <Button fx:id="btnSave" layoutX="2.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleSave" prefHeight="49.0" prefWidth="125.0" text="Gem">
          <font>
             <Font name="System Bold" size="23.0" />
          </font>
       </Button>
-      <Button fx:id="btnClose" layoutX="132.0" layoutY="78.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="125.0" text="Luk">
+      <Button fx:id="btnClose" layoutX="132.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleClose" prefHeight="49.0" prefWidth="125.0" text="Luk">
          <font>
             <Font name="System Bold" size="23.0" />
          </font>
