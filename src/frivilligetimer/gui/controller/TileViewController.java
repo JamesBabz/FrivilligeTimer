@@ -5,6 +5,7 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.be.Guild;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,6 +36,9 @@ public class TileViewController implements Initializable
 
     @FXML
     private AnchorPane mainPane;
+    @FXML
+    private ListView<Guild> listGuilds;
+    
 
     /**
      * Initializes the controller class.
@@ -42,6 +47,7 @@ public class TileViewController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         setLogo();
+//        listGuilds.setItems(value);
     }
 
     @FXML
@@ -50,7 +56,7 @@ public class TileViewController implements Initializable
         ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
         try
         {
-            viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED);
+            viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false);
         }
         catch (IOException ex)
         {
