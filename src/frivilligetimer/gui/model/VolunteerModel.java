@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -22,10 +24,11 @@ import java.util.logging.Logger;
  */
 public class VolunteerModel
 {
-    private final ArrayList<Volunteer> volunteers;
-    VolunteerManager volunteerManager;
-    
-     private static VolunteerModel instance;
+    VolunteerManager manager;
+
+    private static VolunteerModel instance;
+
+    private final ObservableList<Volunteer> allVolunteers;
 
     public static VolunteerModel getInstance()
     {
@@ -35,15 +38,16 @@ public class VolunteerModel
         }
         return instance;
     }
-/**
- * The default contructor
- */
+
+    /**
+     * The default contructor
+     */
     private VolunteerModel()
     {
         volunteers = new ArrayList<>();
         try
         {
-            volunteerManager = new VolunteerManager();
+            manager = new VolunteerManager();
         } catch (IOException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -51,36 +55,24 @@ public class VolunteerModel
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    /**
-     * Gets all volunteers from the VolunteerManager.
-     * @return all the volunteers
-     */
-    public List<Volunteer> getAllVolunteers()
-    {
-       return volunteerManager.getAllVolunteers();
-    }
-    
-    /**
-     * Gets all employees from the manager
-     * @return a list of all the employees
-     */
-    public List<Employee> getAllEmployees()
-    {
-        return volunteerManager.getAllEmployees();
-    }
-    
-    /**
-     * Gets all guilds from the manager
-     * @return a list of all guilds
-     */
-    public List<Guild> getAllGuilds()
-    {
-        return volunteerManager.getAllGuilds();
-    }
-    
 
+        allVolunteers = FXCollections.observableArrayList();
+        
+    }
+
+    /**
+     * Gets all volunteers in the tableview "Frivillige"
+     * @return a list of all volunteers
+     */
+    public ObservableList<Volunteer> getAllVolunteersForTable()
+    {
+        for (Volunteer volunteer : manager.getAllVolunteers())
+        {
+            allVolunteers.add(volunteer);
+        }
+            return allVolunteers;
+    }
+  
     public void addVolunteer(String fName, String email, String lName, String pNumber) {
         Volunteer volunteer = new Volunteer(0, fName, email, lName, pNumber, "", "");
         
@@ -90,6 +82,5 @@ public class VolunteerModel
         System.out.println(pNumber);
         volunteers.add(volunteer);
     }
-       
 }
 

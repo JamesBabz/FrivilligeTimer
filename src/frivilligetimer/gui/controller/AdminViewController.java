@@ -8,9 +8,13 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.model.GuildModel;
+import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,12 +56,13 @@ public class AdminViewController implements Initializable
     @FXML
     private TableColumn<Guild, String> colGuild;
 
-    VolunteerModel model;
-    private final ObservableList<Volunteer> allVolunteers;
-    private final ObservableList<Employee> allEmployees;
-    private final ObservableList<Guild> allGuilds;
-    @FXML
-    private MenuItem Volunteradd;
+    VolunteerModel volunteerModel;
+    GuildModel guildModel;
+    StaffModel staffModel;
+    
+    private List<Employee> allVolunteers;
+    private List<Employee> allEmployees;
+    private List<Guild> allGuilds;
 
     /**
      * Initializes the controller class.
@@ -70,17 +75,20 @@ public class AdminViewController implements Initializable
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        setVolunteersTable();
-        setGuildManagerTable();
-        setGuildTable();
+        populateTables();
+
     }
 
     public AdminViewController()
     {
-        model = VolunteerModel.getInstance();
-        allVolunteers = FXCollections.observableArrayList();
-        allEmployees = FXCollections.observableArrayList();
-        allGuilds = FXCollections.observableArrayList();
+        volunteerModel = VolunteerModel.getInstance();
+        guildModel = GuildModel.getInstance();
+        staffModel = StaffModel.getInstance();
+        
+        allVolunteers = new ArrayList<>();
+        allEmployees = new ArrayList<>();
+        allGuilds = new ArrayList<>();
+
     }
 
     /**
@@ -95,16 +103,13 @@ public class AdminViewController implements Initializable
     }
 
     /**
-     * Sets all volunteers in the tableview "Frivillige"
+     * Sets the data from the model to the tables
      */
-    private void setVolunteersTable()
+    private void populateTables()
     {
-        for (Volunteer volunteer : model.getAllVolunteers())
-        {
-            allVolunteers.add(volunteer);
-        }
-        tbhFrivillige.setItems(allVolunteers);
-
+        tbhFrivillige.setItems(volunteerModel.getAllVolunteersForTable());
+        tbhTovholdere.setItems(staffModel.getAllGuildManagersForTable());
+        tbhLaug.setItems(guildModel.getAllGuildForTable());
     }
 
     /**
