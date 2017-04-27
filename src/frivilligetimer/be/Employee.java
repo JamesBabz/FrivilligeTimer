@@ -12,8 +12,7 @@ package frivilligetimer.be;
  */
 public class Employee extends Person
 {
-    private String preference;
-    private String note;
+  
     /**
      * The contructor
      *
@@ -22,35 +21,11 @@ public class Employee extends Person
      * @param lastName Gets the lastname of the employee
      * @param phoneNum Gets the phonenumber of the employee
      * @param email Gets the emailadress of the employee
-     * @param preference, the prefernce the volunteer has, that the employee can write down
-     * @param note, a note that the employee kan write about a volunteer
      */
-    public Employee(int id, String firstName, String lastName, String phoneNum, String email, String preference, String note)
+    public Employee(int id, String firstName, String lastName, String phoneNum, String email)
     {
         super(id, firstName, lastName, phoneNum, email);
-        this.preference = preference;
-        this.note = note;
+   
     }
-
-    public String getPreference()
-    {
-        return preference;
-    }
-
-    public void setPreference(String preference)
-    {
-        this.preference = preference;
-    }
-
-    public String getNote()
-    {
-        return note;
-    }
-
-    public void setNote(String note)
-    {
-        this.note = note;
-    }
-
     
 }

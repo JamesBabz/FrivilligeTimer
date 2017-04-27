@@ -27,20 +27,19 @@ import javafx.scene.image.ImageView;
  *
  * @author Bruger
  */
-public class AdminViewController implements Initializable {
+public class AdminViewController implements Initializable
+{
+
     @FXML
     private ImageView imageLogo;
     @FXML
     private TableView<Volunteer> tbhFrivillige;
     @FXML
-    private TableView<?> tbhTovholdere;
+    private TableView<Employee> tbhTovholdere;
     @FXML
     private TableView<?> tbhLaug;
     @FXML
     private MenuBar btnMenu;
-    
-    VolunteerModel model;
-    private final ObservableList<Volunteer> allVolunteers;
     @FXML
     private TableColumn<Volunteer, String> colVolunteer;
     @FXML
@@ -48,25 +47,31 @@ public class AdminViewController implements Initializable {
     @FXML
     private TableColumn<Guild, String> colGuild;
 
+    VolunteerModel model;
+    private final ObservableList<Volunteer> allVolunteers;
+    private final ObservableList<Employee> allEmployees;
+
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-       setLogo();
-       colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-       
-       setVolunteersTable();
-    } 
+    public void initialize(URL url, ResourceBundle rb)
+    {
+        setLogo();
+        colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
 
-    
+        setVolunteersTable();
+        setGuildManagerTable();
+    }
+
     public AdminViewController()
     {
         model = VolunteerModel.getInstance();
         allVolunteers = FXCollections.observableArrayList();
+        allEmployees = FXCollections.observableArrayList();
     }
-    
-    
+
     /**
      * set the logo on AdimView
      */
@@ -77,17 +82,29 @@ public class AdminViewController implements Initializable {
 //        imageLogo.setFitHeight(80);
 //        imageLogo.setFitWidth(150);
     }
-    
+
     /**
      * Sets all volunteers in the tableview "Frivillige"
      */
     private void setVolunteersTable()
     {
-          for (Volunteer volunteer : model.getAllVolunteers())
+        for (Volunteer volunteer : model.getAllVolunteers())
         {
             allVolunteers.add(volunteer);
         }
-          tbhFrivillige.setItems(allVolunteers);
-          
+        tbhFrivillige.setItems(allVolunteers);
+
+    }
+
+    /**
+     * Sets all employees in the tableview "Tovholdere"
+     */
+    private void setGuildManagerTable()
+    {
+        for (Employee employee : model.getAllEmployees())
+        {
+            allEmployees.add(employee);
+        }
+        tbhTovholdere.setItems(allEmployees);
     }
 }
