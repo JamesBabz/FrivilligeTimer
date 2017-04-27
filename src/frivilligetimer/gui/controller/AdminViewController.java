@@ -37,7 +37,7 @@ public class AdminViewController implements Initializable
     @FXML
     private TableView<Employee> tbhTovholdere;
     @FXML
-    private TableView<?> tbhLaug;
+    private TableView<Guild> tbhLaug;
     @FXML
     private MenuBar btnMenu;
     @FXML
@@ -50,6 +50,7 @@ public class AdminViewController implements Initializable
     VolunteerModel model;
     private final ObservableList<Volunteer> allVolunteers;
     private final ObservableList<Employee> allEmployees;
+    private final ObservableList<Guild> allGuilds;
 
     /**
      * Initializes the controller class.
@@ -60,9 +61,11 @@ public class AdminViewController implements Initializable
         setLogo();
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         setVolunteersTable();
         setGuildManagerTable();
+        setGuildTable();
     }
 
     public AdminViewController()
@@ -70,6 +73,7 @@ public class AdminViewController implements Initializable
         model = VolunteerModel.getInstance();
         allVolunteers = FXCollections.observableArrayList();
         allEmployees = FXCollections.observableArrayList();
+        allGuilds = FXCollections.observableArrayList();
     }
 
     /**
@@ -106,5 +110,14 @@ public class AdminViewController implements Initializable
             allEmployees.add(employee);
         }
         tbhTovholdere.setItems(allEmployees);
+    }
+    
+    private void setGuildTable()
+    {
+        for (Guild guild : model.getAllGuilds())
+        {
+            allGuilds.add(guild);
+        }
+        tbhLaug.setItems(allGuilds);
     }
 }

@@ -6,6 +6,7 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
@@ -65,6 +66,15 @@ public class VolunteerModel
     public List<Employee> getAllEmployees()
     {
         return volunteerManager.getAllEmployees();
+    }
+    
+    /**
+     * Gets all guilds from the manager
+     * @return a list of all guilds
+     */
+    public List<Guild> getAllGuilds()
+    {
+        return volunteerManager.getAllGuilds();
     }
     
     
