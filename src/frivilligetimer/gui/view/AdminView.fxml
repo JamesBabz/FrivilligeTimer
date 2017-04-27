@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+<AnchorPane id="AnchorPane" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
       <TableView fx:id="tbhFrivillige" layoutX="189.0" layoutY="82.0" prefHeight="456.0" prefWidth="231.0">
         <columns>
@@ -28,7 +31,8 @@
           <Menu mnemonicParsing="false" text="Menu">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem fx:id="Volunteradd" mnemonicParsing="false" onAction="#addVolunteer" text="Add volunteer" />
+                  <MenuItem fx:id="Volunteradd" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj Frivillig" />
+                  <MenuItem fx:id="guildAdd" mnemonicParsing="false" onAction="#addGuild" text="Tilføj Laug" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Statistik">
