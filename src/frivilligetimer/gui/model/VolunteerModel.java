@@ -38,7 +38,7 @@ public class VolunteerModel
         }
         return instance;
     }
-    private final ArrayList<Object> volunteers;
+    private final ArrayList<Volunteer> volunteers;
 
     /**
      * The default contructor
