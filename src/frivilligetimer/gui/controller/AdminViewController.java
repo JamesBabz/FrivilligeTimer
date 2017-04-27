@@ -10,6 +10,8 @@ import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,9 +50,10 @@ public class AdminViewController implements Initializable
     private TableColumn<Guild, String> colGuild;
 
     VolunteerModel model;
-    private final ObservableList<Volunteer> allVolunteers;
-    private final ObservableList<Employee> allEmployees;
-    private final ObservableList<Guild> allGuilds;
+    private List<Employee> allVolunteers;
+    private List<Employee> allEmployees;
+    private List<Guild> allGuilds;
+
 
     /**
      * Initializes the controller class.
@@ -62,18 +65,18 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
+        
+        populateTables();
 
-        setVolunteersTable();
-        setGuildManagerTable();
-        setGuildTable();
     }
 
     public AdminViewController()
     {
         model = VolunteerModel.getInstance();
-        allVolunteers = FXCollections.observableArrayList();
-        allEmployees = FXCollections.observableArrayList();
-        allGuilds = FXCollections.observableArrayList();
+        allVolunteers = new ArrayList<>();
+        allEmployees = new ArrayList<>();
+        allGuilds = new ArrayList<>();
+
     }
 
     /**
@@ -86,38 +89,13 @@ public class AdminViewController implements Initializable
 //        imageLogo.setFitHeight(80);
 //        imageLogo.setFitWidth(150);
     }
-
-    /**
-     * Sets all volunteers in the tableview "Frivillige"
-     */
-    private void setVolunteersTable()
-    {
-        for (Volunteer volunteer : model.getAllVolunteers())
-        {
-            allVolunteers.add(volunteer);
-        }
-        tbhFrivillige.setItems(allVolunteers);
-
-    }
-
-    /**
-     * Sets all employees in the tableview "Tovholdere"
-     */
-    private void setGuildManagerTable()
-    {
-        for (Employee employee : model.getAllEmployees())
-        {
-            allEmployees.add(employee);
-        }
-        tbhTovholdere.setItems(allEmployees);
-    }
     
-    private void setGuildTable()
+    private void  populateTables()
     {
-        for (Guild guild : model.getAllGuilds())
-        {
-            allGuilds.add(guild);
-        }
-        tbhLaug.setItems(allGuilds);
+       tbhFrivillige.setItems(model.getAllVolunteersForTable());
+       tbhTovholdere.setItems(model.getAllGuildManagersForTable());
+       tbhLaug.setItems(model.getAllGuildForTable());
     }
+
+   
 }
