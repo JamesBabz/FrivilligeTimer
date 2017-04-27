@@ -8,6 +8,8 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.model.GuildModel;
+import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,11 +51,13 @@ public class AdminViewController implements Initializable
     @FXML
     private TableColumn<Guild, String> colGuild;
 
-    VolunteerModel model;
+    VolunteerModel volunteerModel;
+    GuildModel guildModel;
+    StaffModel staffModel;
+    
     private List<Employee> allVolunteers;
     private List<Employee> allEmployees;
     private List<Guild> allGuilds;
-
 
     /**
      * Initializes the controller class.
@@ -65,14 +69,17 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
-        
+
         populateTables();
 
     }
 
     public AdminViewController()
     {
-        model = VolunteerModel.getInstance();
+        volunteerModel = VolunteerModel.getInstance();
+        guildModel = GuildModel.getInstance();
+        staffModel = StaffModel.getInstance();
+        
         allVolunteers = new ArrayList<>();
         allEmployees = new ArrayList<>();
         allGuilds = new ArrayList<>();
@@ -89,13 +96,15 @@ public class AdminViewController implements Initializable
 //        imageLogo.setFitHeight(80);
 //        imageLogo.setFitWidth(150);
     }
-    
-    private void  populateTables()
+
+    /**
+     * Sets the data from the model to the tables
+     */
+    private void populateTables()
     {
-       tbhFrivillige.setItems(model.getAllVolunteersForTable());
-       tbhTovholdere.setItems(model.getAllGuildManagersForTable());
-       tbhLaug.setItems(model.getAllGuildForTable());
+        tbhFrivillige.setItems(volunteerModel.getAllVolunteersForTable());
+        tbhTovholdere.setItems(staffModel.getAllGuildManagersForTable());
+        tbhLaug.setItems(guildModel.getAllGuildForTable());
     }
 
-   
 }

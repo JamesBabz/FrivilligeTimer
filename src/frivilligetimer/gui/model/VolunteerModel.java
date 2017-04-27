@@ -24,13 +24,11 @@ import javafx.collections.ObservableList;
 public class VolunteerModel
 {
 
-    VolunteerManager volunteerManager;
+    VolunteerManager manager;
 
     private static VolunteerModel instance;
 
     private final ObservableList<Volunteer> allVolunteers;
-    private final ObservableList<Employee> allEmployees;
-    private final ObservableList<Guild> allGuilds;
 
     public static VolunteerModel getInstance()
     {
@@ -48,7 +46,7 @@ public class VolunteerModel
     {
         try
         {
-            volunteerManager = new VolunteerManager();
+            manager = new VolunteerManager();
         } catch (IOException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,48 +56,23 @@ public class VolunteerModel
         }
 
         allVolunteers = FXCollections.observableArrayList();
-        allEmployees = FXCollections.observableArrayList();
-        allGuilds = FXCollections.observableArrayList();
         
     }
 
     /**
-     * Sets all volunteers in the tableview "Frivillige"
+     * Gets all volunteers in the tableview "Frivillige"
      * @return a list of all volunteers
      */
     public ObservableList<Volunteer> getAllVolunteersForTable()
     {
-        for (Volunteer volunteer : volunteerManager.getAllVolunteers())
+        for (Volunteer volunteer : manager.getAllVolunteers())
         {
             allVolunteers.add(volunteer);
         }
             return allVolunteers;
     }
 
-    /**
-     * Sets all employees in the tableview "Tovholdere"
-     * @return a list of all employees
-     */
-    public ObservableList<Employee> getAllGuildManagersForTable()
-    {
-        for (Employee employee : volunteerManager.getAllEmployees())
-        {
-            allEmployees.add(employee);
-        }
-        return allEmployees;
-    }
 
-    /**
-     * Sets all guilds in tableview "laug"
-     * @return a list of all guilds
-     */
-    public ObservableList<Guild> getAllGuildForTable()
-    {
-        for (Guild guild : volunteerManager.getAllGuilds())
-        {
-            allGuilds.add(guild);
-        }
-        return allGuilds;
-    }
+
 
 }
