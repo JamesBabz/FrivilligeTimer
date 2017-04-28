@@ -21,8 +21,11 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -57,18 +60,23 @@ public class AdminViewController implements Initializable
     private TableColumn<Employee, String> colGuldManager;
     @FXML
     private TableColumn<Guild, String> colGuild;
+    @FXML
+    private MenuItem Volunteradd;
+    @FXML
+    private MenuItem guildAdd;
+    @FXML
+    private ContextMenu contextVolunteer;
+    @FXML
+    private ContextMenu contextEmployee;
+    @FXML
+    private ContextMenu contextGuild;
+        @FXML
+    private Menu menuAddVolToGuild;
 
     VolunteerModel volunteerModel;
     GuildModel guildModel;
     StaffModel staffModel;
 
-    private List<Employee> allVolunteers;
-    private List<Employee> allEmployees;
-    private List<Guild> allGuilds;
-    @FXML
-    private MenuItem Volunteradd;
-    @FXML
-    private MenuItem guildAdd;
 
     /**
      * Initializes the controller class.
@@ -91,9 +99,7 @@ public class AdminViewController implements Initializable
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
 
-        allVolunteers = new ArrayList<>();
-        allEmployees = new ArrayList<>();
-        allGuilds = new ArrayList<>();
+
 
     }
 
@@ -117,7 +123,7 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void addVolunteer() 
+    private void addVolunteer()
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
         try
@@ -142,4 +148,25 @@ public class AdminViewController implements Initializable
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    private void addVolunteerToGuild(Menu menu)
+    {
+        List<MenuItem> guildsSubMenu = new ArrayList<>();
+        
+        for (Guild guild : tbhLaug.getItems())
+        {
+            MenuItem item = new MenuItem(guild.getName());
+            guildsSubMenu.add(item);
+        }
+        menu.getItems().setAll(guildsSubMenu);
+    }
+
+    @FXML
+    private void handleContextGuildMenu()
+    {
+        addVolunteerToGuild(menuAddVolToGuild);
+        
+    }
+
 }
