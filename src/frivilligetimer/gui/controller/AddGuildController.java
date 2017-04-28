@@ -17,7 +17,11 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -29,7 +33,7 @@ public class AddGuildController implements Initializable
 
     @FXML
     private TextField txtLaug;
-    
+
     GuildModel model;
     GuildManager manager;
 
@@ -40,7 +44,7 @@ public class AddGuildController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
-    }    
+    }
 
     public AddGuildController()
     {
@@ -56,25 +60,38 @@ public class AddGuildController implements Initializable
             Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
 
     @FXML
     private void addGuild()
     {
         Guild guild = new Guild(txtLaug.getText());
-        try
+
+        if (!txtLaug.getText().isEmpty())
         {
-            manager.addGuild(guild);
-        } catch (SQLException ex)
+            try
+            {
+                manager.addGuild(guild);
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cancel();
+        } else
         {
-            Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Ingen information");
+            alert.setHeaderText("Udfyld laugets navn");
+            alert.setContentText("Når tekstfeltet er udfyldt, vil du kunne tilføje lauget");
+            alert.show();
         }
+
     }
 
     @FXML
-    private void cancel(ActionEvent event)
+    private void cancel()
     {
+        Stage stage = (Stage) txtLaug.getScene().getWindow();
+        stage.close();
     }
-    
+
 }
