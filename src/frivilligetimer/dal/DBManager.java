@@ -173,4 +173,26 @@ public final class DBManager
         }
 
     }
+    
+    public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
+                Connection con = cm.getConnection(); 
+                {
+                    Statement st = con.createStatement();
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, volunteer.getFirstName());
+                    ps.setString(2, volunteer.getLastName());
+                    ps.setString(3, volunteer.getEmail());
+                    ps.setString(4, volunteer.getPhoneNum());
+                    
+                     ps.executeUpdate();
+                     
+                        if (ps.getGeneratedKeys().next()) {
+                volunteer.setId(ps.getGeneratedKeys().getInt(1));
+                }
+        
+        
+    }
+}
 }

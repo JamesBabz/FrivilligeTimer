@@ -34,6 +34,12 @@ public class Volunteer extends Person
         this.preference = preference;
         this.note = note;
     }
+
+    public Volunteer(String firstName, String lastName, String phoneNum, String email) {
+        super(0, firstName, lastName, phoneNum, email);
+    }
+    
+    
     
         public String getPreference()
     {

@@ -44,4 +44,9 @@ public class VolunteerManager
         return dbManager.getAllVolunteers();
     }
 
+     public void addVolunteer(Volunteer volunteer) throws SQLException
+    {
+        dbManager.addVolunteer(volunteer);
+    }
+    
 }
