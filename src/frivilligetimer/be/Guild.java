@@ -20,6 +20,12 @@ private String name;
         this.name = name;
     }
 
+    public Guild(String name)
+    {
+        this.name = name;
+    }
+    
+
     public int getId()
     {
         return id;

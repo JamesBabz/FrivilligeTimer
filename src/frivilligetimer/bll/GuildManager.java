@@ -17,22 +17,27 @@ import java.util.List;
  */
 public class GuildManager
 {
+
     DBManager dbManager;
 
     public GuildManager() throws IOException, SQLException
     {
         dbManager = new DBManager();
     }
-    
-        /**
+
+    /**
      * Gets all guilds from DAO
+     *
      * @return a list of guilds
      */
     public List<Guild> getAllGuilds()
     {
         return dbManager.getAllGuilds();
     }
-    
-    
-    
+
+    public void addGuild(Guild guild) throws SQLException
+    {
+        dbManager.addGuild(guild);
+    }
+
 }
