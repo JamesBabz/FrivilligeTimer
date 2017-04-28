@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="172.0" prefWidth="353.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="frivilligetimer.gui.controller.AddGuildController">
+   <children>
+      <Label layoutX="135.0" layoutY="14.0" text="Tilføj Laug">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="41.0" layoutY="65.0" text="Laug:" />
+      <TextField fx:id="txtLaug" layoutX="117.0" layoutY="61.0" prefHeight="25.0" prefWidth="200.0" />
+      <Button layoutX="275.0" layoutY="108.0" mnemonicParsing="false" onAction="#addGuild" text="Tilføj" />
+      <Button layoutX="214.0" layoutY="108.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
+   </children>
+</AnchorPane>
