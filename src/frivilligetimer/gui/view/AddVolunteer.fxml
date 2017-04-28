@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.view.AddVolunteerController">
+<AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AddVolunteerController">
    <children>
       <TextField fx:id="txtFirstName" layoutX="117.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" />
-      <Button layoutX="275.0" layoutY="201.0" mnemonicParsing="false" text="Tilføj" />
+      <Button layoutX="275.0" layoutY="201.0" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj" />
       <Button layoutX="214.0" layoutY="201.0" mnemonicParsing="false" text="Fortryd" />
       <Label layoutX="128.0" layoutY="14.0" text="Tilføj frivillig">
          <font>
