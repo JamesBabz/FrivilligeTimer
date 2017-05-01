@@ -59,11 +59,15 @@ public class GuildModel
      */
     public ObservableList<Guild> getAllGuildForTable()
     {
-        for (Guild guild : manager.getAllGuilds())
-        {
-            allGuilds.add(guild);
-        }
+        allGuilds.clear();
+        allGuilds.addAll(manager.getAllGuilds());
         return allGuilds;
+    }
+    
+    public void addGuild(Guild guild) throws SQLException
+    {
+        allGuilds.add(guild);
+        manager.addGuild(guild);
     }
 
 
