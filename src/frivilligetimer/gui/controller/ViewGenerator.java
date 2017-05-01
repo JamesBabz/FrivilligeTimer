@@ -37,9 +37,10 @@ public class ViewGenerator
      * @param style The style of the stage, e.g. StageStyle.DECORATED.
      * @param isModal If false the parent stage can be interacted with regardless
      * of which view is in focus.
+     * @param title
      * @throws IOException 
      */
-    public void generateView(String viewPath, boolean closeCurrent, StageStyle style, boolean isModal) throws IOException
+    public void generateView(String viewPath, boolean closeCurrent, StageStyle style, boolean isModal, String title) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
         Parent root = loader.load();
@@ -50,14 +51,18 @@ public class ViewGenerator
 
         newStage = new Stage(style);
 
-        newStage.setScene(new Scene(root));
+        newStage.setScene(new Scene(root));   
         
+        newStage.setTitle(title);
         newStage.getIcons().add(new Image("frivilligetimer/gui/image/windowLogo.png"));
 
         if (isModal)
         {
             newStage.initModality(Modality.WINDOW_MODAL);
         }
+        
+      
+      
         
         newStage.initOwner(primaryStage);
 
