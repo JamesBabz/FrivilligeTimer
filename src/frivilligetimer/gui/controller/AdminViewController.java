@@ -88,6 +88,8 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
+        
+  
 
         populateTables();
 
@@ -121,6 +123,7 @@ public class AdminViewController implements Initializable
         tbhTovholdere.setItems(staffModel.getAllGuildManagersForTable());
         tbhLaug.setItems(guildModel.getAllGuildForTable());
     }
+    
 
     @FXML
     private void addVolunteer()
@@ -128,7 +131,7 @@ public class AdminViewController implements Initializable
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
         try
         {
-            vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY, true);
+            vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
         } catch (IOException ex)
         {
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -142,7 +145,7 @@ public class AdminViewController implements Initializable
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
         try
         {
-            vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.UTILITY, true);
+            vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "gnærongietrh");
         } catch (IOException ex)
         {
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
