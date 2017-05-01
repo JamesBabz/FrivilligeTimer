@@ -21,12 +21,13 @@ import javafx.collections.ObservableList;
  */
 public class GuildModel
 {
-        private static GuildModel instance;
+
+    private static GuildModel instance;
     GuildManager manager;
-    
-     private final ObservableList<Guild> allGuilds;
-    
-        public static GuildModel getInstance()
+
+    private final ObservableList<Guild> allGuilds;
+
+    public static GuildModel getInstance()
     {
         if (instance == null)
         {
@@ -37,31 +38,37 @@ public class GuildModel
 
     private GuildModel()
     {
-            try
-            {
-                manager = new GuildManager();
-            } catch (IOException ex)
-            {
-                Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex)
-            {
-                Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            allGuilds = FXCollections.observableArrayList();
+        try
+        {
+            manager = new GuildManager();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        allGuilds = FXCollections.observableArrayList();
     }
-        
-        /**
+
+    /**
      * Gets all guilds in tableview "laug"
+     *
      * @return a list of all guilds
      */
     public ObservableList<Guild> getAllGuildForTable()
     {
-        for (Guild guild : manager.getAllGuilds())
-        {
-            allGuilds.add(guild);
-        }
+        allGuilds.clear();
+        allGuilds.addAll(manager.getAllGuilds());
         return allGuilds;
     }
-        
+    
+    public void addGuild(Guild guild) throws SQLException
+    {
+        allGuilds.add(guild);
+        manager.addGuild(guild);
+    }
+
+
 }

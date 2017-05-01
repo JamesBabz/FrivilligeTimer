@@ -12,6 +12,7 @@ import frivilligetimer.be.Manager;
 import frivilligetimer.be.Volunteer;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -112,7 +113,7 @@ public final class DBManager
                 Guild guild = new Guild(id, name);
                 guilds.add(guild);
             }
-            
+
         }
     }
 
@@ -145,13 +146,53 @@ public final class DBManager
     {
         return managers;
     }
-    
+
     /**
      * Gets all guilds
+     *
      * @return a list of all guilds
      */
     public List<Guild> getAllGuilds()
     {
         return guilds;
     }
+
+    public void addGuild(Guild guild) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO Guilds (Name) VALUES( ?)";
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, guild.getName());
+            ps.executeUpdate();
+                if (ps.getGeneratedKeys().next()) {
+                guild.setId(ps.getGeneratedKeys().getInt(1));
+            }
+
+        }
+
+    }
+    
+    public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
+                Connection con = cm.getConnection(); 
+                {
+                    Statement st = con.createStatement();
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, volunteer.getFirstName());
+                    ps.setString(2, volunteer.getLastName());
+                    ps.setString(3, volunteer.getEmail());
+                    ps.setString(4, volunteer.getPhoneNum());
+                    
+                     ps.executeUpdate();
+                     
+                        if (ps.getGeneratedKeys().next()) {
+                volunteer.setId(ps.getGeneratedKeys().getInt(1));
+                }
+        
+        
+    }
+}
 }
