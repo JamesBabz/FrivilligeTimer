@@ -6,9 +6,11 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.StaffManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -24,6 +26,7 @@ public class StaffModel
     StaffManager manager;
     
      private final ObservableList<Employee> allEmployees;
+ 
     
         public static StaffModel getInstance()
     {
@@ -56,12 +59,14 @@ public class StaffModel
      */
     public ObservableList<Employee> getAllGuildManagersForTable()
     {
-        for (Employee employee : manager.getAllEmployees())
-        {
-            allEmployees.add(employee);
-        }
-        return allEmployees;
+       allEmployees.addAll(manager.getAllEmployees());
+       return allEmployees;
     }
     
+        public void addEmployee(Employee employee) throws SQLException
+    {
+        allEmployees.add(employee);
+        manager.addEmployee(employee);
+    }
     
 }

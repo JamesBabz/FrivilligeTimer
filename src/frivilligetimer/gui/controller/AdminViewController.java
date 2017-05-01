@@ -138,6 +138,20 @@ public class AdminViewController implements Initializable
         }
 
     }
+    
+      @FXML
+    private void addEmployee()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     @FXML
     private void addGuild()
