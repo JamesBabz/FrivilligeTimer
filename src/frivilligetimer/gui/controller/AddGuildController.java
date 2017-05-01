@@ -68,13 +68,15 @@ public class AddGuildController implements Initializable
 
         if (!txtLaug.getText().isEmpty())
         {
+         
             try
             {
-                manager.addGuild(guild);
+                model.addGuild(guild);
             } catch (SQLException ex)
             {
                 Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
             }
+     
             cancel();
         } else
         {
