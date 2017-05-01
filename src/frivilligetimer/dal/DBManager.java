@@ -7,10 +7,12 @@ package frivilligetimer.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.be.Volunteer;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,6 +32,7 @@ public final class DBManager
     private final List<Volunteer> volunteers;
     private final List<Employee> employees;
     private final List<Manager> managers;
+    private final List<Guild> guilds;
 
     /**
      * The default constructor for the database manager.
@@ -40,15 +43,18 @@ public final class DBManager
         this.cm = new ConnectionManager();
         this.employees = new ArrayList<>();
         this.managers = new ArrayList<>();
+        this.guilds = new ArrayList<>();
 
         setAllPeople();
+        setAllGuilds();
     }
 
     /**
-     * Gets the data from database
-     * adds the people to the right lists (Volunteer, Employee, Manager)
+     * Gets the data from database adds the people to the right lists
+     * (Volunteer, Employee, Manager)
+     *
      * @throws SQLServerException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void setAllPeople() throws SQLServerException, SQLException
     {
@@ -63,7 +69,7 @@ public final class DBManager
                 int id = rs.getInt("ID");
                 String fName = rs.getString("FirstName");
                 String lName = rs.getString("LastName");
-                String phonenum = rs.getString("Phonenum");
+                String phonenum = rs.getString("PhoneNum");
                 String email = rs.getString("Email");
                 String note = rs.getString("Note");
                 String preference = rs.getString("Preference");
@@ -88,6 +94,26 @@ public final class DBManager
                 }
 
             }
+        }
+    }
+
+    public void setAllGuilds() throws SQLServerException, SQLException
+    {
+        String sql = "SELECT * FROM Guilds";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int id = rs.getInt("ID");
+                String name = rs.getString("Name");
+
+                Guild guild = new Guild(id, name);
+                guilds.add(guild);
+            }
+
         }
     }
 
@@ -120,4 +146,53 @@ public final class DBManager
     {
         return managers;
     }
+
+    /**
+     * Gets all guilds
+     *
+     * @return a list of all guilds
+     */
+    public List<Guild> getAllGuilds()
+    {
+        return guilds;
+    }
+
+    public void addGuild(Guild guild) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO Guilds (Name) VALUES( ?)";
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, guild.getName());
+            ps.executeUpdate();
+                if (ps.getGeneratedKeys().next()) {
+                guild.setId(ps.getGeneratedKeys().getInt(1));
+            }
+
+        }
+
+    }
+    
+    public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
+                Connection con = cm.getConnection(); 
+                {
+                    Statement st = con.createStatement();
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, volunteer.getFirstName());
+                    ps.setString(2, volunteer.getLastName());
+                    ps.setString(3, volunteer.getEmail());
+                    ps.setString(4, volunteer.getPhoneNum());
+                    
+                     ps.executeUpdate();
+                     
+                        if (ps.getGeneratedKeys().next()) {
+                volunteer.setId(ps.getGeneratedKeys().getInt(1));
+                }
+        
+        
+    }
+}
 }

@@ -8,19 +8,33 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.model.GuildModel;
+import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -37,7 +51,7 @@ public class AdminViewController implements Initializable
     @FXML
     private TableView<Employee> tbhTovholdere;
     @FXML
-    private TableView<?> tbhLaug;
+    private TableView<Guild> tbhLaug;
     @FXML
     private MenuBar btnMenu;
     @FXML
@@ -46,10 +60,23 @@ public class AdminViewController implements Initializable
     private TableColumn<Employee, String> colGuldManager;
     @FXML
     private TableColumn<Guild, String> colGuild;
+    @FXML
+    private MenuItem Volunteradd;
+    @FXML
+    private MenuItem guildAdd;
+    @FXML
+    private ContextMenu contextVolunteer;
+    @FXML
+    private ContextMenu contextEmployee;
+    @FXML
+    private ContextMenu contextGuild;
+        @FXML
+    private Menu menuAddVolToGuild;
 
-    VolunteerModel model;
-    private final ObservableList<Volunteer> allVolunteers;
-    private final ObservableList<Employee> allEmployees;
+    VolunteerModel volunteerModel;
+    GuildModel guildModel;
+    StaffModel staffModel;
+
 
     /**
      * Initializes the controller class.
@@ -60,16 +87,20 @@ public class AdminViewController implements Initializable
         setLogo();
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        setVolunteersTable();
-        setGuildManagerTable();
+        populateTables();
+
     }
 
     public AdminViewController()
     {
-        model = VolunteerModel.getInstance();
-        allVolunteers = FXCollections.observableArrayList();
-        allEmployees = FXCollections.observableArrayList();
+        volunteerModel = VolunteerModel.getInstance();
+        guildModel = GuildModel.getInstance();
+        staffModel = StaffModel.getInstance();
+
+
+
     }
 
     /**
@@ -79,32 +110,63 @@ public class AdminViewController implements Initializable
     {
         Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
         imageLogo.setImage(imageMlogo);
-//        imageLogo.setFitHeight(80);
-//        imageLogo.setFitWidth(150);
     }
 
     /**
-     * Sets all volunteers in the tableview "Frivillige"
+     * Sets the data from the model to the tables
      */
-    private void setVolunteersTable()
+    private void populateTables()
     {
-        for (Volunteer volunteer : model.getAllVolunteers())
+        tbhFrivillige.setItems(volunteerModel.getAllVolunteersForTable());
+        tbhTovholdere.setItems(staffModel.getAllGuildManagersForTable());
+        tbhLaug.setItems(guildModel.getAllGuildForTable());
+    }
+
+    @FXML
+    private void addVolunteer()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
         {
-            allVolunteers.add(volunteer);
+            vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.UTILITY, true);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tbhFrivillige.setItems(allVolunteers);
 
     }
 
-    /**
-     * Sets all employees in the tableview "Tovholdere"
-     */
-    private void setGuildManagerTable()
+    @FXML
+    private void addGuild()
     {
-        for (Employee employee : model.getAllEmployees())
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
         {
-            allEmployees.add(employee);
+            vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.UTILITY, true);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tbhTovholdere.setItems(allEmployees);
     }
+    
+    
+    private void addVolunteerToGuild(Menu menu)
+    {
+        List<MenuItem> guildsSubMenu = new ArrayList<>();
+        
+        for (Guild guild : tbhLaug.getItems())
+        {
+            MenuItem item = new MenuItem(guild.getName());
+            guildsSubMenu.add(item);
+        }
+        menu.getItems().setAll(guildsSubMenu);
+    }
+
+    @FXML
+    private void handleContextGuildMenu()
+    {
+        addVolunteerToGuild(menuAddVolToGuild);
+        
+    }
+
 }

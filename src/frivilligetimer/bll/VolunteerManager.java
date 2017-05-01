@@ -6,6 +6,7 @@
 package frivilligetimer.bll;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
@@ -20,41 +21,32 @@ import java.util.List;
  */
 public class VolunteerManager
 {
+
     DBManager dbManager;
 
     /**
      * The constuctor for the class.
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public VolunteerManager() throws IOException, SQLException
     {
         dbManager = new DBManager();
     }
+
     /**
      * Gets all volunteers from DAO
+     *
      * @return a list of all volunteers
      */
     public List<Volunteer> getAllVolunteers()
     {
         return dbManager.getAllVolunteers();
     }
-    /**
-     * Gets all employees from DAO
-     * @return a list of employees
-     */
-    public List<Employee> getAllEmployees()
+
+     public void addVolunteer(Volunteer volunteer) throws SQLException
     {
-        return dbManager.getAllEmployees();
+        dbManager.addVolunteer(volunteer);
     }
-    /**
-     * Gets all managers from DAO
-     * @return a list of managers
-     */
-    public List<Manager> getAllManagers()
-    {
-        return dbManager.getAllManagers();
-    }
-    
-    
     
 }

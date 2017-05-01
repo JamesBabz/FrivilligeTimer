@@ -5,8 +5,16 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.GuildManager;
+import frivilligetimer.bll.VolunteerManager;
+import frivilligetimer.gui.model.VolunteerModel;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -18,6 +26,8 @@ import javafx.scene.control.TextField;
  */
 public class AddVolunteerController implements Initializable {
 
+    
+     private VolunteerModel model;
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -26,6 +36,8 @@ public class AddVolunteerController implements Initializable {
     private TextField txtLastName;
     @FXML
     private TextField txtPhoneNummer;
+    
+     VolunteerManager manager;
 
     /**
      * Initializes the controller class.
@@ -33,6 +45,31 @@ public class AddVolunteerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        model = VolunteerModel.getInstance();    
+         try {
+             manager = new VolunteerManager();
+         } catch (IOException ex) {
+             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (SQLException ex) {
+             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }    
+    
+    @FXML
+    private void addVolunteer()
+    {
+        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtEmail.getText(), txtLastName.getText(), txtPhoneNummer.getText());
+        
+         try {
+             manager.addVolunteer(volunteer);
+         } catch (SQLException ex) {
+             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+         }
+  
+    }
+    
+    
+    
+    
     
 }

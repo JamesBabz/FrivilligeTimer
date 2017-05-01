@@ -6,13 +6,17 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,9 +24,11 @@ import java.util.logging.Logger;
  */
 public class VolunteerModel
 {
-    VolunteerManager volunteerManager;
-    
-     private static VolunteerModel instance;
+    VolunteerManager manager;
+
+    private static VolunteerModel instance;
+
+    private final ObservableList<Volunteer> allVolunteers;
 
     public static VolunteerModel getInstance()
     {
@@ -32,14 +38,16 @@ public class VolunteerModel
         }
         return instance;
     }
-/**
- * The default contructor
- */
+    private final ArrayList<Volunteer> volunteers;
+
+    /**
+     * The default contructor
+     */
     private VolunteerModel()
     {
         try
         {
-            volunteerManager = new VolunteerManager();
+            manager = new VolunteerManager();
         } catch (IOException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,26 +55,32 @@ public class VolunteerModel
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        allVolunteers = FXCollections.observableArrayList();
+        volunteers = new ArrayList<>();
     }
-    
+
     /**
-     * Gets all volunteers from the VolunteerManager.
-     * @return all the volunteers
+     * Gets all volunteers in the tableview "Frivillige"
+     * @return a list of all volunteers
      */
-    public List<Volunteer> getAllVolunteers()
+    public ObservableList<Volunteer> getAllVolunteersForTable()
     {
-       return volunteerManager.getAllVolunteers();
+        for (Volunteer volunteer : manager.getAllVolunteers())
+        {
+            allVolunteers.add(volunteer);
+        }
+            return allVolunteers;
     }
-    
-    /**
-     * Gets all employees from the manager
-     * @return a list of all the employees
-     */
-    public List<Employee> getAllEmployees()
-    {
-        return volunteerManager.getAllEmployees();
+  
+    public void addVolunteer(String fName, String email, String lName, String pNumber) {
+        Volunteer volunteer = new Volunteer(0, fName, email, lName, pNumber, "", "");
+        
+        System.out.println(fName);
+        System.out.println(email);
+        System.out.println(lName);
+        System.out.println(pNumber);
+        volunteers.add(volunteer);
     }
-    
-    
-    
 }
+
