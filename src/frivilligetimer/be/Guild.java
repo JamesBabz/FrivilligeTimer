@@ -5,26 +5,30 @@
  */
 package frivilligetimer.be;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  *
  * @author thomas
  */
 public class Guild
 {
-private int id;
-private String name;
+
+    private int id;
+    private final StringProperty name = new SimpleStringProperty();
 
     public Guild(int id, String name)
     {
         this.id = id;
-        this.name = name;
+        this.name.set(name);
+        
     }
 
     public Guild(String name)
     {
-        this.name = name;
+        this.name.set(name);
     }
-    
 
     public int getId()
     {
@@ -38,13 +42,17 @@ private String name;
 
     public String getName()
     {
+        return name.get();
+    }
+
+    public void setName(String value)
+    {
+        name.set(value);
+    }
+
+    public StringProperty nameProperty()
+    {
         return name;
     }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
 
 }
