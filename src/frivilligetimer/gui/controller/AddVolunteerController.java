@@ -15,19 +15,21 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Jacob Enemark
  */
-public class AddVolunteerController implements Initializable {
+public class AddVolunteerController implements Initializable
+{
 
-    
-     private VolunteerModel model;
+    private VolunteerModel model;
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -36,40 +38,50 @@ public class AddVolunteerController implements Initializable {
     private TextField txtLastName;
     @FXML
     private TextField txtPhoneNummer;
-    
-     VolunteerManager manager;
+
+    VolunteerManager manager;
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         // TODO
-        model = VolunteerModel.getInstance();    
-         try {
-             manager = new VolunteerManager();
-         } catch (IOException ex) {
-             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (SQLException ex) {
-             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-    }    
-    
+        model = VolunteerModel.getInstance();
+        try
+        {
+            manager = new VolunteerManager();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @FXML
     private void addVolunteer()
     {
-        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtEmail.getText(), txtLastName.getText(), txtPhoneNummer.getText());
-        
-         try {
-             manager.addVolunteer(volunteer);
-         } catch (SQLException ex) {
-             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-  
+        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText());
+
+        try
+        {
+            model.addVolunteer(volunteer);
+            cancel();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    
-    
-    
-    
-    
+
+    @FXML
+    private void cancel()
+    {
+        Stage stage = (Stage) txtFirstName.getScene().getWindow();
+        stage.close();
+    }
+
 }
