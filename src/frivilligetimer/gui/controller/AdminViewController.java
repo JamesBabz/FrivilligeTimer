@@ -22,6 +22,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
@@ -35,6 +37,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -47,17 +50,17 @@ public class AdminViewController implements Initializable
     @FXML
     private ImageView imageLogo;
     @FXML
-    private TableView<Volunteer> tbhFrivillige;
+    private TableView<Volunteer> tableVolunteer;
     @FXML
-    private TableView<Employee> tbhTovholdere;
+    private TableView<Employee> tableEmployee;
     @FXML
-    private TableView<Guild> tbhLaug;
+    private TableView<Guild> tableGuild;
     @FXML
     private MenuBar btnMenu;
     @FXML
     private TableColumn<Volunteer, String> colVolunteer;
     @FXML
-    private TableColumn<Employee, String> colGuldManager;
+    private TableColumn<Employee, String> colGuildManager;
     @FXML
     private TableColumn<Guild, String> colGuild;
     @FXML
@@ -70,13 +73,14 @@ public class AdminViewController implements Initializable
     private ContextMenu contextEmployee;
     @FXML
     private ContextMenu contextGuild;
-        @FXML
+    @FXML
     private Menu menuAddVolToGuild;
 
-    VolunteerModel volunteerModel;
-    GuildModel guildModel;
-    StaffModel staffModel;
-
+    private final VolunteerModel volunteerModel;
+    private final GuildModel guildModel;
+    private final StaffModel staffModel;
+    private Volunteer selectedVolunteer;
+    private List<MenuItem> guildsSubMenu;
 
     /**
      * Initializes the controller class.
@@ -86,22 +90,21 @@ public class AdminViewController implements Initializable
     {
         setLogo();
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        colGuldManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colGuildManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
-        
-  
 
         populateTables();
 
     }
 
+    /**
+     * Default contructor
+     */
     public AdminViewController()
     {
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
-
-
 
     }
 
@@ -119,11 +122,10 @@ public class AdminViewController implements Initializable
      */
     private void populateTables()
     {
-        tbhFrivillige.setItems(volunteerModel.getAllVolunteersForTable());
-        tbhTovholdere.setItems(staffModel.getAllGuildManagersForTable());
-        tbhLaug.setItems(guildModel.getAllGuildForTable());
+        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        tableGuild.setItems(guildModel.getAllGuildForTable());
     }
-    
 
     @FXML
     private void addVolunteer()
@@ -138,8 +140,8 @@ public class AdminViewController implements Initializable
         }
 
     }
-    
-      @FXML
+
+    @FXML
     private void addEmployee()
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
@@ -165,25 +167,66 @@ public class AdminViewController implements Initializable
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+    /**
+     * Sets all the guilds in the contextMenu, rightClick in the table.
+     *
+     * @param menu of all the guilds to be shown
+     */
     private void addVolunteerToGuild(Menu menu)
     {
-        List<MenuItem> guildsSubMenu = new ArrayList<>();
-        
-        for (Guild guild : tbhLaug.getItems())
+        selectedVolunteer = tableVolunteer.selectionModelProperty().getValue().getSelectedItem();
+        guildsSubMenu = new ArrayList<>();
+
+        for (Guild guild : tableGuild.getItems())
         {
             MenuItem item = new MenuItem(guild.getName());
             guildsSubMenu.add(item);
+            item.setOnAction(new EventHandler<ActionEvent>()
+            {
+                @Override
+                public void handle(ActionEvent event)
+                {
+                   if(item.getText().equals(guild.getName()))
+                   {
+                       guildModel.addVolunteerToGuild(guild, selectedVolunteer);
+                   }
+                }
+            });
+            
         }
         menu.getItems().setAll(guildsSubMenu);
+      
+        
     }
 
     @FXML
     private void handleContextGuildMenu()
     {
         addVolunteerToGuild(menuAddVolToGuild);
-        
+
+    }
+    
+    @FXML
+    private void handleDeletePerson() 
+    {
+        Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getItems().remove(selectedItem);
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.deleteVolunteer(selectedItem);
+    }
+
+    @FXML
+    private void handleDeleteGuild() {
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getItems().remove(selectedItem);
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.deleteGuild(selectedItem);
+    }
+
+    @FXML
+    private void addVolunteerToGuild(WindowEvent event)
+    {
     }
 
 }
