@@ -7,6 +7,7 @@ package frivilligetimer.bll;
 
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Manager;
+import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,4 +43,10 @@ public class StaffManager
     {
         return dbManager.getAllEmployees();
     }
+    
+        public void addEmployee(Employee employee) throws SQLException
+    {
+        dbManager.addEmployee(employee);
+    }
+    
 }

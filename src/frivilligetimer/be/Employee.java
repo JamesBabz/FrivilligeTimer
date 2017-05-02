@@ -27,5 +27,11 @@ public class Employee extends Person
         super(id, firstName, lastName, phoneNum, email);
    
     }
+
+    public Employee(String firstName, String lastName, String phoneNum, String email) {
+        super(0, firstName, lastName, phoneNum, email);
+    }
+
+   
     
 }
