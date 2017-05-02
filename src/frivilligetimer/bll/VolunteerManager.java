@@ -5,14 +5,13 @@
  */
 package frivilligetimer.bll;
 
-import frivilligetimer.be.Employee;
-import frivilligetimer.be.Guild;
-import frivilligetimer.be.Manager;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A class that holds data about the people.
@@ -49,4 +48,12 @@ public class VolunteerManager
         dbManager.addVolunteer(volunteer);
     }
     
+     public void deleteVolunteer(Volunteer volunteer)
+     {
+        try {
+            dbManager.deleteVolunteer(volunteer);
+        } catch (SQLException ex) {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
 }

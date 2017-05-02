@@ -5,14 +5,10 @@
  */
 package frivilligetimer.gui.model;
 
-import frivilligetimer.be.Employee;
-import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -78,5 +74,11 @@ public class VolunteerModel
     {
         allVolunteers.add(volunteer);
         manager.addVolunteer(volunteer);
+    }
+    
+    public void deleteVolunteer(Volunteer volunteer)
+    {
+        allVolunteers.remove(volunteer);
+        manager.deleteVolunteer(volunteer);
     }
 }
