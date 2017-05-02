@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,6 +215,35 @@ public final class DBManager
                 }
     }
 }  
+
+     public void deleteVolunteer(Volunteer volunteer) throws SQLException
+    {
+        String sql = "DELETE from People WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, volunteer.getId());
+          ps.executeUpdate();
+        
+        }
+    }
+
+    public void deleteGuild(Guild guild) throws SQLException {
+         String sql = "DELETE from Guilds WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, guild.getId());
+          ps.executeUpdate();
+        
+        }
+    }
     
     
     

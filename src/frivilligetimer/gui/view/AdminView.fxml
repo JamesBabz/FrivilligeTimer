@@ -14,11 +14,8 @@
          <contextMenu>
             <ContextMenu fx:id="contextVolunteer">
                <items>
-                  <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj Frivillig Til Laug">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
+                  <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj Frivillig Til Laug" />
+                  <Menu mnemonicParsing="false" onAction="#handleDeletePerson" onShowing="#handleContextGuildMenu" text="Slet frivillig" />
                </items>
             </ContextMenu>
          </contextMenu>
@@ -42,7 +39,7 @@
          <contextMenu>
             <ContextMenu fx:id="contextGuild">
               <items>
-                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
               </items>
             </ContextMenu>
          </contextMenu>
