@@ -244,7 +244,19 @@ public final class DBManager
         
         }
     }
+
+    public void removeEmployee(Employee employee) throws SQLServerException, SQLException {
+        String sql = "DELETE from People WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, employee.getId());
+          ps.executeUpdate();
+    }
     
     
-    
+    }
 }
