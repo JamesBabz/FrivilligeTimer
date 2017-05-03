@@ -26,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -81,6 +82,8 @@ public class AdminViewController implements Initializable
     private final StaffModel staffModel;
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
+    @FXML
+    private Button btnTestGuild;
 
     /**
      * Initializes the controller class.
@@ -94,6 +97,9 @@ public class AdminViewController implements Initializable
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         populateTables();
+        
+        
+        
 
     }
 
@@ -208,7 +214,7 @@ public class AdminViewController implements Initializable
     }
     
     @FXML
-    private void handleDeletePerson() 
+    private void handleDeleteVolunteer() 
     {
         Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getItems().remove(selectedItem);
@@ -225,8 +231,21 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void addVolunteerToGuild(WindowEvent event)
+    private void handleDeleteEmployee() {
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getItems().remove(selectedItem);
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.deleteEmployee(selectedItem);
+    }
+  
+
+    @FXML
+    private void handleTestGuild(ActionEvent event)
     {
+        for (Volunteer volunteer : guildModel.getVolunteersInGuild(tableGuild.getSelectionModel().getSelectedItem()))
+        {
+            System.out.println(tableGuild.getSelectionModel().getSelectedItem().getName() + " " + volunteer.getFullName());
+        }
     }
 
 }
