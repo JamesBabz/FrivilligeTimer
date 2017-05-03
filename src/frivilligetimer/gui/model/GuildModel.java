@@ -73,15 +73,21 @@ public class GuildModel
         manager.addGuild(guild);
     }
 
-    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer)
-    {
-        volunteersInGuild.add(selectedVolunteer);
-    }
-
     public void deleteGuild(Guild guild)
     {
         allGuilds.remove(guild);
         manager.removeGuild(guild);
     }
 
+    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer)
+    {
+        
+        volunteersInGuild.add(selectedVolunteer);
+        
+    }
+    
+    public ObservableList<Volunteer> getVolunteersInGuild(Guild guild)
+    {
+        return volunteersInGuild;
+    }
 }
