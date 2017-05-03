@@ -68,5 +68,10 @@ public class StaffModel
         allEmployees.add(employee);
         manager.addEmployee(employee);
     }
+
+    public void deleteEmployee(Employee employee) {
+        allEmployees.remove(employee);
+        manager.removeEmployee(employee);
+    }
     
 }

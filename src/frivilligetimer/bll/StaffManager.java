@@ -12,6 +12,8 @@ import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -47,6 +49,14 @@ public class StaffManager
         public void addEmployee(Employee employee) throws SQLException
     {
         dbManager.addEmployee(employee);
+    }
+
+    public void removeEmployee(Employee employee) {
+        try {
+            dbManager.removeEmployee(employee);
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
