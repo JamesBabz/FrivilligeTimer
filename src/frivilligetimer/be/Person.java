@@ -5,36 +5,41 @@
  */
 package frivilligetimer.be;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
- * 
+ *
  * @author thomas
  */
-public abstract class Person 
+public abstract class Person
 {
-        private int id;
-    private String firstName;
-    private String lastName;
-    private String fullName;
+
+    private int id;
+    private final StringProperty firstName = new SimpleStringProperty();
+    private final StringProperty lastName = new SimpleStringProperty();
+    private final StringProperty fullName = new SimpleStringProperty();
+
     private String phoneNum;
     private String email;
-    
-    
-/**
- * The contructor 
- * @param id Gets the id of the person
- * @param firstName Gets the firstname of the person
- * @param lastName Gets the lastname of the person
- * @param phoneNum Gets the phonenumber of the person
- * @param email Gets the emailadress of the person
- */
+
+    /**
+     * The contructor
+     *
+     * @param id Gets the id of the person
+     * @param firstName Gets the firstname of the person
+     * @param lastName Gets the lastname of the person
+     * @param phoneNum Gets the phonenumber of the person
+     * @param email Gets the emailadress of the person
+     */
     public Person(int id, String firstName, String lastName, String phoneNum, String email)
     {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName.set(firstName);
+        this.lastName.set(lastName);
         this.phoneNum = phoneNum;
         this.email = email;
-        this.fullName = firstName + " " + lastName;
+        this.fullName.setValue(firstName + " " + lastName);
     }
 
     public int getId()
@@ -49,29 +54,34 @@ public abstract class Person
 
     public String getFirstName()
     {
-        return firstName;
+        return firstName.get();
     }
 
-    public void setFirstName(String firstName)
+    public void setFirstName(String value)
     {
-        this.firstName = firstName;
+        firstName.set(value);
+    }
+
+    public StringProperty firstNameProperty()
+    {
+        return firstName;
     }
 
     public String getLastName()
     {
+        return lastName.get();
+    }
+
+    public void setLastName(String value)
+    {
+        lastName.set(value);
+    }
+
+    public StringProperty lastNameProperty()
+    {
         return lastName;
     }
 
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
-    }
-    
-    public String getFullName()
-    {
-        return fullName;
-    }
-    
     public String getPhoneNum()
     {
         return phoneNum;
@@ -91,7 +101,20 @@ public abstract class Person
     {
         this.email = email;
     }
-    
-    
-}
 
+    public String getFullName()
+    {
+        return fullName.get();
+    }
+
+    public void setFullName(String value)
+    {
+        fullName.set(value);
+    }
+
+    public StringProperty fullNameProperty()
+    {
+        return fullName;
+    }
+
+}

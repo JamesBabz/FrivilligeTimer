@@ -10,6 +10,8 @@ import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,6 +40,14 @@ public class GuildManager
     public void addGuild(Guild guild) throws SQLException
     {
         dbManager.addGuild(guild);
+    }
+
+    public void removeGuild(Guild guild) {
+        try {
+            dbManager.deleteGuild(guild);
+        } catch (SQLException ex) {
+            Logger.getLogger(GuildManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

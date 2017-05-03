@@ -11,25 +11,25 @@
 
 <AnchorPane id="AnchorPane" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
-      <TableView fx:id="tbhFrivillige" layoutX="189.0" layoutY="82.0" prefHeight="456.0" prefWidth="231.0">
+      <TableView fx:id="tableVolunteer" layoutX="189.0" layoutY="82.0" prefHeight="456.0" prefWidth="231.0">
         <columns>
           <TableColumn fx:id="colVolunteer" prefWidth="230.0" text="Frivillige" />
         </columns>
          <contextMenu>
-            <ContextMenu fx:id="contextVolunteer">
+            <ContextMenu fx:id="contextVolunteer" onShowing="#addVolunteerToGuild">
                <items>
-                  <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj Frivillig Til Laug">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
+                  <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj Person Til Laug">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                     </items></Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#handleDeletePerson" text="Slet Person" />
                </items>
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <TableView fx:id="tbhTovholdere" layoutX="462.0" layoutY="82.0" prefHeight="456.0" prefWidth="200.0">
+      <TableView fx:id="tableEmployee" layoutX="462.0" layoutY="82.0" prefHeight="456.0" prefWidth="200.0">
         <columns>
-          <TableColumn fx:id="colGuldManager" prefWidth="199.0" text="Tovholdere" />
+          <TableColumn fx:id="colGuildManager" prefWidth="199.0" text="Tovholdere" />
         </columns>
          <contextMenu>
             <ContextMenu fx:id="contextEmployee">
@@ -39,14 +39,14 @@
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <TableView fx:id="tbhLaug" layoutX="21.0" layoutY="82.0" prefHeight="456.0" prefWidth="137.0">
+      <TableView fx:id="tableGuild" layoutX="21.0" layoutY="82.0" prefHeight="456.0" prefWidth="137.0">
         <columns>
           <TableColumn fx:id="colGuild" prefWidth="136.0" text="Laug" />
         </columns>
          <contextMenu>
             <ContextMenu fx:id="contextGuild">
               <items>
-                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
               </items>
             </ContextMenu>
          </contextMenu>
@@ -59,6 +59,7 @@
               <MenuItem mnemonicParsing="false" text="Close" />
                   <MenuItem fx:id="Volunteradd" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj Frivillig" />
                   <MenuItem fx:id="guildAdd" mnemonicParsing="false" onAction="#addGuild" text="Tilføj Laug" />
+                  <MenuItem mnemonicParsing="false" onAction="#addEmployee" text="Tilføj Tovholdere" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Statistik">

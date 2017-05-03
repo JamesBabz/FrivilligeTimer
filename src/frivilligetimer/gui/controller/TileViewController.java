@@ -56,7 +56,7 @@ public class TileViewController implements Initializable
         ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
         try
         {
-            viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false);
+            viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin");
         }
         catch (IOException ex)
         {

@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -24,6 +25,9 @@ public class FrivilligeTimer extends Application
         Parent root = FXMLLoader.load(getClass().getResource("gui/view/TileView.fxml"));
         
         Scene scene = new Scene(root);
+        
+        stage.setTitle("Tilepane");
+        stage.getIcons().add(new Image("frivilligetimer/gui/image/windowLogo.png"));
         
         stage.setScene(scene);
         stage.show();
