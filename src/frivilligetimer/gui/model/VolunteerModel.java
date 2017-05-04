@@ -5,14 +5,10 @@
  */
 package frivilligetimer.gui.model;
 
-import frivilligetimer.be.Employee;
-import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -24,6 +20,7 @@ import javafx.collections.ObservableList;
  */
 public class VolunteerModel
 {
+
     VolunteerManager manager;
 
     private static VolunteerModel instance;
@@ -38,7 +35,6 @@ public class VolunteerModel
         }
         return instance;
     }
-    private final ArrayList<Volunteer> volunteers;
 
     /**
      * The default contructor
@@ -57,30 +53,32 @@ public class VolunteerModel
         }
 
         allVolunteers = FXCollections.observableArrayList();
-        volunteers = new ArrayList<>();
     }
 
     /**
      * Gets all volunteers in the tableview "Frivillige"
+     *
      * @return a list of all volunteers
      */
     public ObservableList<Volunteer> getAllVolunteersForTable()
     {
+        allVolunteers.clear();
         for (Volunteer volunteer : manager.getAllVolunteers())
         {
             allVolunteers.add(volunteer);
         }
-            return allVolunteers;
+        return allVolunteers;
     }
-  
-    public void addVolunteer(String fName, String email, String lName, String pNumber) {
-        Volunteer volunteer = new Volunteer(0, fName, email, lName, pNumber, "", "");
-        
-        System.out.println(fName);
-        System.out.println(email);
-        System.out.println(lName);
-        System.out.println(pNumber);
-        volunteers.add(volunteer);
+
+    public void addVolunteer(Volunteer volunteer) throws SQLException
+    {
+        allVolunteers.add(volunteer);
+        manager.addVolunteer(volunteer);
+    }
+    
+    public void deleteVolunteer(Volunteer volunteer)
+    {
+        allVolunteers.remove(volunteer);
+        manager.deleteVolunteer(volunteer);
     }
 }
-

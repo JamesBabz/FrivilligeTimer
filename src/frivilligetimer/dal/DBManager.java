@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,5 +173,90 @@ public final class DBManager
 
         }
 
+    }
+    
+    public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
+                Connection con = cm.getConnection(); 
+                {
+                    Statement st = con.createStatement();
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, volunteer.getFirstName());
+                    ps.setString(2, volunteer.getLastName());
+                    ps.setString(3, volunteer.getEmail());
+                    ps.setString(4, volunteer.getPhoneNum());
+                    
+                     ps.executeUpdate();
+                     
+                        if (ps.getGeneratedKeys().next()) {
+                volunteer.setId(ps.getGeneratedKeys().getInt(1));
+                }
+    }
+}
+    
+      
+    public void addEmployee(Employee employee) throws SQLServerException, SQLException
+    {
+        String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 1)";
+                Connection con = cm.getConnection(); 
+                {
+                    Statement st = con.createStatement();
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, employee.getFirstName());
+                    ps.setString(2, employee.getLastName());
+                    ps.setString(3, employee.getEmail());
+                    ps.setString(4, employee.getPhoneNum());
+                    
+                     ps.executeUpdate();
+                     
+                        if (ps.getGeneratedKeys().next()) {
+                employee.setId(ps.getGeneratedKeys().getInt(1));
+                }
+    }
+}  
+
+     public void deleteVolunteer(Volunteer volunteer) throws SQLException
+    {
+        String sql = "DELETE from People WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, volunteer.getId());
+          ps.executeUpdate();
+        
+        }
+    }
+
+    public void deleteGuild(Guild guild) throws SQLException {
+         String sql = "DELETE from Guilds WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, guild.getId());
+          ps.executeUpdate();
+        
+        }
+    }
+
+    public void removeEmployee(Employee employee) throws SQLServerException, SQLException {
+        String sql = "DELETE from People WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+          Statement st = con.createStatement();
+          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          
+          ps.setInt(1, employee.getId());
+          ps.executeUpdate();
+    }
+    
+    
     }
 }
