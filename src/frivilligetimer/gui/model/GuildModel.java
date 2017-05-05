@@ -11,6 +11,7 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.GuildManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -73,15 +74,34 @@ public class GuildModel
         manager.addGuild(guild);
     }
 
-    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer)
-    {
-        volunteersInGuild.add(selectedVolunteer);
-    }
-
     public void deleteGuild(Guild guild)
     {
         allGuilds.remove(guild);
         manager.removeGuild(guild);
     }
+
+    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer) throws SQLException
+    {
+        selectedGuild.addVolunteer(selectedVolunteer);
+        manager.addVolunteerToGuild(selectedGuild.getId(), selectedVolunteer.getId());
+
+    }
+
+    public void setVolunteersInGuild(Guild guild)
+    {
+        volunteersInGuild.clear();
+        volunteersInGuild.addAll(guild.getVolunteers());
+    }
+
+    public List<String> getAllVolunteersInGuilds()
+    {
+        return manager.getVolunteersInGuild();
+    }
+
+    public ObservableList<Volunteer> getVolunteersInGuild()
+    {
+        return volunteersInGuild;
+    }
+    
 
 }

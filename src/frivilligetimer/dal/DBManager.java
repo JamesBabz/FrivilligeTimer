@@ -34,6 +34,7 @@ public final class DBManager
     private final List<Employee> employees;
     private final List<Manager> managers;
     private final List<Guild> guilds;
+    private final List<String> volunteersInGuild;
 
     /**
      * The default constructor for the database manager.
@@ -45,9 +46,11 @@ public final class DBManager
         this.employees = new ArrayList<>();
         this.managers = new ArrayList<>();
         this.guilds = new ArrayList<>();
+        this.volunteersInGuild = new ArrayList<>();
 
         setAllPeople();
         setAllGuilds();
+        setAllVolunteersInGuilds();
     }
 
     /**
@@ -118,6 +121,26 @@ public final class DBManager
         }
     }
 
+    public void setAllVolunteersInGuilds() throws SQLServerException, SQLException
+    {
+        String sql = " SELECT* FROM AssignedGuilds";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int uid = rs.getInt("uid");
+                int laugid = rs.getInt("laugid");
+
+                String string = uid + "," + laugid;
+                volunteersInGuild.add(string);
+            }
+
+        }
+    }
+
     /**
      * Gets all the volunteers
      *
@@ -167,84 +190,120 @@ public final class DBManager
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, guild.getName());
             ps.executeUpdate();
-                if (ps.getGeneratedKeys().next()) {
+            if (ps.getGeneratedKeys().next())
+            {
                 guild.setId(ps.getGeneratedKeys().getInt(1));
             }
 
         }
 
     }
-    
+
     public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
     {
         String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
-                Connection con = cm.getConnection(); 
-                {
-                    Statement st = con.createStatement();
-                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, volunteer.getFirstName());
-                    ps.setString(2, volunteer.getLastName());
-                    ps.setString(3, volunteer.getEmail());
-                    ps.setString(4, volunteer.getPhoneNum());
-                    
-                     ps.executeUpdate();
-                     
-                        if (ps.getGeneratedKeys().next()) {
+        Connection con = cm.getConnection();
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, volunteer.getFirstName());
+            ps.setString(2, volunteer.getLastName());
+            ps.setString(3, volunteer.getEmail());
+            ps.setString(4, volunteer.getPhoneNum());
+
+            ps.executeUpdate();
+
+            if (ps.getGeneratedKeys().next())
+            {
                 volunteer.setId(ps.getGeneratedKeys().getInt(1));
-                }
+            }
+        }
     }
-}
-    
-      
+
     public void addEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 1)";
-                Connection con = cm.getConnection(); 
-                {
-                    Statement st = con.createStatement();
-                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, employee.getFirstName());
-                    ps.setString(2, employee.getLastName());
-                    ps.setString(3, employee.getEmail());
-                    ps.setString(4, employee.getPhoneNum());
-                    
-                     ps.executeUpdate();
-                     
-                        if (ps.getGeneratedKeys().next()) {
-                employee.setId(ps.getGeneratedKeys().getInt(1));
-                }
-    }
-}  
+        Connection con = cm.getConnection();
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, employee.getFirstName());
+            ps.setString(2, employee.getLastName());
+            ps.setString(3, employee.getEmail());
+            ps.setString(4, employee.getPhoneNum());
 
-     public void deleteVolunteer(Volunteer volunteer) throws SQLException
+            ps.executeUpdate();
+
+            if (ps.getGeneratedKeys().next())
+            {
+                employee.setId(ps.getGeneratedKeys().getInt(1));
+            }
+        }
+    }
+
+    public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "DELETE from People WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
-          Statement st = con.createStatement();
-          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-          
-          ps.setInt(1, volunteer.getId());
-          ps.executeUpdate();
-        
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, volunteer.getId());
+            ps.executeUpdate();
+
         }
     }
 
-    public void deleteGuild(Guild guild) throws SQLException {
-         String sql = "DELETE from Guilds WHERE ID = ?";
+    public void deleteGuild(Guild guild) throws SQLException
+    {
+        String sql = "DELETE from Guilds WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
-          Statement st = con.createStatement();
-          PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-          
-          ps.setInt(1, guild.getId());
-          ps.executeUpdate();
-        
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, guild.getId());
+            ps.executeUpdate();
+
         }
     }
-    
-    
-    
+
+    public void removeEmployee(Employee employee) throws SQLServerException, SQLException
+    {
+        String sql = "DELETE from People WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, employee.getId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void addVolunteerToGuild(int laugid, int uid) throws SQLException
+    {
+        String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
+
+        Connection con = cm.getConnection();
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, uid);
+            ps.setInt(2, laugid);
+
+            ps.executeUpdate();
+
+        }
+    }
+
+    public List<String> getVolunteersInGuild()
+    {
+        return volunteersInGuild;
+    }
+
 }
