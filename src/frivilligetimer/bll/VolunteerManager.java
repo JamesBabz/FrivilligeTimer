@@ -57,7 +57,7 @@ public class VolunteerManager
         }
      }
 
-    public void updateVolunteer(Volunteer volunteer) {
+    public void updateVolunteer(Volunteer volunteer) throws SQLException {
         dbManager.updateVolunteer(volunteer);
     }
 }
