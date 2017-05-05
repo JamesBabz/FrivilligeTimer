@@ -5,12 +5,13 @@
  */
 package frivilligetimer.gui.controller;
 
-import frivilligetimer.gui.model.TileModel;
+import frivilligetimer.gui.model.VolunteerCellModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 
 /**
  * FXML Controller class
@@ -27,7 +28,7 @@ public class VolunteerSingleCellController implements Initializable
     @FXML
     private Label lblPhone;
     
-    private TileModel model;
+    private VolunteerCellModel model;
 
     /**
      * Initializes the controller class.
@@ -36,17 +37,22 @@ public class VolunteerSingleCellController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
+        
     }    
 
-    public void setTileModel(TileModel model)
+    public VolunteerCellModel getModel()
+    {
+        return model;
+    }
+
+    public void setModel(VolunteerCellModel model)
     {
         this.model = model;
         lblName.textProperty().bind(model.nameProperty());
-        lblName.requestLayout();
         lblEmail.textProperty().bind(model.emailProperty());
-        lblEmail.requestLayout();
-        lblPhone.textProperty().bind(model.phoneProperty());
-        lblPhone.requestLayout();
+        lblPhone.textProperty().bind(model.PhoneNumProperty());
     }
+    
+    
     
 }

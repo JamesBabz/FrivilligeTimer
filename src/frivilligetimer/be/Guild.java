@@ -5,6 +5,7 @@
  */
 package frivilligetimer.be;
 
+import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -17,6 +18,7 @@ public class Guild
 
     private int id;
     private final StringProperty name = new SimpleStringProperty();
+    private ArrayList<Volunteer> volunteers = new ArrayList<>(); 
 
     public Guild(int id, String name)
     {
@@ -53,6 +55,16 @@ public class Guild
     public StringProperty nameProperty()
     {
         return name;
+    }
+    
+    public void addVolunteer(Volunteer volunteer)
+    {
+        volunteers.add(volunteer);
+    }
+    
+    public ArrayList<Volunteer> getVolunteers()
+    {
+        return volunteers;
     }
 
 }
