@@ -7,6 +7,7 @@ package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
+import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.GuildManager;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class GuildModel
     GuildManager manager;
 
     private final ObservableList<Guild> allGuilds;
+    private ObservableList<Volunteer> volunteersInGuild;
 
     public static GuildModel getInstance()
     {
@@ -50,6 +52,7 @@ public class GuildModel
         }
 
         allGuilds = FXCollections.observableArrayList();
+        volunteersInGuild = FXCollections.observableArrayList();
     }
 
     /**
@@ -63,12 +66,28 @@ public class GuildModel
         allGuilds.addAll(manager.getAllGuilds());
         return allGuilds;
     }
-    
+
     public void addGuild(Guild guild) throws SQLException
     {
         allGuilds.add(guild);
         manager.addGuild(guild);
     }
 
+    public void deleteGuild(Guild guild)
+    {
+        allGuilds.remove(guild);
+        manager.removeGuild(guild);
+    }
 
+    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer)
+    {
+        
+        volunteersInGuild.add(selectedVolunteer);
+        
+    }
+    
+    public ObservableList<Volunteer> getVolunteersInGuild(Guild guild)
+    {
+        return volunteersInGuild;
+    }
 }
