@@ -315,7 +315,6 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
-    }
 
     public List<String> getVolunteersInGuild()
     {
