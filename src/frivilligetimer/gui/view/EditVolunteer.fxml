@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EditVolunteerController">
+   <children>
+      <TextField fx:id="txtFirstName" layoutX="117.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" />
+      <Button layoutX="275.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleUpdate" text="Tilføj" />
+      <Button layoutX="214.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
+      <Label layoutX="128.0" layoutY="14.0" text="Ændrer frivillig">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtEmail" layoutX="117.0" layoutY="127.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtLastName" layoutX="117.0" layoutY="93.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtPhoneNummer" layoutX="117.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label layoutX="41.0" layoutY="59.0" text="Fornavn:" />
+      <Label layoutX="40.0" layoutY="97.0" text="Efternavn:" />
+      <Label layoutX="40.0" layoutY="129.0" text="Email:" />
+      <Label layoutX="39.0" layoutY="160.0" text="Telefon nr:" />
+   </children>
+</AnchorPane>
