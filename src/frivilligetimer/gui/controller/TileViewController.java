@@ -5,6 +5,7 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.VolunteerCellBoardModel;
 import frivilligetimer.gui.model.VolunteerCellModel;
@@ -17,9 +18,13 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -37,6 +42,8 @@ public class TileViewController implements Initializable
 
     private VolunteerCellBoardModel boardModel;
     private VolunteerModel volunteerModel;
+    
+    
 
     @FXML
     private MenuBar btnMenu;
@@ -48,6 +55,12 @@ public class TileViewController implements Initializable
     private ScrollPane containerForVolunteerBoard;
     @FXML
     private TilePane volunteerBoard;
+    @FXML
+    private ListView<Guild> listGuilds;
+    @FXML
+    private SplitPane splitPane;
+    @FXML
+    private AnchorPane listGuildsContainer;
 
     public TileViewController()
     {
@@ -68,6 +81,7 @@ public class TileViewController implements Initializable
         {
             addNewVolunteerCellView(new VolunteerCellModel(volunteer));
         }
+        volunteerBoard.setAlignment(Pos.CENTER);
     }
 
     @FXML
@@ -92,10 +106,12 @@ public class TileViewController implements Initializable
         Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
         imageLogo.setImage(imageMlogo);
     }
-/**
- * adds a new Tile with a volunteer
- * @param model the model for the tile
- */
+
+    /**
+     * adds a new Tile with a volunteer
+     *
+     * @param model the model for the tile
+     */
     private void addNewVolunteerCellView(VolunteerCellModel model)
     {
         try
@@ -110,16 +126,20 @@ public class TileViewController implements Initializable
 
     /**
      * creates the tile view
+     *
      * @param model the model for the tile
      * @return returns a volunteer
-     * @throws IOException 
+     * @throws IOException
      */
     private Node getVolunteerCellView(VolunteerCellModel model) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/frivilligetimer/gui/view/VolunteerSingleCell.fxml"));
         AnchorPane volunteer = loader.load();
-        VolunteerSingleCellController singleCellController = loader.getController();
-        singleCellController.setModel(model);
+        VolunteerSingleCellController controller = loader.getController();
+        controller.setModel(model);
+
+        TilePane.setMargin(volunteer, new Insets(5, 5, 5, 5));
+
         return volunteer;
     }
 
