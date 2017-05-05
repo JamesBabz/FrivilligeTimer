@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -9,7 +10,7 @@
 
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="594.0" prefWidth="1009.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.TileViewController">
    <children>
-      <MenuBar fx:id="btnMenu" prefHeight="28.0" prefWidth="1009.0">
+      <MenuBar fx:id="btnMenu" prefHeight="28.0" prefWidth="1009.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
             <Menu mnemonicParsing="false" text="Menu">
                <items>
@@ -29,16 +30,16 @@
          </menus>
       </MenuBar>
       <ImageView fx:id="imageLogo" fitHeight="41.0" fitWidth="137.0" layoutX="14.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" />
-      <SplitPane dividerPositions="0.2323733862959285" layoutY="113.0" prefHeight="481.0" prefWidth="1009.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.25" layoutY="113.0" prefHeight="481.0" prefWidth="1009.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="113.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane fx:id="listGuildsContainer" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
                <children>
-                  <ListView prefHeight="479.0" prefWidth="231.0" />
+                  <ListView fx:id="listGuilds" maxWidth="249.0" prefHeight="479.0" prefWidth="249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
             <ScrollPane fx:id="containerForVolunteerBoard" prefHeight="479.0" prefWidth="770.0">
                <content>
-                  <TilePane fx:id="volunteerBoard" prefHeight="200.0" prefWidth="200.0" />
+                  <TilePane fx:id="volunteerBoard" prefHeight="133.0" prefWidth="275.0" />
                </content>
             </ScrollPane>
         </items>
