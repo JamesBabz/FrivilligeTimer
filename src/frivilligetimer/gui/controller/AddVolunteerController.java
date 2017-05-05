@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 public class AddVolunteerController implements Initializable
 {
 
-    private VolunteerModel model;
+   
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -39,7 +39,8 @@ public class AddVolunteerController implements Initializable
     @FXML
     private TextField txtPhoneNummer;
 
-    VolunteerManager manager;
+     private VolunteerManager manager;
+     private VolunteerModel model;
 
     /**
      * Initializes the controller class.
