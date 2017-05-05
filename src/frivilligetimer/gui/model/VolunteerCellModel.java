@@ -8,43 +8,43 @@ package frivilligetimer.gui.model;
 import frivilligetimer.be.Volunteer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
  * @author James
  */
-public class TileModel
+public class VolunteerCellModel
 {
 
     private final StringProperty name = new SimpleStringProperty();
     private final StringProperty email = new SimpleStringProperty();
-    private final StringProperty phone = new SimpleStringProperty();
+    private final StringProperty phoneNum = new SimpleStringProperty();
+    
+    private final Volunteer volunteer;
 
-    private Volunteer volunteer;
-
-    public TileModel(Volunteer volunteer){
-            this.volunteer = volunteer;
-            name.set(volunteer.getFullName());
-            email.set(volunteer.getEmail());
-            phone.set(volunteer.getPhoneNum());
-    }
-    public String getPhone()
+    public VolunteerCellModel(Volunteer volunteer)
     {
-        return phone.get();
+        this.volunteer = volunteer;
+        name.set(volunteer.getFullName());
+        email.set(volunteer.getEmail());
+        phoneNum.set(volunteer.getPhoneNum());
     }
-
-    public void setPhone(String value)
+    
+    public String getPhoneNum()
     {
-        phone.set(value);
+        return phoneNum.get();
     }
 
-    public StringProperty phoneProperty()
+    public void setPhoneNum(String value)
     {
-        return phone;
+        phoneNum.set(value);
     }
 
+    public StringProperty PhoneNumProperty()
+    {
+        return phoneNum;
+    }
+    
     public String getEmail()
     {
         return email.get();
@@ -59,7 +59,7 @@ public class TileModel
     {
         return email;
     }
-
+    
     public String getName()
     {
         return name.get();
@@ -74,5 +74,7 @@ public class TileModel
     {
         return name;
     }
+
+    
     
 }

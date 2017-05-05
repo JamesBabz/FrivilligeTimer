@@ -42,12 +42,24 @@ public class GuildManager
         dbManager.addGuild(guild);
     }
 
-    public void removeGuild(Guild guild) {
-        try {
+    public void removeGuild(Guild guild)
+    {
+        try
+        {
             dbManager.deleteGuild(guild);
-        } catch (SQLException ex) {
+        } catch (SQLException ex)
+        {
             Logger.getLogger(GuildManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public void addVolunteerToGuild(int laugid, int uid) throws SQLException
+    {
+        dbManager.addVolunteerToGuild(laugid, uid);
+    }
+
+    public List<String> getVolunteersInGuild()
+    {
+        return dbManager.getVolunteersInGuild();
+    }
 }
