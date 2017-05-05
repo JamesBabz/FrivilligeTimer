@@ -248,4 +248,32 @@ public class AdminViewController implements Initializable
         }
     }
 
+    @FXML
+    private void editVolunteer()
+    {
+        
+        Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.setSelectedVolunteer(selectedItem);
+        
+        
+        
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+      
+      
+        
+        
+        
+        
+    }
+    
+    
 }

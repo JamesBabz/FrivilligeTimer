@@ -259,4 +259,24 @@ public final class DBManager
     
     
     }
-}
+    
+    public void updateVolunteer(Volunteer volunteer) throws SQLException
+    {
+          String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+              ps.setString(1, volunteer.getFirstName());
+              ps.setString(2, volunteer.getLastName());
+              ps.setString(3, volunteer.getPhoneNum());
+              ps.setString(4, volunteer.getEmail());
+              ps.setInt(5, volunteer.getId());
+            ps.executeUpdate();
+        }
+    }
+    }
+        
+    
+
+
