@@ -28,6 +28,7 @@ public class GuildModel
     GuildManager manager;
 
     private final ObservableList<Guild> allGuilds;
+    private final ObservableList<String> guildNames;
     private ObservableList<Volunteer> volunteersInGuild;
 
     public static GuildModel getInstance()
@@ -44,15 +45,18 @@ public class GuildModel
         try
         {
             manager = new GuildManager();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         allGuilds = FXCollections.observableArrayList();
+        guildNames = FXCollections.observableArrayList();
         volunteersInGuild = FXCollections.observableArrayList();
     }
 
@@ -102,6 +106,24 @@ public class GuildModel
     {
         return volunteersInGuild;
     }
-    
+
+    /**
+     * Gets all names of the guilds
+     * @param includeAllField includes an All Guilds field for lists
+     * @return Guild Names
+     */
+    public ObservableList<String> getAllGuildNames(boolean includeAllField)
+    {
+        guildNames.clear();
+        if (includeAllField)
+        {
+            guildNames.add("Alle Laug");
+        }
+        for (Guild guild : manager.getAllGuilds())
+        {
+            guildNames.add(guild.getName());
+        }
+        return guildNames;
+    }
 
 }
