@@ -56,4 +56,8 @@ public class VolunteerManager
             Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
      }
+
+    public void updateVolunteer(Volunteer volunteer) throws SQLException {
+        dbManager.updateVolunteer(volunteer);
+    }
 }

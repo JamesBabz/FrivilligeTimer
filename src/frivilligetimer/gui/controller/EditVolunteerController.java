@@ -6,10 +6,8 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.bll.GuildManager;
 import frivilligetimer.bll.VolunteerManager;
 import frivilligetimer.gui.model.VolunteerModel;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -19,17 +17,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Jacob Enemark
  */
-public class AddVolunteerController implements Initializable
-{
+public class EditVolunteerController implements Initializable {
 
-   
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -41,48 +36,49 @@ public class AddVolunteerController implements Initializable
 
      private VolunteerManager manager;
      private VolunteerModel model;
-
+     private Volunteer volunteer;
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
-        // TODO
+    public void initialize(URL url, ResourceBundle rb) {
         model = VolunteerModel.getInstance();
+        volunteer = model.getSelectedVolunteer();
+        
+        model.getSelectedVolunteer();
+        
+        
+       getCurrentInfo();
+    }    
+
+    private void getCurrentInfo()
+    {
+        txtFirstName.setText(volunteer.getFirstName());
+        txtLastName.setText(volunteer.getLastName());
+        txtEmail.setText(volunteer.getEmail());
+        txtPhoneNummer.setText(volunteer.getPhoneNum());
+    }
+    
+    @FXML
+    private void handleUpdate() {
+        volunteer.setFirstName(txtFirstName.getText());
+        volunteer.setLastName(txtLastName.getText());
+        volunteer.setEmail(txtEmail.getText());
+        volunteer.setPhoneNum(txtPhoneNummer.getText());
         try
         {
-            manager = new VolunteerManager();
-        } catch (IOException ex)
+            model.editVolunteer(volunteer);
+        }
+        catch (SQLException ex)
         {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @FXML
-    private void addVolunteer()
-    {
-        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText());
-
-        try
-        {
-            model.addVolunteer(volunteer);
-            cancel();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    private void cancel(ActionEvent event) {
     }
 
-    @FXML
-    private void cancel()
-    {
-        Stage stage = (Stage) txtFirstName.getScene().getWindow();
-        stage.close();
-    }
-
+    
+    
 }

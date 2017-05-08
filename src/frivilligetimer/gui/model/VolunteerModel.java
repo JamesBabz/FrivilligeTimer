@@ -21,6 +21,8 @@ import javafx.collections.ObservableList;
 public class VolunteerModel
 {
 
+    public Volunteer selectedVolunteer;
+
     VolunteerManager manager;
 
     private static VolunteerModel instance;
@@ -81,4 +83,21 @@ public class VolunteerModel
         allVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
+    
+    public Volunteer getSelectedVolunteer() {
+        return selectedVolunteer;
+    }
+
+    public void setSelectedVolunteer(Volunteer selectedVolunteer) {
+        this.selectedVolunteer = selectedVolunteer;
+    }
+    
+    public void editVolunteer(Volunteer volunteer) throws SQLException
+    {
+       manager.updateVolunteer(selectedVolunteer);
+    }
+
+   
+
+
 }

@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="121.0" prefWidth="260.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="frivilligetimer.gui.controller.VolunteerSingleCellController">
+<AnchorPane prefHeight="121.0" prefWidth="260.0" style="-: ; : ;" styleClass="volunteerCell" stylesheets="@../css/TileView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.VolunteerSingleCellController">
    <children>
-      <SplitPane dividerPositions="0.46511627906976744" layoutX="39.0" layoutY="34.0" prefHeight="97.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <GridPane layoutX="18.0" layoutY="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label fx:id="lblName" prefHeight="17.0" prefWidth="125.0" text="NAME" />
-                        <Label fx:id="lblEmail" text="EMAIL" GridPane.rowIndex="1" />
-                        <Label fx:id="lblPhone" text="PHONE" GridPane.rowIndex="2" />
-                     </children>
-                  </GridPane>
-               </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
+      <GridPane style="-fx-padding: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="lblName" prefHeight="17.0" prefWidth="125.0" text="NAME" GridPane.columnIndex="1" />
+            <Label fx:id="lblEmail" text="EMAIL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="lblPhone" text="PHONE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ImageView fitHeight="85.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true" GridPane.rowSpan="3" />
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

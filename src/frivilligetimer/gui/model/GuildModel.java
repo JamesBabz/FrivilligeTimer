@@ -11,6 +11,7 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.GuildManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -27,6 +28,7 @@ public class GuildModel
     GuildManager manager;
 
     private final ObservableList<Guild> allGuilds;
+    private final ObservableList<String> guildNames;
     private ObservableList<Volunteer> volunteersInGuild;
 
     public static GuildModel getInstance()
@@ -43,15 +45,18 @@ public class GuildModel
         try
         {
             manager = new GuildManager();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         allGuilds = FXCollections.observableArrayList();
+        guildNames = FXCollections.observableArrayList();
         volunteersInGuild = FXCollections.observableArrayList();
     }
 
@@ -79,15 +84,46 @@ public class GuildModel
         manager.removeGuild(guild);
     }
 
-    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer)
+    public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer) throws SQLException
     {
-        
-        volunteersInGuild.add(selectedVolunteer);
-        
+        selectedGuild.addVolunteer(selectedVolunteer);
+        manager.addVolunteerToGuild(selectedGuild.getId(), selectedVolunteer.getId());
+
     }
-    
-    public ObservableList<Volunteer> getVolunteersInGuild(Guild guild)
+
+    public void setVolunteersInGuild(Guild guild)
+    {
+        volunteersInGuild.clear();
+        volunteersInGuild.addAll(guild.getVolunteers());
+    }
+
+    public List<String> getAllVolunteersInGuilds()
+    {
+        return manager.getVolunteersInGuild();
+    }
+
+    public ObservableList<Volunteer> getVolunteersInGuild()
     {
         return volunteersInGuild;
     }
+
+    /**
+     * Gets all names of the guilds
+     * @param includeAllField includes an All Guilds field for lists
+     * @return Guild Names
+     */
+    public ObservableList<String> getAllGuildNames(boolean includeAllField)
+    {
+        guildNames.clear();
+        if (includeAllField)
+        {
+            guildNames.add("Alle Laug");
+        }
+        for (Guild guild : manager.getAllGuilds())
+        {
+            guildNames.add(guild.getName());
+        }
+        return guildNames;
+    }
+
 }
