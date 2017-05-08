@@ -92,7 +92,7 @@ public class VolunteerModel
         this.selectedVolunteer = selectedVolunteer;
     }
     
-    public void editVolunteer(Volunteer volunteer)
+    public void editVolunteer(Volunteer volunteer) throws SQLException
     {
        manager.updateVolunteer(selectedVolunteer);
     }
