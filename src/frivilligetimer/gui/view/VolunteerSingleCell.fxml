@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="pane" onMouseClicked="#handleOpenHours" prefHeight="179.0" prefWidth="478.0" style="-: ; : ;" styleClass="volunteerCell" stylesheets="@../css/TileView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.VolunteerSingleCellController">
+<AnchorPane fx:id="pane" onMouseClicked="#handleOpenHours" prefHeight="179.0" prefWidth="478.0" styleClass="volunteerCell" stylesheets="@../css/TileView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.VolunteerSingleCellController">
    <children>
       <GridPane style="-fx-padding: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -34,7 +34,7 @@
                <font>
                   <Font size="36.0" />
                </font></Label>
-            <ImageView fitHeight="85.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true" GridPane.rowSpan="3" />
+            <ImageView fitHeight="159.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true" GridPane.rowSpan="3" />
          </children>
       </GridPane>
    </children>
