@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -336,13 +335,30 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
-
-    public List<String> getVolunteersInGuild()
+        public List<String> getVolunteersInGuild()
     {
         return volunteersInGuild;
     }
     
-        /**
+  
+        public void updateEmployee(Employee employee) throws SQLException
+    {
+          String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+              ps.setString(1, employee.getFirstName());
+              ps.setString(2, employee.getLastName());
+              ps.setString(3, employee.getPhoneNum());
+              ps.setString(4, employee.getEmail());
+              ps.setInt(5, employee.getId());
+            ps.executeUpdate();
+        }
+        
+    }
+  
+     /**
      * Updates the database with a student image represented by binary data.
      *
      * @param person
@@ -368,5 +384,21 @@ public final class DBManager
 
         }
     }
+  
+        
+        public void updateGuild(Guild guild) throws SQLException
+    {
+          String sql = "UPDATE Guilds SET Name = ?";
 
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+              ps.setString(1, guild.getName());
+
+            ps.executeUpdate();
+        }
+        
+    }
 }
+  
+

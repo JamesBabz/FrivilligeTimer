@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+
    <children>
       <TableView fx:id="tableVolunteer" layoutX="189.0" layoutY="82.0" prefHeight="456.0" prefWidth="231.0">
         <columns>
@@ -37,6 +38,7 @@
             <ContextMenu fx:id="contextEmployee">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet Person" />
+                  <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændre medarbejder" />
               </items>
             </ContextMenu>
          </contextMenu>
@@ -49,6 +51,7 @@
             <ContextMenu fx:id="contextGuild">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
+                  <MenuItem mnemonicParsing="false" onAction="#editGuild" text="Ændre laug" />
               </items>
             </ContextMenu>
          </contextMenu>
