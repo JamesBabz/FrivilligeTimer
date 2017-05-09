@@ -172,7 +172,7 @@ public class TileViewController implements Initializable
      */
     private void addVolunteerCellForGuild()
     {
-        for (Guild guild : guildModel.getAllGuildForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable())
         {
             if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
             {
