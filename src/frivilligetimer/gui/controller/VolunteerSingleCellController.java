@@ -22,13 +22,13 @@ public class VolunteerSingleCellController implements Initializable
 {
 
     @FXML
-    private Label lblName;
-    @FXML
-    private Label lblEmail;
-    @FXML
     private Label lblPhone;
     
     private VolunteerCellModel model;
+    @FXML
+    private Label lblFName;
+    @FXML
+    private Label lblLName;
 
     /**
      * Initializes the controller class.
@@ -48,8 +48,8 @@ public class VolunteerSingleCellController implements Initializable
     public void setModel(VolunteerCellModel model)
     {
         this.model = model;
-        lblName.textProperty().bind(model.nameProperty());
-        lblEmail.textProperty().bind(model.emailProperty());
+        lblFName.textProperty().bind(model.fNameProperty());
+        lblLName.textProperty().bind(model.lNameProperty());
         lblPhone.textProperty().bind(model.PhoneNumProperty());
     }
     
