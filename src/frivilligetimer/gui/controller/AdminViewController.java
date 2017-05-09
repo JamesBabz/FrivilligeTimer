@@ -86,8 +86,7 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
 
-    @FXML
-    private Button btnTestGuild;
+
     @FXML
     private Button btnImage;
 
@@ -141,7 +140,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -150,7 +149,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -159,7 +158,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "gnærongietrh");
+        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
 
     }
 
@@ -264,11 +263,6 @@ public class AdminViewController implements Initializable
         tableGuild.getSelectionModel().select(selectedGuild);
     }
 
-    @FXML
-    private void handleTestBtn(ActionEvent event)
-    {
-
-    }
 
     @FXML
     private void editVolunteer()

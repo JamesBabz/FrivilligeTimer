@@ -76,7 +76,6 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="btnTestGuild" layoutX="79.0" layoutY="37.0" mnemonicParsing="false" onAction="#handleTestBtn" prefHeight="25.0" prefWidth="126.0" text="Test knap" />
       <Button focusTraversable="false" layoutX="21.0" layoutY="82.0" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis Alle Personer" />
       <Button fx:id="btnImage" layoutX="285.0" layoutY="45.0" mnemonicParsing="false" onAction="#updateImage" text="Button" />
    </children>
