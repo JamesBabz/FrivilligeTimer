@@ -6,7 +6,6 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.bll.GuildManager;
 import frivilligetimer.bll.VolunteerManager;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -65,7 +63,7 @@ public class AddVolunteerController implements Initializable
     @FXML
     private void addVolunteer()
     {
-        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText());
+        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null);
 
         try
         {

@@ -5,6 +5,7 @@
  */
 package frivilligetimer.be;
 
+import java.awt.image.BufferedImage;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -22,6 +23,8 @@ public abstract class Person
 
     private String phoneNum;
     private String email;
+    private BufferedImage image;
+
 
     /**
      * The contructor
@@ -32,7 +35,7 @@ public abstract class Person
      * @param phoneNum Gets the phonenumber of the person
      * @param email Gets the emailadress of the person
      */
-    public Person(int id, String firstName, String lastName, String phoneNum, String email)
+    public Person(int id, String firstName, String lastName, String phoneNum, String email, BufferedImage image)
     {
         this.id = id;
         this.firstName.set(firstName);
@@ -40,6 +43,7 @@ public abstract class Person
         this.phoneNum = phoneNum;
         this.email = email;
         this.fullName.setValue(firstName + " " + lastName);
+        this.image = image;
     }
 
     public int getId()
@@ -115,6 +119,16 @@ public abstract class Person
     public StringProperty fullNameProperty()
     {
         return fullName;
+    }
+    
+    public BufferedImage getImage()
+    {
+        return image;
+    }
+
+    public void setImage(BufferedImage image)
+    {
+        this.image = image;
     }
 
 }
