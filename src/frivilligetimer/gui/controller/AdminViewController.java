@@ -5,8 +5,8 @@
  */
 package frivilligetimer.gui.controller;
 
-import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,15 +31,12 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -333,16 +329,33 @@ public class AdminViewController implements Initializable
         {
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-      
-      
-        
-        
-        
-        
     }
+        
     
     
+        @FXML
+        private void editEmployee()
+        {
+        
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.setSelectedEmployee(selectedItem);
+        
+        
+        
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+                     
+    }
+       
+
 }
 
 
