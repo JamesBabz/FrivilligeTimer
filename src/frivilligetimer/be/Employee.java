@@ -5,6 +5,8 @@
  */
 package frivilligetimer.be;
 
+import java.awt.image.BufferedImage;
+
 /**
  * The Buisness entity of the employee. This class extends Person
  *
@@ -21,15 +23,16 @@ public class Employee extends Person
      * @param lastName Gets the lastname of the employee
      * @param phoneNum Gets the phonenumber of the employee
      * @param email Gets the emailadress of the employee
+     * @param image
      */
-    public Employee(int id, String firstName, String lastName, String phoneNum, String email)
+    public Employee(int id, String firstName, String lastName, String phoneNum, String email, BufferedImage image)
     {
-        super(id, firstName, lastName, phoneNum, email);
+        super(id, firstName, lastName, phoneNum, email, image);
    
     }
 
-    public Employee(String firstName, String lastName, String phoneNum, String email) {
-        super(0, firstName, lastName, phoneNum, email);
+    public Employee(String firstName, String lastName, String phoneNum, String email, BufferedImage image) {
+        super(0, firstName, lastName, phoneNum, email, image);
     }
 
    

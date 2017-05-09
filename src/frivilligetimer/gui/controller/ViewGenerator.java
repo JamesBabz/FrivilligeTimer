@@ -1,6 +1,8 @@
 package frivilligetimer.gui.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -40,10 +42,18 @@ public class ViewGenerator
      * @param title
      * @throws IOException 
      */
-    public void generateView(String viewPath, boolean closeCurrent, StageStyle style, boolean isModal, String title) throws IOException
+    public void generateView(String viewPath, boolean closeCurrent, StageStyle style, boolean isModal, String title)
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        Parent root = loader.load();
+        Parent root = null;
+        try
+        {
+            root = loader.load();
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(ViewGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (closeCurrent)
         {
             primaryStage.close();
