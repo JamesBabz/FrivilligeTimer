@@ -8,6 +8,7 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
@@ -87,6 +88,8 @@ public class AdminViewController implements Initializable
 
     @FXML
     private Button btnTestGuild;
+    @FXML
+    private Button btnImage;
 
     /**
      * Initializes the controller class.
@@ -279,6 +282,22 @@ public class AdminViewController implements Initializable
 
         vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
 
+    }
+
+    @FXML
+    private void updateImage(ActionEvent event)
+    {
+//        try
+//        {
+//            ImageManager iManager = new ImageManager();
+//
+//            iManager.updateImage(tableVolunteer.selectionModelProperty().getValue().getSelectedItem(), "test.jpg");
+//        }
+//        catch (SQLException | IOException ex)
+//        {
+//            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
     }
 
 }
