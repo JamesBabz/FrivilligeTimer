@@ -11,7 +11,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -29,6 +31,8 @@ public class VolunteerSingleCellController implements Initializable
     private Label lblFName;
     @FXML
     private Label lblLName;
+    @FXML
+    private AnchorPane pane;
 
     /**
      * Initializes the controller class.
@@ -51,6 +55,14 @@ public class VolunteerSingleCellController implements Initializable
         lblFName.textProperty().bind(model.fNameProperty());
         lblLName.textProperty().bind(model.lNameProperty());
         lblPhone.textProperty().bind(model.PhoneNumProperty());
+    }
+
+    @FXML
+    private void handleOpenHours()
+    {
+        System.out.println("fsehfshjdsfkhusfdhuisdfhusfihusf");
+        ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
     }
     
     

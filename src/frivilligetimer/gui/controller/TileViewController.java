@@ -95,14 +95,9 @@ public class TileViewController implements Initializable
     private void logOn()
     {
         ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
-        try
-        {
-            viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin");
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        viewGen.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin");
+
     }
 
     /**
@@ -163,8 +158,7 @@ public class TileViewController implements Initializable
             addVolunteerCellForGuild();
         }
     }
-    
-    
+
     /**
      * Gets the selected guild and creates tiles for each volunteer in it
      */
