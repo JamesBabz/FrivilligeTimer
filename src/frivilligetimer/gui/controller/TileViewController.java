@@ -77,10 +77,8 @@ public class TileViewController implements Initializable
     {
         setLogo();
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
-//        boardModel.getAllVolunteers();
         addAllVolunteerCells();
 
-        volunteerBoard.setAlignment(Pos.CENTER);
         listGuilds.setItems(guildModel.getAllGuildNames(true));
 
     }

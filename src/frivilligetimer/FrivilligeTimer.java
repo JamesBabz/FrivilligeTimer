@@ -28,7 +28,7 @@ public class FrivilligeTimer extends Application
         
         stage.setTitle("Tilepane");
         stage.getIcons().add(new Image("frivilligetimer/gui/image/windowLogo.png"));
-        
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
