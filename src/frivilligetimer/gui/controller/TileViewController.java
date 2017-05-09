@@ -7,7 +7,7 @@ package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.gui.model.VolunteerCellBoardModel;
+import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -40,10 +41,9 @@ import javafx.stage.StageStyle;
 public class TileViewController implements Initializable
 {
 
-    private VolunteerCellBoardModel boardModel;
+//    private VolunteerCellBoardModel boardModel;
     private VolunteerModel volunteerModel;
-    
-    
+    private GuildModel guildModel;
 
     @FXML
     private MenuBar btnMenu;
@@ -56,7 +56,7 @@ public class TileViewController implements Initializable
     @FXML
     private TilePane volunteerBoard;
     @FXML
-    private ListView<Guild> listGuilds;
+    private ListView<String> listGuilds;
     @FXML
     private SplitPane splitPane;
     @FXML
@@ -64,8 +64,9 @@ public class TileViewController implements Initializable
 
     public TileViewController()
     {
-        boardModel = VolunteerCellBoardModel.getInstance();
+//        boardModel = VolunteerCellBoardModel.getInstance();
         volunteerModel = VolunteerModel.getInstance();
+        guildModel = GuildModel.getInstance();
     }
 
     /**
@@ -76,12 +77,20 @@ public class TileViewController implements Initializable
     {
         setLogo();
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
-        boardModel.getAllVolunteers();
+//        boardModel.getAllVolunteers();
+        addAllVolunteerCells();
+
+        volunteerBoard.setAlignment(Pos.CENTER);
+        listGuilds.setItems(guildModel.getAllGuildNames(true));
+
+    }
+
+    private void addAllVolunteerCells()
+    {
         for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
         {
             addNewVolunteerCellView(new VolunteerCellModel(volunteer));
         }
-        volunteerBoard.setAlignment(Pos.CENTER);
     }
 
     @FXML
@@ -141,6 +150,39 @@ public class TileViewController implements Initializable
         TilePane.setMargin(volunteer, new Insets(5, 5, 5, 5));
 
         return volunteer;
+    }
+
+    @FXML
+    private void updateVolunteerCells()
+    {
+        volunteerBoard.getChildren().remove(0, volunteerBoard.getChildren().size());
+        if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Laug"))
+        {
+            addAllVolunteerCells();
+        }
+        else
+        {
+            addVolunteerCellForGuild();
+        }
+    }
+    
+    
+    /**
+     * Gets the selected guild and creates tiles for each volunteer in it
+     */
+    private void addVolunteerCellForGuild()
+    {
+        for (Guild guild : guildModel.getAllGuildForTable())
+        {
+            if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
+            {
+                guildModel.setVolunteersInGuild(guild);
+            }
+        }
+        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+        {
+            addNewVolunteerCellView(new VolunteerCellModel(volunteer));
+        }
     }
 
 }
