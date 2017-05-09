@@ -77,10 +77,8 @@ public class TileViewController implements Initializable
     {
         setLogo();
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
-//        boardModel.getAllVolunteers();
         addAllVolunteerCells();
 
-        volunteerBoard.setAlignment(Pos.CENTER);
         listGuilds.setItems(guildModel.getAllGuildNames(true));
 
     }
@@ -172,7 +170,7 @@ public class TileViewController implements Initializable
      */
     private void addVolunteerCellForGuild()
     {
-        for (Guild guild : guildModel.getAllGuildForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable())
         {
             if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
             {
