@@ -354,6 +354,30 @@ public class AdminViewController implements Initializable
       
                      
     }
+        
+        
+        
+        @FXML
+        private void editGuild()
+        {
+        
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.setSelectedGuild(selectedItem);
+        
+        
+        
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        try
+        {
+            vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+                     
+    }
        
 
 }

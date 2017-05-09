@@ -50,6 +50,7 @@
             <ContextMenu fx:id="contextGuild">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
+                  <MenuItem mnemonicParsing="false" onAction="#editGuild" text="Ændre laug" />
               </items>
             </ContextMenu>
          </contextMenu>

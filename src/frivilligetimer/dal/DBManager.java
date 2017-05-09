@@ -335,6 +335,20 @@ public final class DBManager
         }
         
     }
+        
+        public void updateGuild(Guild guild) throws SQLException
+    {
+          String sql = "UPDATE Guilds SET Name = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+              ps.setString(1, guild.getName());
+
+            ps.executeUpdate();
+        }
+        
+    }
 }
   
 
