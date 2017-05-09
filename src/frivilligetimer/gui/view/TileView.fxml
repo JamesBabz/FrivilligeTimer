@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="594.0" prefWidth="1009.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.TileViewController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="1394.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.TileViewController">
    <children>
       <MenuBar fx:id="btnMenu" prefHeight="28.0" prefWidth="1009.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
@@ -34,12 +34,12 @@
         <items>
           <AnchorPane fx:id="listGuildsContainer" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
                <children>
-                  <ListView fx:id="listGuilds" maxWidth="249.0" prefHeight="479.0" prefWidth="249.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ListView id="guildList" fx:id="listGuilds" maxWidth="249.0" onMouseClicked="#updateVolunteerCells" prefHeight="479.0" prefWidth="249.0" stylesheets="@../css/TileView.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-            <ScrollPane fx:id="containerForVolunteerBoard" prefHeight="479.0" prefWidth="770.0">
+            <ScrollPane id="volunteerContainer" fx:id="containerForVolunteerBoard" hbarPolicy="NEVER" prefHeight="479.0" prefWidth="770.0" stylesheets="@../css/TileView.css" vbarPolicy="ALWAYS">
                <content>
-                  <TilePane fx:id="volunteerBoard" prefHeight="133.0" prefWidth="275.0" />
+                  <TilePane fx:id="volunteerBoard" alignment="CENTER" prefHeight="133.0" prefWidth="303.0" />
                </content>
             </ScrollPane>
         </items>

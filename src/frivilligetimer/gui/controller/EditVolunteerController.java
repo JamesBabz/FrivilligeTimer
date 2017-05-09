@@ -9,7 +9,10 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,7 +65,14 @@ public class EditVolunteerController implements Initializable {
         volunteer.setLastName(txtLastName.getText());
         volunteer.setEmail(txtEmail.getText());
         volunteer.setPhoneNum(txtPhoneNummer.getText());
-        model.editVolunteer(volunteer);
+        try
+        {
+            model.editVolunteer(volunteer);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @FXML

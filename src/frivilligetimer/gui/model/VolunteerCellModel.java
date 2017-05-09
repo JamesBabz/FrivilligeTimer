@@ -16,8 +16,8 @@ import javafx.beans.property.StringProperty;
 public class VolunteerCellModel
 {
 
-    private final StringProperty name = new SimpleStringProperty();
-    private final StringProperty email = new SimpleStringProperty();
+    private final StringProperty fName = new SimpleStringProperty();
+    private final StringProperty lName = new SimpleStringProperty();
     private final StringProperty phoneNum = new SimpleStringProperty();
     
     private final Volunteer volunteer;
@@ -25,8 +25,8 @@ public class VolunteerCellModel
     public VolunteerCellModel(Volunteer volunteer)
     {
         this.volunteer = volunteer;
-        name.set(volunteer.getFullName());
-        email.set(volunteer.getEmail());
+        fName.set(volunteer.getFirstName());
+        lName.set(volunteer.getLastName());
         phoneNum.set(volunteer.getPhoneNum());
     }
     
@@ -45,34 +45,34 @@ public class VolunteerCellModel
         return phoneNum;
     }
     
-    public String getEmail()
+    public String getLName()
     {
-        return email.get();
+        return lName.get();
     }
 
-    public void setEmail(String value)
+    public void setLName(String value)
     {
-        email.set(value);
+        lName.set(value);
     }
 
-    public StringProperty emailProperty()
+    public StringProperty lNameProperty()
     {
-        return email;
+        return lName;
     }
     
-    public String getName()
+    public String getFName()
     {
-        return name.get();
+        return fName.get();
     }
 
-    public void setName(String value)
+    public void setFName(String value)
     {
-        name.set(value);
+        fName.set(value);
     }
 
-    public StringProperty nameProperty()
+    public StringProperty fNameProperty()
     {
-        return name;
+        return fName;
     }
 
     
