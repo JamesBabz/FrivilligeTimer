@@ -75,6 +75,12 @@ public class VolunteerCellModel
         return fName;
     }
 
+    public Volunteer getVolunteer()
+    {
+        return volunteer;
+    }
+
+    
     
     
 }

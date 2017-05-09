@@ -22,6 +22,7 @@ public class VolunteerModel
 {
 
     public Volunteer selectedVolunteer;
+    public Volunteer tileVolunteer;
 
     VolunteerManager manager;
 
@@ -95,6 +96,16 @@ public class VolunteerModel
     public void editVolunteer(Volunteer volunteer) throws SQLException
     {
        manager.updateVolunteer(selectedVolunteer);
+    }
+
+    public Volunteer getTileVolunteer()
+    {
+        return tileVolunteer;
+    }
+
+    public void setTileVolunteer(Volunteer tileVolunteer)
+    {
+        this.tileVolunteer = tileVolunteer;
     }
 
    
