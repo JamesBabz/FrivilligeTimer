@@ -5,6 +5,8 @@
  */
 package frivilligetimer.be;
 
+import java.awt.image.BufferedImage;
+
 /**
  * The Buisness entity of the manager. This class extends Person
  *
@@ -15,9 +17,9 @@ public class Manager extends Person
 
     private String password;
 
-    public Manager(int id, String firstName, String lastName, String phoneNum, String email, String password)
+    public Manager(int id, String firstName, String lastName, String phoneNum, String email, String password, BufferedImage image)
     {
-        super(id, firstName, lastName, phoneNum, email);
+        super(id, firstName, lastName, phoneNum, email, image);
         this.password = password;
     }
 

@@ -47,7 +47,7 @@ public class AddEmployeeController implements Initializable {
     @FXML
     private void addEmployee()
     {
-        Employee employee = new Employee(txtFirstName.getText(), txtLastName.getText(),  txtEmail.getText(), txtPhoneNummer.getText());
+        Employee employee = new Employee(txtFirstName.getText(), txtLastName.getText(),  txtEmail.getText(), txtPhoneNummer.getText(), null);
         try {
             model.addEmployee(employee);
         } catch (SQLException ex) {
