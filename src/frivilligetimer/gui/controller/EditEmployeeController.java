@@ -17,13 +17,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Bruger
  */
-public class EditEmployeeController implements Initializable {
+public class EditEmployeeController implements Initializable
+{
 
     @FXML
     private TextField txtFirstName;
@@ -33,7 +35,7 @@ public class EditEmployeeController implements Initializable {
     private TextField txtEmail;
     @FXML
     private TextField txtPhoneNumber;
-    
+
     private StaffManager manager;
     private StaffModel model;
     private Employee employee;
@@ -42,17 +44,16 @@ public class EditEmployeeController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) 
+    public void initialize(URL url, ResourceBundle rb)
     {
         model = StaffModel.getInstance();
         employee = model.getSelectedEmployee();
-        
+
         model.getSelectedEmployee();
-        
-        
-       getCurrentInfo();
-    }    
-    
+
+        getCurrentInfo();
+    }
+
     private void getCurrentInfo()
     {
         txtFirstName.setText(employee.getFirstName());
@@ -60,9 +61,10 @@ public class EditEmployeeController implements Initializable {
         txtEmail.setText(employee.getEmail());
         txtPhoneNumber.setText(employee.getPhoneNum());
     }
-    
-        @FXML
-    private void handleUpdate() {
+
+    @FXML
+    private void handleUpdate()
+    {
         employee.setFirstName(txtFirstName.getText());
         employee.setLastName(txtLastName.getText());
         employee.setEmail(txtEmail.getText());
@@ -70,14 +72,18 @@ public class EditEmployeeController implements Initializable {
         try
         {
             model.editEmployee(employee);
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        cancel();
     }
-    
+
     @FXML
-    private void cancel(ActionEvent event) {
+    private void cancel()
+    {
+        Stage stage = (Stage) txtFirstName.getScene().getWindow();
+        stage.close();
     }
 }

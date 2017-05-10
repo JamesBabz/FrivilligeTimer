@@ -17,13 +17,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Jacob Enemark
  */
-public class EditVolunteerController implements Initializable {
+public class EditVolunteerController implements Initializable
+{
 
     @FXML
     private TextField txtFirstName;
@@ -34,22 +36,23 @@ public class EditVolunteerController implements Initializable {
     @FXML
     private TextField txtPhoneNummer;
 
-     private VolunteerManager manager;
-     private VolunteerModel model;
-     private Volunteer volunteer;
+    private VolunteerManager manager;
+    private VolunteerModel model;
+    private Volunteer volunteer;
+
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         model = VolunteerModel.getInstance();
         volunteer = model.getSelectedVolunteer();
-        
+
         model.getSelectedVolunteer();
-        
-        
-       getCurrentInfo();
-    }    
+
+        getCurrentInfo();
+    }
 
     private void getCurrentInfo()
     {
@@ -58,9 +61,10 @@ public class EditVolunteerController implements Initializable {
         txtEmail.setText(volunteer.getEmail());
         txtPhoneNummer.setText(volunteer.getPhoneNum());
     }
-    
+
     @FXML
-    private void handleUpdate() {
+    private void handleUpdate()
+    {
         volunteer.setFirstName(txtFirstName.getText());
         volunteer.setLastName(txtLastName.getText());
         volunteer.setEmail(txtEmail.getText());
@@ -68,17 +72,18 @@ public class EditVolunteerController implements Initializable {
         try
         {
             model.editVolunteer(volunteer);
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    @FXML
-    private void cancel(ActionEvent event) {
+        cancel();
     }
 
-    
-    
+    @FXML
+    private void cancel()
+    {
+        Stage stage = (Stage) txtFirstName.getScene().getWindow();
+        stage.close();
+    }
+
 }

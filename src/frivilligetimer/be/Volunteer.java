@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
  */
 public class Volunteer extends Person
 {
-
     private String preference;
     private String note;
     private BufferedImage image;
