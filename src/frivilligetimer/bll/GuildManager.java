@@ -62,4 +62,8 @@ public class GuildManager
     {
         return dbManager.getVolunteersInGuild();
     }
+    
+    public void updateGuild(Guild guild) throws SQLException {
+        dbManager.updateGuild(guild);
+    }
 }
