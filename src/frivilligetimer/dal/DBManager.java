@@ -91,13 +91,12 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    }
-                    catch (IOException e)
+                    } catch (IOException e)
                     {
                         e.printStackTrace();
                     }
                 }
-                
+
                 switch (level)
                 {
                     case 0:
@@ -303,6 +302,12 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
+    /**
+     * Assigns volunteer to a guild
+     * @param laugid id of the guild
+     * @param uid id of the volunteer
+     * @throws SQLException 
+     */
 
     public void addVolunteerToGuild(int laugid, int uid) throws SQLException
     {
@@ -335,30 +340,45 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
-        public List<String> getVolunteersInGuild()
+
+    public List<String> getVolunteersInGuild()
     {
         return volunteersInGuild;
     }
-    
-  
-        public void updateEmployee(Employee employee) throws SQLException
+
+    public void updateEmployee(Employee employee) throws SQLException
     {
-          String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
+        String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
-              ps.setString(1, employee.getFirstName());
-              ps.setString(2, employee.getLastName());
-              ps.setString(3, employee.getPhoneNum());
-              ps.setString(4, employee.getEmail());
-              ps.setInt(5, employee.getId());
+            ps.setString(1, employee.getFirstName());
+            ps.setString(2, employee.getLastName());
+            ps.setString(3, employee.getPhoneNum());
+            ps.setString(4, employee.getEmail());
+            ps.setInt(5, employee.getId());
             ps.executeUpdate();
         }
-        
+
     }
-  
-     /**
+
+    public void updateGuild(Guild guild) throws SQLException
+    {
+        String sql = "UPDATE Guilds SET Name = ? WHERE id = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, guild.getName());
+            ps.setInt(2, guild.getId());
+
+            ps.executeUpdate();
+        }
+
+    }
+
+    /**
      * Updates the database with a student image represented by binary data.
      *
      * @param person
@@ -384,21 +404,5 @@ public final class DBManager
 
         }
     }
-  
-        
-        public void updateGuild(Guild guild) throws SQLException
-    {
-          String sql = "UPDATE Guilds SET Name = ?";
 
-        try (Connection con = cm.getConnection())
-        {
-            PreparedStatement ps = con.prepareStatement(sql);
-              ps.setString(1, guild.getName());
-
-            ps.executeUpdate();
-        }
-        
-    }
 }
-  
-

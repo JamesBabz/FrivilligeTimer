@@ -17,18 +17,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author Bruger
  */
-public class EditGuildController implements Initializable {
+public class EditGuildController implements Initializable
+{
 
     @FXML
     private TextField txtLaug;
-    
-    
+
     private GuildManager manager;
     private GuildModel model;
     private Guild guild;
@@ -37,37 +38,41 @@ public class EditGuildController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         model = GuildModel.getInstance();
         guild = model.getSelectedGuild();
-        
+
         model.getSelectedGuild();
-        
-        
-       getCurrentInfo();
-    }    
-    
+
+        getCurrentInfo();
+    }
+
     private void getCurrentInfo()
     {
         txtLaug.setText(guild.getName());
- 
+
     }
-    
-        @FXML
-        private void handleUpdate() {
+
+    @FXML
+    private void handleUpdate()
+    {
         guild.setName(txtLaug.getText());
         try
         {
             model.editGuild(guild);
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        cancel();
     }
-    
-    
+
     @FXML
-    private void cancel(ActionEvent event) {
+    private void cancel()
+    {
+             Stage stage = (Stage) txtLaug.getScene().getWindow();
+        stage.close();   
     }
 }
