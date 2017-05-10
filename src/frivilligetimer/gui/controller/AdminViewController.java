@@ -85,10 +85,6 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
 
-    @FXML
-    private Button btnImage;
-
-
     /**
      * Initializes the controller class.
      */
@@ -308,22 +304,6 @@ public class AdminViewController implements Initializable
 
         vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
-    }
-
-    @FXML
-    private void updateImage(ActionEvent event)
-    {
-//        try
-//        {
-//            ImageManager iManager = new ImageManager();
-//
-//            iManager.updateImage(tableVolunteer.selectionModelProperty().getValue().getSelectedItem(), "test.jpg");
-//        }
-//        catch (SQLException | IOException ex)
-//        {
-//            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
     }
 
 }
