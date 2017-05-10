@@ -36,6 +36,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -240,21 +241,24 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void ShowVolunteersInCurrentGuild()
+    private void ShowVolunteersInCurrentGuild(MouseEvent event)
     {
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
-        colVolunteer.setText("Frivillige i " + selectedGuild.getName());
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        if (event.getClickCount() == 2)
         {
-            if (guild == selectedGuild)
+            Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+            colVolunteer.setText("Frivillige i " + selectedGuild.getName());
+            for (Guild guild : guildModel.getAllGuildsForTable())
             {
+                if (guild == selectedGuild)
+                {
 
-                guildModel.getVolunteersInCurrentGuild().clear();
-                guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+                    guildModel.getVolunteersInCurrentGuild().clear();
+                    guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+                }
             }
+            tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
+            tableGuild.getSelectionModel().select(selectedGuild);
         }
-        tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-        tableGuild.getSelectionModel().select(selectedGuild);
     }
 
     @FXML
