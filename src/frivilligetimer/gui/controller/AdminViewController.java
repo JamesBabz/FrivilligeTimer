@@ -37,6 +37,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -86,6 +88,7 @@ public class AdminViewController implements Initializable
     @FXML
     private Button btnImage;
 
+
     /**
      * Initializes the controller class.
      */
@@ -96,6 +99,10 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuildManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        colGuild.prefWidthProperty().bind(tableGuild.widthProperty());
+        colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
+        colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
         populateTables();
 
