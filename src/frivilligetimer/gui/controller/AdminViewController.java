@@ -8,6 +8,7 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
@@ -85,8 +86,9 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
 
+
     @FXML
-    private Button btnTestGuild;
+    private Button btnImage;
 
     /**
      * Initializes the controller class.
@@ -138,7 +140,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -147,7 +149,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -156,7 +158,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "gnærongietrh");
+        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
 
     }
 
@@ -261,11 +263,6 @@ public class AdminViewController implements Initializable
         tableGuild.getSelectionModel().select(selectedGuild);
     }
 
-    @FXML
-    private void handleTestBtn(ActionEvent event)
-    {
-
-    }
 
     @FXML
     private void editVolunteer()
@@ -279,6 +276,22 @@ public class AdminViewController implements Initializable
 
         vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
 
+    }
+
+    @FXML
+    private void updateImage(ActionEvent event)
+    {
+//        try
+//        {
+//            ImageManager iManager = new ImageManager();
+//
+//            iManager.updateImage(tableVolunteer.selectionModelProperty().getValue().getSelectedItem(), "test.jpg");
+//        }
+//        catch (SQLException | IOException ex)
+//        {
+//            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
     }
 
 }

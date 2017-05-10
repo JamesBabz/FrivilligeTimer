@@ -9,7 +9,12 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
+import frivilligetimer.be.Person;
 import frivilligetimer.be.Volunteer;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +24,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  * This class handles all the Data from the Database once a connection has been
@@ -79,18 +85,32 @@ public final class DBManager
                 String preference = rs.getString("Preference");
                 int level = rs.getInt("Position");
                 String password = rs.getString("Password");
+                byte[] imageBytes = rs.getBytes("ImageBinary");
+                BufferedImage image = null;
+                if (imageBytes != null)
+                {
+                    try
+                    {
+                        image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                
                 switch (level)
                 {
                     case 0:
-                        Manager manager = new Manager(id, fName, lName, phonenum, email, password);
+                        Manager manager = new Manager(id, fName, lName, phonenum, email, password, image);
                         managers.add(manager);
                         break;
                     case 1:
-                        Employee employee = new Employee(id, fName, lName, phonenum, email);
+                        Employee employee = new Employee(id, fName, lName, phonenum, email, image);
                         employees.add(employee);
                         break;
                     case 2:
-                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, note, preference);
+                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, note, preference, image);
                         volunteers.add(volunteer);
                         break;
                     default:
@@ -300,18 +320,19 @@ public final class DBManager
 
         }
     }
+
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
-          String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
+        String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
-              ps.setString(1, volunteer.getFirstName());
-              ps.setString(2, volunteer.getLastName());
-              ps.setString(3, volunteer.getPhoneNum());
-              ps.setString(4, volunteer.getEmail());
-              ps.setInt(5, volunteer.getId());
+            ps.setString(1, volunteer.getFirstName());
+            ps.setString(2, volunteer.getLastName());
+            ps.setString(3, volunteer.getPhoneNum());
+            ps.setString(4, volunteer.getEmail());
+            ps.setInt(5, volunteer.getId());
             ps.executeUpdate();
         }
     }
@@ -319,6 +340,33 @@ public final class DBManager
     public List<String> getVolunteersInGuild()
     {
         return volunteersInGuild;
+    }
+    
+        /**
+     * Updates the database with a student image represented by binary data.
+     *
+     * @param person
+     * @param localImagePath
+     * @throws IOException
+     * @throws SQLException
+     */
+    public void updateImage(Person person, String localImagePath) throws IOException, SQLException
+    {
+        String sql = "UPDATE People SET ImageBinary = ? WHERE ID = ?";
+        int length;
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            File imageFile = new File(localImagePath);
+            FileInputStream fis = new FileInputStream(imageFile);
+            length = (int) imageFile.length();
+            byte[] imageBytes = new byte[length];
+            int i = fis.read(imageBytes);
+            ps.setBytes(1, imageBytes);
+            ps.setInt(2, person.getId());
+            ps.executeUpdate();
+
+        }
     }
 
 }

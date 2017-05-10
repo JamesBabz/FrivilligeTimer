@@ -65,7 +65,9 @@ public final class GuildModel
         volunteersInGuild = FXCollections.observableArrayList();
         volunteersInCurrentGuild = FXCollections.observableArrayList();
         
+        setAllGuilds();
         populateGuilds();
+        
     }
 
     /**
@@ -75,9 +77,13 @@ public final class GuildModel
      */
     public ObservableList<Guild> getAllGuildsForTable()
     {
+        return allGuilds;
+    }
+    
+    public void setAllGuilds()
+    {
         allGuilds.clear();
         allGuilds.addAll(manager.getAllGuilds());
-        return allGuilds;
     }
     
     private ObservableList<Volunteer> getAllGuilds()
