@@ -37,6 +37,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -83,9 +85,6 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
 
-    @FXML
-    private Button btnImage;
-
     /**
      * Initializes the controller class.
      */
@@ -96,6 +95,10 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuildManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        colGuild.prefWidthProperty().bind(tableGuild.widthProperty());
+        colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
+        colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
         populateTables();
 
@@ -301,22 +304,6 @@ public class AdminViewController implements Initializable
 
         vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
-    }
-
-    @FXML
-    private void updateImage(ActionEvent event)
-    {
-//        try
-//        {
-//            ImageManager iManager = new ImageManager();
-//
-//            iManager.updateImage(tableVolunteer.selectionModelProperty().getValue().getSelectedItem(), "test.jpg");
-//        }
-//        catch (SQLException | IOException ex)
-//        {
-//            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
     }
 
 }
