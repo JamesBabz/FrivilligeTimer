@@ -10,7 +10,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+
    <children>
       <TableView fx:id="tableVolunteer" layoutX="189.0" layoutY="82.0" prefHeight="456.0" prefWidth="231.0">
         <columns>
@@ -78,7 +79,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="btnTestGuild" layoutX="79.0" layoutY="37.0" mnemonicParsing="false" onAction="#handleTestBtn" prefHeight="25.0" prefWidth="126.0" text="Test knap" />
       <Button focusTraversable="false" layoutX="21.0" layoutY="82.0" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis Alle Personer" />
+      <Button fx:id="btnImage" layoutX="285.0" layoutY="45.0" mnemonicParsing="false" onAction="#updateImage" text="Button" />
    </children>
 </AnchorPane>

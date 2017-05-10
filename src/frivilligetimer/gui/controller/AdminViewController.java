@@ -8,6 +8,7 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
@@ -80,9 +81,10 @@ public class AdminViewController implements Initializable
     private final StaffModel staffModel;
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
-    private ObservableList<Volunteer> volunteersInCurrentGuild;
+
+
     @FXML
-    private Button btnTestGuild;
+    private Button btnImage;
 
     /**
      * Initializes the controller class.
@@ -96,7 +98,6 @@ public class AdminViewController implements Initializable
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         populateTables();
-        populateGuilds();
 
     }
 
@@ -108,7 +109,6 @@ public class AdminViewController implements Initializable
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
-        volunteersInCurrentGuild = FXCollections.observableArrayList();
 
     }
 
@@ -128,20 +128,15 @@ public class AdminViewController implements Initializable
     {
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
-        tableGuild.setItems(guildModel.getAllGuildForTable());
+        tableGuild.setItems(guildModel.getAllGuildsForTable());
     }
 
     @FXML
     private void addVolunteer()
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
-            vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -149,13 +144,8 @@ public class AdminViewController implements Initializable
     private void addEmployee()
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
-            vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -163,13 +153,9 @@ public class AdminViewController implements Initializable
     private void addGuild()
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
-            vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "gnærongietrh");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
+
     }
 
     /**
@@ -196,7 +182,8 @@ public class AdminViewController implements Initializable
                         try
                         {
                             guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                        } catch (SQLException ex)
+                        }
+                        catch (SQLException ex)
                         {
                             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -244,37 +231,6 @@ public class AdminViewController implements Initializable
     }
 
     /**
-     * Gets the volunteers in each guild
-     */
-    public void populateGuilds()
-    {
-
-        for (String string : guildModel.getAllVolunteersInGuilds())
-        {
-            String[] data = string.split(",");
-            int uid = Integer.parseInt(data[0].trim());
-            int laugid = Integer.parseInt(data[1].trim());
-
-            for (Guild guild : guildModel.getAllGuildForTable())
-            {
-                if (laugid == guild.getId())
-                {
-                    for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
-                    {
-                        if (uid == volunteer.getId())
-                        {
-                            guild.addVolunteer(volunteer);
-                            volunteersInCurrentGuild.add(volunteer);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
-    /**
      * Shows all the volunteers in the table when the user click "Vis alle
      * personer"
      */
@@ -290,45 +246,32 @@ public class AdminViewController implements Initializable
     {
         Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
         colVolunteer.setText("Frivillige i " + selectedGuild.getName());
-        for (Guild guild : guildModel.getAllGuildForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable())
         {
             if (guild == selectedGuild)
             {
-                
-                volunteersInCurrentGuild.clear();
-                volunteersInCurrentGuild.addAll(selectedGuild.getVolunteers());
+
+                guildModel.getVolunteersInCurrentGuild().clear();
+                guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
             }
         }
-        tableVolunteer.setItems(volunteersInCurrentGuild);
+        tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
         tableGuild.getSelectionModel().select(selectedGuild);
     }
-    
-        @FXML
-    private void handleTestBtn(ActionEvent event)
-    {
 
-    }
-    
-    
 
     @FXML
     private void editVolunteer()
     {
-        
+
         Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.setSelectedVolunteer(selectedItem);
-        
-        
-        
+
            ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
+      
             vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+     
     }
         
     
@@ -344,20 +287,21 @@ public class AdminViewController implements Initializable
         
         
            ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
+    
             vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+ 
       
                      
     }
         
         
         
-        @FXML
+    
+       
+
+
+
+    @FXML
         private void editGuild()
         {
         
@@ -368,18 +312,28 @@ public class AdminViewController implements Initializable
         
         
            ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-        try
-        {
+
             vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
       
                      
     }
-       
+
+
+    @FXML
+    private void updateImage(ActionEvent event)
+    {
+//        try
+//        {
+//            ImageManager iManager = new ImageManager();
+//
+//            iManager.updateImage(tableVolunteer.selectionModelProperty().getValue().getSelectedItem(), "test.jpg");
+//        }
+//        catch (SQLException | IOException ex)
+//        {
+//            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+    }
 
 }
-
-
