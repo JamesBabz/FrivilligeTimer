@@ -8,6 +8,8 @@ package frivilligetimer.gui.model;
 import frivilligetimer.be.Volunteer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -19,7 +21,8 @@ public class VolunteerCellModel
     private final StringProperty fName = new SimpleStringProperty();
     private final StringProperty lName = new SimpleStringProperty();
     private final StringProperty phoneNum = new SimpleStringProperty();
-    
+    private final Image image;
+
     private final Volunteer volunteer;
 
     public VolunteerCellModel(Volunteer volunteer)
@@ -28,8 +31,17 @@ public class VolunteerCellModel
         fName.set(volunteer.getFirstName());
         lName.set(volunteer.getLastName());
         phoneNum.set(volunteer.getPhoneNum());
+        if (volunteer.getImage() != null)
+        {
+            image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+        }
+        else
+        {
+            image = null;
+        }
+
     }
-    
+
     public String getPhoneNum()
     {
         return phoneNum.get();
@@ -44,7 +56,7 @@ public class VolunteerCellModel
     {
         return phoneNum;
     }
-    
+
     public String getLName()
     {
         return lName.get();
@@ -59,7 +71,7 @@ public class VolunteerCellModel
     {
         return lName;
     }
-    
+
     public String getFName()
     {
         return fName.get();
@@ -75,6 +87,16 @@ public class VolunteerCellModel
         return fName;
     }
 
+    public Volunteer getVolunteer()
+    {
+        return volunteer;
+    }
+
+    public Image getImage()
+    {
+        return image;
+    }
     
     
+
 }
