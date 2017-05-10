@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EditEmployeeController">
+<AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EditEmployeeController">
    <children>
       <Label layoutX="128.0" layoutY="14.0" text="Ændre Tovholder">
          <font>
@@ -21,7 +21,7 @@
       <TextField fx:id="txtLastName" layoutX="117.0" layoutY="93.0" prefHeight="25.0" prefWidth="200.0" />
       <TextField fx:id="txtEmail" layoutX="117.0" layoutY="127.0" prefHeight="25.0" prefWidth="200.0" />
       <TextField fx:id="txtPhoneNumber" layoutX="117.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" />
-      <Button layoutX="287.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleUpdate" text="Tilføj" />
-      <Button layoutX="217.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
+      <Button layoutX="276.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleUpdate" text="Gem" />
+      <Button layoutX="204.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Annuller" />
    </children>
 </AnchorPane>
