@@ -16,11 +16,13 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -39,7 +41,7 @@ public class AddVolunteerController implements Initializable
     @FXML
     private TextField txtLastName;
     @FXML
-    private TextField txtPhoneNummer;
+    private TextField txtPhoneNumber;
     @FXML
     private Button btnBrowseImage;
 
@@ -66,6 +68,8 @@ public class AddVolunteerController implements Initializable
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        validateData();
+        
     }
 
     @FXML
@@ -73,7 +77,7 @@ public class AddVolunteerController implements Initializable
     {
         try
         {
-            Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null);
+            Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), null);
 
             model.addVolunteer(volunteer);
 
@@ -104,5 +108,51 @@ public class AddVolunteerController implements Initializable
         file = fileChooser.showOpenDialog(stage);
 
     }
+    
+    private static String firstName = "";
+    private static String lastName = "";
+    private static String eMail = "";
+    private static String phoneNumber = "";
 
+
+    private void validateData()
+    {   
+        txtFirstName.textProperty().addListener((observable, oldVal, newVal) -> {
+            if (Pattern.matches("[^0-9]+", newVal) || newVal.isEmpty())
+            {
+                firstName = newVal;
+            }
+            txtFirstName.setText(firstName);
+        });
+        
+        txtLastName.textProperty().addListener((observable, oldVal, newVal) -> {
+            if (Pattern.matches("[^0-9]+", newVal) || newVal.isEmpty())
+            {
+                lastName = newVal;
+            }
+            txtLastName.setText(lastName);
+        });
+        
+        txtEmail.textProperty().addListener((observable, oldVal, newVal) ->
+        {
+            if (Pattern.matches("[[\\w]+[@]?[\\w\\.]+]+", newVal) || newVal.isEmpty())
+            {
+                eMail = newVal;
+            }
+            txtEmail.setText(eMail);
+        });
+        
+        txtPhoneNumber.textProperty().addListener((observable, oldVal, newVal) -> 
+        {
+            if (Pattern.matches("[0-9]+", newVal) || newVal.isEmpty())
+            {
+                phoneNumber = newVal;
+            }
+            txtPhoneNumber.setText(phoneNumber);
+        });
+    }
+
+    
+    
+    
 }
