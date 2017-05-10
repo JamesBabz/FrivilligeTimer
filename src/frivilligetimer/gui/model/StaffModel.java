@@ -6,11 +6,9 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
-import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.StaffManager;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -24,6 +22,8 @@ public class StaffModel
 {
     private static StaffModel instance;
     StaffManager manager;
+    
+    public Employee selectedEmployee;
     
      private final ObservableList<Employee> allEmployees;
  
@@ -74,4 +74,17 @@ public class StaffModel
         manager.removeEmployee(employee);
     }
     
+     public Employee getSelectedEmployee() {
+        return selectedEmployee;
+    }
+
+    public void setSelectedEmployee(Employee selectedEmployee) {
+        this.selectedEmployee = selectedEmployee;
+    }
+    
+    public void editEmployee(Employee employee) throws SQLException
+    {
+       manager.updateEmployee(selectedEmployee);
+    }
+
 }
