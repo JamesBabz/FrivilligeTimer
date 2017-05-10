@@ -13,7 +13,7 @@
       <TextField fx:id="txtEmail" layoutX="117.0" layoutY="127.0" prefHeight="25.0" prefWidth="200.0" />
       <TextField fx:id="txtPhoneNummer" layoutX="117.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" />
       <Button layoutX="217.0" layoutY="201.0" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj" />
-      <Button layoutX="262.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Annuller" />
+      <Button layoutX="262.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
       <Label layoutX="128.0" layoutY="14.0" text="Tilføj frivillig">
          <font>
             <Font size="18.0" />

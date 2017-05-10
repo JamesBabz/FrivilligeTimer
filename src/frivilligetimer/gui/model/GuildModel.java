@@ -5,7 +5,6 @@
  */
 package frivilligetimer.gui.model;
 
-import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.GuildManager;
@@ -24,7 +23,8 @@ import javafx.collections.ObservableList;
  */
 public final class GuildModel
 {
-
+    
+    public Guild selectedGuild;
     private static GuildModel instance;
     private GuildManager manager;
     private VolunteerManager volunteerManager;
@@ -128,6 +128,20 @@ public final class GuildModel
         return volunteersInGuild;
     }
     
+
+    public void editGuild(Guild guild) throws SQLException
+    {
+       manager.updateGuild(selectedGuild);
+    }
+    
+    public Guild getSelectedGuild() {
+        return selectedGuild;
+    }
+    
+    public void setSelectedGuild(Guild selectedGuild) {
+        this.selectedGuild = selectedGuild;
+    }
+    
         /**
      * Gets the volunteers in each guild
      */
@@ -181,5 +195,6 @@ public final class GuildModel
     {
         return volunteersInCurrentGuild;
     }
+  
 
 }

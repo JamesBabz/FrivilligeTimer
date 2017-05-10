@@ -21,3 +21,8 @@ and open the template in the editor.
 .scroll-pane > .viewport {
    -fx-background-color: transparent;
 }
+
+.list-cell 
+{
+  -fx-font: 20pt "Arial";
+}

@@ -5,8 +5,8 @@
  */
 package frivilligetimer.gui.controller;
 
-import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +32,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -41,7 +39,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -86,8 +83,6 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
 
-    @FXML
-    private Button btnTestGuild;
     @FXML
     private Button btnImage;
 
@@ -141,7 +136,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -150,7 +145,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "drpgjioerhg");
+        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
 
     }
 
@@ -159,7 +154,7 @@ public class AdminViewController implements Initializable
     {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "gnærongietrh");
+        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
 
     }
 
@@ -187,8 +182,7 @@ public class AdminViewController implements Initializable
                         try
                         {
                             guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                        }
-                        catch (SQLException ex)
+                        } catch (SQLException ex)
                         {
                             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -247,27 +241,24 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void ShowVolunteersInCurrentGuild()
+    private void ShowVolunteersInCurrentGuild(MouseEvent event)
     {
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
-        colVolunteer.setText("Frivillige i " + selectedGuild.getName());
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        if (event.getClickCount() == 2)
         {
-            if (guild == selectedGuild)
+            Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+            colVolunteer.setText("Frivillige i " + selectedGuild.getName());
+            for (Guild guild : guildModel.getAllGuildsForTable())
             {
+                if (guild == selectedGuild)
+                {
 
-                guildModel.getVolunteersInCurrentGuild().clear();
-                guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+                    guildModel.getVolunteersInCurrentGuild().clear();
+                    guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+                }
             }
+            tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
+            tableGuild.getSelectionModel().select(selectedGuild);
         }
-        tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-        tableGuild.getSelectionModel().select(selectedGuild);
-    }
-
-    @FXML
-    private void handleTestBtn(ActionEvent event)
-    {
-
     }
 
     @FXML
@@ -280,7 +271,35 @@ public class AdminViewController implements Initializable
 
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
+        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Person");
+
+    }
+
+    @FXML
+    private void editEmployee()
+    {
+
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.setSelectedEmployee(selectedItem);
+
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
+
+    }
+
+    @FXML
+    private void editGuild()
+    {
+
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.setSelectedGuild(selectedItem);
+
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
     }
 
