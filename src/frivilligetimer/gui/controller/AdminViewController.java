@@ -5,8 +5,8 @@
  */
 package frivilligetimer.gui.controller;
 
-import frivilligetimer.be.Guild;
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,15 +32,12 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -272,11 +268,57 @@ public class AdminViewController implements Initializable
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.setSelectedVolunteer(selectedItem);
 
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
-
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+      
+            vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer person");
+     
     }
+        
+    
+    
+        @FXML
+        private void editEmployee()
+        {
+        
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.setSelectedEmployee(selectedItem);
+        
+        
+        
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+    
+            vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
+ 
+      
+                     
+    }
+        
+        
+        
+    
+       
+
+
+
+    @FXML
+        private void editGuild()
+        {
+        
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.setSelectedGuild(selectedItem);
+        
+        
+        
+           ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+            vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer medarbejder");
+
+      
+                     
+    }
+
 
     @FXML
     private void updateImage(ActionEvent event)
