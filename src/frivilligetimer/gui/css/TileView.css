@@ -8,16 +8,21 @@ and open the template in the editor.
     Author     : James
 */
 
-.volunteerCell{
+.volunteerCell, .button{
     -fx-background-radius: 50px;
     -fx-background-color: rgba(194, 136, 51, 0.749);
     margin: 20px;
 }
 
-#guildList, #volunteerContainer{
+#guildList, #volunteerContainer, #anchorPane{
     -fx-background-color: #E6DFD7;
 }
 
 .scroll-pane > .viewport {
    -fx-background-color: transparent;
+}
+
+.list-cell 
+{
+  -fx-font: 20pt "Arial";
 }

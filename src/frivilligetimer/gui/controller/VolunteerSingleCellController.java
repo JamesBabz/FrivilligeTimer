@@ -6,12 +6,17 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.gui.model.VolunteerCellModel;
+import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -21,14 +26,19 @@ import javafx.scene.control.SplitPane;
 public class VolunteerSingleCellController implements Initializable
 {
 
-    @FXML
-    private Label lblName;
-    @FXML
-    private Label lblEmail;
+    private VolunteerCellModel cellModel;
+    private VolunteerModel model;
+
     @FXML
     private Label lblPhone;
-    
-    private VolunteerCellModel model;
+    @FXML
+    private Label lblFName;
+    @FXML
+    private Label lblLName;
+    @FXML
+    private AnchorPane pane;
+    @FXML
+    private ImageView imgV;
 
     /**
      * Initializes the controller class.
@@ -36,23 +46,31 @@ public class VolunteerSingleCellController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
-        
-    }    
+        model = VolunteerModel.getInstance();
+    }
 
     public VolunteerCellModel getModel()
     {
-        return model;
+        return cellModel;
     }
 
     public void setModel(VolunteerCellModel model)
     {
-        this.model = model;
-        lblName.textProperty().bind(model.nameProperty());
-        lblEmail.textProperty().bind(model.emailProperty());
+        this.cellModel = model;
+        lblFName.textProperty().bind(model.fNameProperty());
+        lblLName.textProperty().bind(model.lNameProperty());
         lblPhone.textProperty().bind(model.PhoneNumProperty());
+        Image img = model.getImage();
+        imgV.setImage(img);
     }
-    
-    
-    
+
+    @FXML
+    private void handleOpenHours()
+    {
+        model.setTileVolunteer(getModel().getVolunteer());
+        ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+
+    }
+
 }

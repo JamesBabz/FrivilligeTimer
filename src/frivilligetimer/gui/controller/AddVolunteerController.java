@@ -6,9 +6,10 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.bll.GuildManager;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
 import frivilligetimer.gui.model.VolunteerModel;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -18,7 +19,9 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -29,7 +32,6 @@ import javafx.stage.Stage;
 public class AddVolunteerController implements Initializable
 {
 
-   
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -38,9 +40,14 @@ public class AddVolunteerController implements Initializable
     private TextField txtLastName;
     @FXML
     private TextField txtPhoneNummer;
+    @FXML
+    private Button btnBrowseImage;
 
-     private VolunteerManager manager;
-     private VolunteerModel model;
+    private VolunteerManager manager;
+    private VolunteerModel model;
+    private Stage stage;
+    private final FileChooser fileChooser = new FileChooser();
+    private File file;
 
     /**
      * Initializes the controller class.
@@ -53,25 +60,30 @@ public class AddVolunteerController implements Initializable
         try
         {
             manager = new VolunteerManager();
-        } catch (IOException ex)
-        {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (IOException | SQLException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     @FXML
     private void addVolunteer()
     {
-        Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText());
-
         try
         {
+            Volunteer volunteer = new Volunteer(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null);
+
             model.addVolunteer(volunteer);
+
+            ImageManager iManager = new ImageManager();
+
+            iManager.updateImage(volunteer, file.getAbsolutePath());
+
             cancel();
-        } catch (SQLException ex)
+        }
+        catch (SQLException | IOException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,8 +93,16 @@ public class AddVolunteerController implements Initializable
     @FXML
     private void cancel()
     {
-        Stage stage = (Stage) txtFirstName.getScene().getWindow();
+        stage = (Stage) txtFirstName.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void handleBrowseImage(ActionEvent event)
+    {
+        stage = (Stage) txtFirstName.getScene().getWindow();
+        file = fileChooser.showOpenDialog(stage);
+
     }
 
 }

@@ -8,6 +8,8 @@ package frivilligetimer.gui.model;
 import frivilligetimer.be.Volunteer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -16,20 +18,30 @@ import javafx.beans.property.StringProperty;
 public class VolunteerCellModel
 {
 
-    private final StringProperty name = new SimpleStringProperty();
-    private final StringProperty email = new SimpleStringProperty();
+    private final StringProperty fName = new SimpleStringProperty();
+    private final StringProperty lName = new SimpleStringProperty();
     private final StringProperty phoneNum = new SimpleStringProperty();
-    
+    private final Image image;
+
     private final Volunteer volunteer;
 
     public VolunteerCellModel(Volunteer volunteer)
     {
         this.volunteer = volunteer;
-        name.set(volunteer.getFullName());
-        email.set(volunteer.getEmail());
+        fName.set(volunteer.getFirstName());
+        lName.set(volunteer.getLastName());
         phoneNum.set(volunteer.getPhoneNum());
+        if (volunteer.getImage() != null)
+        {
+            image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+        }
+        else
+        {
+            image = null;
+        }
+
     }
-    
+
     public String getPhoneNum()
     {
         return phoneNum.get();
@@ -44,37 +56,47 @@ public class VolunteerCellModel
     {
         return phoneNum;
     }
+
+    public String getLName()
+    {
+        return lName.get();
+    }
+
+    public void setLName(String value)
+    {
+        lName.set(value);
+    }
+
+    public StringProperty lNameProperty()
+    {
+        return lName;
+    }
+
+    public String getFName()
+    {
+        return fName.get();
+    }
+
+    public void setFName(String value)
+    {
+        fName.set(value);
+    }
+
+    public StringProperty fNameProperty()
+    {
+        return fName;
+    }
+
+    public Volunteer getVolunteer()
+    {
+        return volunteer;
+    }
+
+    public Image getImage()
+    {
+        return image;
+    }
     
-    public String getEmail()
-    {
-        return email.get();
-    }
-
-    public void setEmail(String value)
-    {
-        email.set(value);
-    }
-
-    public StringProperty emailProperty()
-    {
-        return email;
-    }
     
-    public String getName()
-    {
-        return name.get();
-    }
 
-    public void setName(String value)
-    {
-        name.set(value);
-    }
-
-    public StringProperty nameProperty()
-    {
-        return name;
-    }
-
-    
-    
 }

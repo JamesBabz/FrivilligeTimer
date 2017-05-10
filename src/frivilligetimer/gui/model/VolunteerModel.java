@@ -6,9 +6,11 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -22,6 +24,7 @@ public class VolunteerModel
 {
 
     public Volunteer selectedVolunteer;
+    public Volunteer tileVolunteer;
 
     VolunteerManager manager;
 
@@ -76,6 +79,7 @@ public class VolunteerModel
     {
         allVolunteers.add(volunteer);
         manager.addVolunteer(volunteer);
+
     }
     
     public void deleteVolunteer(Volunteer volunteer)
@@ -97,7 +101,20 @@ public class VolunteerModel
        manager.updateVolunteer(selectedVolunteer);
     }
 
-   
+    public Volunteer getTileVolunteer()
+    {
+        return tileVolunteer;
+    }
+
+    public void setTileVolunteer(Volunteer tileVolunteer)
+    {
+        this.tileVolunteer = tileVolunteer;
+    }
+
+  public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        manager.addHoursForVolunteer(uid, date, hours);
+    }
 
 
 }

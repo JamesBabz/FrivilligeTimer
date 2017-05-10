@@ -5,6 +5,8 @@
  */
 package frivilligetimer.be;
 
+import java.awt.image.BufferedImage;
+
 /**
  * The Buisness entity of the volunteer. This class extends Person
  *
@@ -12,9 +14,10 @@ package frivilligetimer.be;
  */
 public class Volunteer extends Person
 {
-
     private String preference;
     private String note;
+    private BufferedImage image;
+
 
     /**
      * The contructor
@@ -27,16 +30,17 @@ public class Volunteer extends Person
      * @param preference, the prefernce the volunteer has, that the employee can write down
      * @param note, a note that the employee kan write about a volunteer
      */
-    public Volunteer(int id, String firstName, String lastName, String phoneNum, String email, String preference, String note)
+    public Volunteer(int id, String firstName, String lastName, String phoneNum, String email, String preference, String note, BufferedImage image)
     {
-        super(id, firstName, lastName, phoneNum, email);
+        super(id, firstName, lastName, phoneNum, email, image);
         this.preference = preference;
         this.preference = preference;
         this.note = note;
+        this.image = image;
     }
 
-    public Volunteer(String firstName, String lastName, String phoneNum, String email) {
-        super(0, firstName, lastName, phoneNum, email);
+    public Volunteer(String firstName, String lastName, String phoneNum, String email, BufferedImage image) {
+        super(0, firstName, lastName, phoneNum, email, image);
     }
     
     
