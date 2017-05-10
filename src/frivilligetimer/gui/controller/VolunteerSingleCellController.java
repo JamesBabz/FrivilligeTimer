@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,7 +28,7 @@ public class VolunteerSingleCellController implements Initializable
 
     private VolunteerCellModel cellModel;
     private VolunteerModel model;
-    
+
     @FXML
     private Label lblPhone;
     @FXML
@@ -35,6 +37,8 @@ public class VolunteerSingleCellController implements Initializable
     private Label lblLName;
     @FXML
     private AnchorPane pane;
+    @FXML
+    private ImageView imgV;
 
     /**
      * Initializes the controller class.
@@ -43,7 +47,7 @@ public class VolunteerSingleCellController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         model = VolunteerModel.getInstance();
-    }    
+    }
 
     public VolunteerCellModel getModel()
     {
@@ -56,6 +60,8 @@ public class VolunteerSingleCellController implements Initializable
         lblFName.textProperty().bind(model.fNameProperty());
         lblLName.textProperty().bind(model.lNameProperty());
         lblPhone.textProperty().bind(model.PhoneNumProperty());
+        Image img = model.getImage();
+        imgV.setImage(img);
     }
 
     @FXML
@@ -64,9 +70,7 @@ public class VolunteerSingleCellController implements Initializable
         model.setTileVolunteer(getModel().getVolunteer());
         ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
         vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
-        
+
     }
-    
-    
-    
+
 }

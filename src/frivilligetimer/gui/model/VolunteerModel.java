@@ -10,6 +10,7 @@ import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -110,7 +111,10 @@ public class VolunteerModel
         this.tileVolunteer = tileVolunteer;
     }
 
-   
+  public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        manager.addHoursForVolunteer(uid, date, hours);
+    }
 
 
 }
