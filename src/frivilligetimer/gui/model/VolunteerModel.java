@@ -6,6 +6,7 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -76,6 +77,7 @@ public class VolunteerModel
     {
         allVolunteers.add(volunteer);
         manager.addVolunteer(volunteer);
+
     }
     
     public void deleteVolunteer(Volunteer volunteer)
