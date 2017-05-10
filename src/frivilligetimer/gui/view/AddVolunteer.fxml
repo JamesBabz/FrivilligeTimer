@@ -9,19 +9,20 @@
 <AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AddVolunteerController">
    <children>
       <TextField fx:id="txtFirstName" layoutX="117.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" />
-      <Button layoutX="275.0" layoutY="201.0" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj" />
-      <Button layoutX="214.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
+      <TextField fx:id="txtLastName" layoutX="117.0" layoutY="93.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtEmail" layoutX="117.0" layoutY="127.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="txtPhoneNummer" layoutX="117.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" />
+      <Button layoutX="217.0" layoutY="201.0" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj" />
+      <Button layoutX="262.0" layoutY="201.0" mnemonicParsing="false" onAction="#cancel" text="Fortryd" />
       <Label layoutX="128.0" layoutY="14.0" text="Tilføj frivillig">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="txtEmail" layoutX="117.0" layoutY="127.0" prefHeight="25.0" prefWidth="200.0" />
-      <TextField fx:id="txtLastName" layoutX="117.0" layoutY="93.0" prefHeight="25.0" prefWidth="200.0" />
-      <TextField fx:id="txtPhoneNummer" layoutX="117.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" />
       <Label layoutX="41.0" layoutY="59.0" text="Fornavn:" />
       <Label layoutX="40.0" layoutY="97.0" text="Efternavn:" />
       <Label layoutX="40.0" layoutY="129.0" text="Email:" />
       <Label layoutX="39.0" layoutY="160.0" text="Telefon nr:" />
+      <Button fx:id="btnBrowseImage" layoutX="38.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleBrowseImage" text="Tilføj Billede..." />
    </children>
 </AnchorPane>
