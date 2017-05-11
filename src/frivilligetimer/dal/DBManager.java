@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 
@@ -91,7 +92,8 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         e.printStackTrace();
                     }
@@ -266,7 +268,7 @@ public final class DBManager
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, volunteer.getId());
             ps.executeUpdate();
@@ -281,7 +283,7 @@ public final class DBManager
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, guild.getId());
             ps.executeUpdate();
@@ -296,19 +298,20 @@ public final class DBManager
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, employee.getId());
             ps.executeUpdate();
         }
     }
+
     /**
      * Assigns volunteer to a guild
+     *
      * @param laugid id of the guild
      * @param uid id of the volunteer
-     * @throws SQLException 
+     * @throws SQLException
      */
-
     public void addVolunteerToGuild(int laugid, int uid) throws SQLException
     {
         String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
@@ -403,6 +406,20 @@ public final class DBManager
             ps.executeUpdate();
 
         }
+    }
+
+    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        String sql = "INSERT INTO Hours (uid, date, hours) VALUES (?,?,?)";
+        try(Connection con = cm.getConnection()){
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, uid);
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            ps.setDate(2, sqlDate);
+            ps.setInt(3, hours);
+            ps.executeUpdate();
+        }
+        
     }
 
 }

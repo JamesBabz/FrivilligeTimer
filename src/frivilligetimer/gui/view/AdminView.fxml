@@ -17,14 +17,13 @@
 <AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
 
    <children>
-      <Button fx:id="btnImage" layoutX="285.0" layoutY="45.0" mnemonicParsing="false" onAction="#updateImage" text="Button" />
       <BorderPane prefHeight="569.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <HBox prefHeight="521.0" prefWidth="679.0" spacing="25.0" BorderPane.alignment="CENTER">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button alignment="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis Alle Personer" VBox.vgrow="ALWAYS">
+                        <Button alignment="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis Alle Personer" VBox.vgrow="NEVER">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Button>
@@ -72,7 +71,7 @@
                   </TableView>
                   <TableView fx:id="tableEmployee" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="colGuildManager" prefWidth="278.0" resizable="false" text="Tovholdere" />
+                      <TableColumn fx:id="colGuildManager" prefWidth="278.0" resizable="false" text="Medarbejdere" />
                     </columns>
                      <contextMenu>
                         <ContextMenu fx:id="contextEmployee">
@@ -103,7 +102,7 @@
                     <MenuItem mnemonicParsing="false" text="Close" />
                         <MenuItem fx:id="Volunteradd" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj Frivillig" />
                         <MenuItem fx:id="guildAdd" mnemonicParsing="false" onAction="#addGuild" text="Tilføj Laug" />
-                        <MenuItem mnemonicParsing="false" onAction="#addEmployee" text="Tilføj Tovholder" />
+                        <MenuItem mnemonicParsing="false" onAction="#addEmployee" text="Tilføj Medarbejder" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Statistik">
