@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -199,6 +200,31 @@ public final class DBManager
     public List<Guild> getAllGuilds()
     {
         return guilds;
+    }
+    
+    public int getTodaysHours(int id) throws SQLException
+    {
+        String sql = "SELECT * FROM Hours";
+        int hours = -1;
+        Date today = new java.sql.Date(new Date().getTime());
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int uid = rs.getInt("uid");
+                Date date = rs.getDate("Date");
+                int h = rs.getInt("hours");
+                
+                if(uid == id && date.toString().equals(today.toString()))
+                {
+                    hours = h;
+                }
+            }
+
+        }
+        return hours;
     }
 
     public void addGuild(Guild guild) throws SQLServerException, SQLException
@@ -411,7 +437,8 @@ public final class DBManager
     public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
     {
         String sql = "INSERT INTO Hours (uid, date, hours) VALUES (?,?,?)";
-        try(Connection con = cm.getConnection()){
+        try (Connection con = cm.getConnection())
+        {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, uid);
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -419,7 +446,22 @@ public final class DBManager
             ps.setInt(3, hours);
             ps.executeUpdate();
         }
-        
+
+    }
+    
+    public void updateHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        String sql = "UPDATE Hours SET hours = ? WHERE uid = ? AND date = ?";
+        try(Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, hours);
+            ps.setInt(2, uid);
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            ps.setDate(3, sqlDate);
+            ps.executeUpdate();
+        }
     }
 
+    
 }

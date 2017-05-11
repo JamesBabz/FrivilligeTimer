@@ -70,4 +70,14 @@ public class VolunteerManager
     {
         dbManager.addHoursForVolunteer(uid, date, hours);
     }
+
+    public int getTodaysHours(int id) throws SQLException
+    {
+        return dbManager.getTodaysHours(id);
+    }
+
+    public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
+    {
+        dbManager.updateHoursForVolunteer(id, date, hours);
+    }
 }

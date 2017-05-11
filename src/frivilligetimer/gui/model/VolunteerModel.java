@@ -116,5 +116,15 @@ public class VolunteerModel
         manager.addHoursForVolunteer(uid, date, hours);
     }
 
+    public int getTodaysHours(int id) throws SQLException
+    {
+        return manager.getTodaysHours(id);
+    }
+
+    public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
+    {
+        manager.updateHoursForVolunteers(id, date, hours);
+    }
+
 
 }
