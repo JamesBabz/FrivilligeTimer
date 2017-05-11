@@ -131,7 +131,14 @@ public class AddVolunteerHoursController implements Initializable
     @FXML
     private void handleSubtractHour()
     {
-        int hours = Integer.parseInt(txtHours.getText());
+        int hours;
+        if (txtHours.getText().equals(""))
+        {
+            hours = 0;
+            txtHours.setText("" + hours);
+        } else{
+        hours = Integer.parseInt(txtHours.getText());
+        }
         if (hours != 0)
         {
             hours--;
@@ -142,8 +149,16 @@ public class AddVolunteerHoursController implements Initializable
     @FXML
     private void handleAddHour()
     {
-        int hours = Integer.parseInt(txtHours.getText());
-        hours++;
+        int hours;
+        if (txtHours.getText().equals(""))
+        {
+            hours = 0;
+        }
+        else
+        {
+            hours = Integer.parseInt(txtHours.getText());
+            hours++;
+        }
         txtHours.setText("" + hours);
     }
 
@@ -159,7 +174,6 @@ public class AddVolunteerHoursController implements Initializable
             if (isHourSet)
             {
                 model.updateHoursForVolunteers(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
-
             }
             else
             {
