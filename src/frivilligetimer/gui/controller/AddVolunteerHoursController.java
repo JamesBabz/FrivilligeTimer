@@ -35,6 +35,7 @@ public class AddVolunteerHoursController implements Initializable
     private Volunteer volunteer;
     private VolunteerModel model;
     private boolean isManager = false;
+    private boolean isHourSet = false;
 
     @FXML
     private TextField txtHours;
@@ -71,33 +72,24 @@ public class AddVolunteerHoursController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
         model = VolunteerModel.getInstance();
         this.volunteer = model.getTileVolunteer();
-        lblName.setText(volunteer.getFullName());
-        lblMail.setText(volunteer.getEmail());
-        lblNumber.setText(volunteer.getPhoneNum());
-        Image image;
-        if (volunteer.getImage() != null)
+        populateFields();
+
+        if (isManager)
         {
-             image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+            txtPref.setText(volunteer.getPreference());
+            txtNote.setText(volunteer.getNote());
         }
         else
         {
-            image = null;
-        }
-        imgV.setImage(image);
-        if(isManager)
-        {
-        txtPref.setText(volunteer.getPreference());
-        txtNote.setText(volunteer.getNote());
-        }else{
             pane.getChildren().remove(txtPref);
             pane.getChildren().remove(txtNote);
             pane.getChildren().remove(lblPref);
             pane.getChildren().remove(lblNote);
             pane.setPrefHeight(450);
         }
+
         // force the hour field to be numeric only
         txtHours.textProperty().addListener(new ChangeListener<String>()
         {
@@ -111,6 +103,29 @@ public class AddVolunteerHoursController implements Initializable
             }
         });
 
+    }
+
+    private void populateFields()
+    {
+        lblName.setText(volunteer.getFullName());
+        lblMail.setText(volunteer.getEmail());
+        lblNumber.setText(volunteer.getPhoneNum());
+        setImage();
+        populateHours();
+    }
+
+    private void setImage()
+    {
+        Image image;
+        if (volunteer.getImage() != null)
+        {
+            image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+        }
+        else
+        {
+            image = null;
+        }
+        imgV.setImage(image);
     }
 
     @FXML
@@ -135,13 +150,22 @@ public class AddVolunteerHoursController implements Initializable
     @FXML
     private void handleSave()
     {
-        if(isManager){
-            
+        if (isManager)
+        {
+
         }
-        
         try
         {
-            model.addHoursForVolunteer(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
+            if (isHourSet)
+            {
+                model.updateHoursForVolunteers(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
+
+            }
+            else
+            {
+                model.addHoursForVolunteer(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
+            }
+
         }
         catch (SQLException ex)
         {
@@ -161,5 +185,26 @@ public class AddVolunteerHoursController implements Initializable
         Stage stage = (Stage) btnClose.getScene().getWindow();
         stage.close();
     }
-    
+
+    private void populateHours()
+    {
+        try
+        {
+            int hours = model.getTodaysHours(volunteer.getId());
+            if (hours > 0)
+            {
+                isHourSet = true;
+            }
+            else
+            {
+                hours = 0;
+            }
+            txtHours.setText("" + hours);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(AddVolunteerHoursController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
