@@ -159,7 +159,6 @@ public class AddVolunteerHoursController implements Initializable
             if (isHourSet)
             {
                 model.updateHoursForVolunteers(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
-
             }
             else
             {
