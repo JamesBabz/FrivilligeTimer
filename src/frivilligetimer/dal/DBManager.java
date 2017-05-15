@@ -107,7 +107,7 @@ public final class DBManager
                         managers.add(manager);
                         break;
                     case 1:
-                        Employee employee = new Employee(id, fName, lName, phonenum, email, image);
+                        Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
                         employees.add(employee);
                         break;
                     case 2:
