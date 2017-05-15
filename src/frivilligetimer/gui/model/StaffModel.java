@@ -6,9 +6,11 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Manager;
 import frivilligetimer.bll.StaffManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.collections.ObservableList;
 public class StaffModel
 {
     private static StaffModel instance;
+    public int level;
     StaffManager manager;
     
     public Employee selectedEmployee;
@@ -37,6 +40,7 @@ public class StaffModel
         return instance;
     }
 
+
     private StaffModel() 
     {
         try
@@ -51,6 +55,16 @@ public class StaffModel
         }
         
         allEmployees = FXCollections.observableArrayList();
+    }
+    
+    public List<Manager> getAllManagers()
+    {
+        return manager.getAllManagers();
+    }
+    
+    public List<Employee> getAllEmployees()
+    {
+        return manager.getAllEmployees();
     }
     
         /**
@@ -86,5 +100,12 @@ public class StaffModel
     {
        manager.updateEmployee(selectedEmployee);
     }
+    
+    public int getLevel() {
+        return level;
+    }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
 }
