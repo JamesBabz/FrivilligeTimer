@@ -9,6 +9,7 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,21 +44,40 @@ public class VolunteerManager
         return dbManager.getAllVolunteers();
     }
 
-     public void addVolunteer(Volunteer volunteer) throws SQLException
+    public void addVolunteer(Volunteer volunteer) throws SQLException
     {
         dbManager.addVolunteer(volunteer);
     }
-    
-     public void deleteVolunteer(Volunteer volunteer)
-     {
-        try {
+
+    public void deleteVolunteer(Volunteer volunteer)
+    {
+        try
+        {
             dbManager.deleteVolunteer(volunteer);
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex)
+        {
             Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-     }
+    }
 
-    public void updateVolunteer(Volunteer volunteer) throws SQLException {
+    public void updateVolunteer(Volunteer volunteer) throws SQLException
+    {
         dbManager.updateVolunteer(volunteer);
+    }
+
+    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        dbManager.addHoursForVolunteer(uid, date, hours);
+    }
+
+    public int getTodaysHours(int id) throws SQLException
+    {
+        return dbManager.getTodaysHours(id);
+    }
+
+    public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
+    {
+        dbManager.updateHoursForVolunteer(id, date, hours);
     }
 }
