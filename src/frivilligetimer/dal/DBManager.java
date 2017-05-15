@@ -489,4 +489,17 @@ public final class DBManager
         }
     }
 
+    public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
+    {
+        String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
+        try(Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, note);
+            ps.setString(2, pref);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+        }
+    }
+
 }
