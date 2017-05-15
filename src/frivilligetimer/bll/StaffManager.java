@@ -52,7 +52,7 @@ public class StaffManager
 
     public void removeEmployee(Employee employee) {
         try {
-            dbManager.removeEmployee(employee);
+            dbManager.deleteEmployee(employee);
         } catch (SQLException ex) {
             Logger.getLogger(StaffManager.class.getName()).log(Level.SEVERE, null, ex);
         }

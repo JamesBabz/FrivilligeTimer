@@ -78,6 +78,8 @@ public class AdminViewController implements Initializable
     private ContextMenu contextGuild;
     @FXML
     private Menu menuAddVolToGuild;
+    @FXML
+    private MenuItem menuItemRemoveVolunteer;
 
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
@@ -208,10 +210,23 @@ public class AdminViewController implements Initializable
     @FXML
     private void handleDeleteVolunteer()
     {
-        Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
-        tableVolunteer.getItems().remove(selectedItem);
+        Volunteer selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getItems().remove(selectedVolunteer);
         tableVolunteer.getSelectionModel().clearSelection();
-        volunteerModel.deleteVolunteer(selectedItem);
+        volunteerModel.deleteVolunteer(selectedVolunteer);
+
+        int selectedID = selectedVolunteer.getId();
+        for (Guild guild : guildModel.getAllGuildsForTable())
+        {
+            for (Volunteer volunteer : guild.getVolunteers())
+            {
+                if(volunteer.getId() == selectedID)
+                {
+                    guild.removeVolunteer(volunteer);
+                    break;
+                }
+            }
+        }
     }
 
     @FXML
@@ -304,6 +319,12 @@ public class AdminViewController implements Initializable
 
         vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
+    }
+
+    @FXML
+    private void removeVolunteerFromGuild()
+    {
+        
     }
 
 }

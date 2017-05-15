@@ -5,6 +5,7 @@
  */
 package frivilligetimer.bll;
 
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class VolunteerManager
     {
         try
         {
+            dbManager.removeVolunteerFromGuilds(volunteer);
             dbManager.deleteVolunteer(volunteer);
         }
         catch (SQLException ex)

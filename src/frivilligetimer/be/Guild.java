@@ -62,6 +62,10 @@ public class Guild
         volunteers.add(volunteer);
     }
     
+    public void removeVolunteer(Volunteer volunteer)
+    {
+        volunteers.remove(volunteer);
+    }
     public ArrayList<Volunteer> getVolunteers()
     {
         return volunteers;
