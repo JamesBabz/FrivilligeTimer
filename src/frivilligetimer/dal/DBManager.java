@@ -328,7 +328,6 @@ public final class DBManager
 
             ps.setInt(1, volunteer.getId());
             ps.executeUpdate();
-//            volunteersInGuild.remove(volunteer.getFullName());
         }
     }
 
