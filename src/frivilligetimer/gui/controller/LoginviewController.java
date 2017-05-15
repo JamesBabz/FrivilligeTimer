@@ -7,12 +7,10 @@ package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Manager;
-import frivilligetimer.be.Person;
 import frivilligetimer.gui.model.StaffModel;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,6 +55,7 @@ public class LoginviewController implements Initializable {
 
                 if (email.matches(employee.getEmail()) && password.matches(employee.getPassword())) {
                     model.setLevel(1);
+                    close();
                     break;
                 }
             }
@@ -68,8 +67,9 @@ public class LoginviewController implements Initializable {
                     model.setLevel(0);
 
                     ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
-
-                    vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", false, StageStyle.DECORATED, true, "Admin View");
+                    
+                    vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin View");
+                    close();
                     break;
                 }
 
@@ -78,4 +78,9 @@ public class LoginviewController implements Initializable {
 
     }
 
+      private void close()
+    {
+        Stage stage = (Stage) txtEmail.getScene().getWindow();
+        stage.close();
+    }
 }
