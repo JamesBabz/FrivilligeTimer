@@ -346,6 +346,20 @@ public final class DBManager
 
         }
     }
+    
+    public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE laugid =?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, guild.getId());
+            ps.executeUpdate();
+        }
+    }
 
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {

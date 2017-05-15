@@ -102,7 +102,7 @@ public final class GuildModel
     public void deleteGuild(Guild guild)
     {
         allGuilds.remove(guild);
-        manager.removeGuild(guild);
+        manager.deleteGuild(guild);
     }
 
     public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer) throws SQLException
