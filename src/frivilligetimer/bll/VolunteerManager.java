@@ -82,4 +82,9 @@ public class VolunteerManager
     {
         dbManager.updateHoursForVolunteer(id, date, hours);
     }
+
+    public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
+    {
+        dbManager.updateNoteAndPrefForVolunteer(id, pref, note);
+    }
 }
