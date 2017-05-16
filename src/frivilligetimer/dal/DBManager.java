@@ -19,11 +19,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -92,8 +95,7 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    }
-                    catch (IOException e)
+                    } catch (IOException e)
                     {
                         e.printStackTrace();
                     }
@@ -106,7 +108,7 @@ public final class DBManager
                         managers.add(manager);
                         break;
                     case 1:
-                        Employee employee = new Employee(id, fName, lName, phonenum, email, image);
+                        Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
                         employees.add(employee);
                         break;
                     case 2:
@@ -168,6 +170,14 @@ public final class DBManager
      */
     public List<Volunteer> getAllVolunteers()
     {
+        volunteers.clear();
+        try
+        {
+            setAllPeople();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return volunteers;
     }
 
@@ -199,6 +209,36 @@ public final class DBManager
     public List<Guild> getAllGuilds()
     {
         return guilds;
+    }
+
+    public List<String> getVolunteersInGuild()
+    {
+        return volunteersInGuild;
+    }
+
+    public int getTodaysHours(int id) throws SQLException
+    {
+        String sql = "SELECT * FROM Hours";
+        int hours = -1;
+        Date today = new java.sql.Date(new Date().getTime());
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int uid = rs.getInt("uid");
+                Date date = rs.getDate("Date");
+                int h = rs.getInt("hours");
+
+                if (uid == id && date.toString().equals(today.toString()))
+                {
+                    hours = h;
+                }
+            }
+
+        }
+        return hours;
     }
 
     public void addGuild(Guild guild) throws SQLServerException, SQLException
@@ -272,7 +312,22 @@ public final class DBManager
 
             ps.setInt(1, volunteer.getId());
             ps.executeUpdate();
+            volunteers.remove(volunteer);
 
+        }
+    }
+
+    public void removeVolunteerFromGuilds(Volunteer volunteer) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE uid = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, volunteer.getId());
+            ps.executeUpdate();
         }
     }
 
@@ -287,11 +342,26 @@ public final class DBManager
 
             ps.setInt(1, guild.getId());
             ps.executeUpdate();
+            guilds.remove(guild);
 
         }
     }
+    
+    public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE laugid =?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, guild.getId());
+            ps.executeUpdate();
+        }
+    }
 
-    public void removeEmployee(Employee employee) throws SQLServerException, SQLException
+    public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "DELETE from People WHERE ID = ?";
 
@@ -302,6 +372,7 @@ public final class DBManager
 
             ps.setInt(1, employee.getId());
             ps.executeUpdate();
+            employees.remove(employee);
         }
     }
 
@@ -342,11 +413,6 @@ public final class DBManager
             ps.setInt(5, volunteer.getId());
             ps.executeUpdate();
         }
-    }
-
-    public List<String> getVolunteersInGuild()
-    {
-        return volunteersInGuild;
     }
 
     public void updateEmployee(Employee employee) throws SQLException
@@ -411,7 +477,8 @@ public final class DBManager
     public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
     {
         String sql = "INSERT INTO Hours (uid, date, hours) VALUES (?,?,?)";
-        try(Connection con = cm.getConnection()){
+        try (Connection con = cm.getConnection())
+        {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, uid);
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -419,7 +486,34 @@ public final class DBManager
             ps.setInt(3, hours);
             ps.executeUpdate();
         }
-        
+
+    }
+
+    public void updateHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    {
+        String sql = "UPDATE Hours SET hours = ? WHERE uid = ? AND date = ?";
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, hours);
+            ps.setInt(2, uid);
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            ps.setDate(3, sqlDate);
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
+    {
+        String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
+        try(Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, note);
+            ps.setString(2, pref);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+        }
     }
 
 }

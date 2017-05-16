@@ -1,6 +1,7 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.sql.SQLException;
@@ -19,7 +20,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -34,7 +34,8 @@ public class AddVolunteerHoursController implements Initializable
 
     private Volunteer volunteer;
     private VolunteerModel model;
-    private boolean isManager = false;
+    private StaffModel staffModel;
+    private boolean isHourSet = false;
 
     @FXML
     private TextField txtHours;
@@ -71,33 +72,13 @@ public class AddVolunteerHoursController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
         model = VolunteerModel.getInstance();
+        staffModel = StaffModel.getInstance();
         this.volunteer = model.getTileVolunteer();
-        lblName.setText(volunteer.getFullName());
-        lblMail.setText(volunteer.getEmail());
-        lblNumber.setText(volunteer.getPhoneNum());
-        Image image;
-        if (volunteer.getImage() != null)
-        {
-             image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
-        }
-        else
-        {
-            image = null;
-        }
-        imgV.setImage(image);
-        if(isManager)
-        {
-        txtPref.setText(volunteer.getPreference());
-        txtNote.setText(volunteer.getNote());
-        }else{
-            pane.getChildren().remove(txtPref);
-            pane.getChildren().remove(txtNote);
-            pane.getChildren().remove(lblPref);
-            pane.getChildren().remove(lblNote);
-            pane.setPrefHeight(450);
-        }
+        populateFields();
+
+       
+
         // force the hour field to be numeric only
         txtHours.textProperty().addListener(new ChangeListener<String>()
         {
@@ -113,10 +94,53 @@ public class AddVolunteerHoursController implements Initializable
 
     }
 
+    private void populateFields()
+    {
+         if (staffModel.level == 1)
+        {
+            txtPref.setText(volunteer.getPreference());
+            txtNote.setText(volunteer.getNote());
+        }
+        else
+        {
+            pane.getChildren().remove(txtPref);
+            pane.getChildren().remove(txtNote);
+            pane.getChildren().remove(lblPref);
+            pane.getChildren().remove(lblNote);
+            pane.setPrefHeight(450);
+        }
+        lblName.setText(volunteer.getFullName());
+        lblMail.setText(volunteer.getEmail());
+        lblNumber.setText(volunteer.getPhoneNum());
+        setImage();
+        populateHours();
+    }
+
+    private void setImage()
+    {
+        Image image;
+        if (volunteer.getImage() != null)
+        {
+            image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+        }
+        else
+        {
+            image = null;
+        }
+        imgV.setImage(image);
+    }
+
     @FXML
     private void handleSubtractHour()
     {
-        int hours = Integer.parseInt(txtHours.getText());
+        int hours;
+        if (txtHours.getText().equals(""))
+        {
+            hours = 0;
+            txtHours.setText("" + hours);
+        } else{
+        hours = Integer.parseInt(txtHours.getText());
+        }
         if (hours != 0)
         {
             hours--;
@@ -127,27 +151,55 @@ public class AddVolunteerHoursController implements Initializable
     @FXML
     private void handleAddHour()
     {
-        int hours = Integer.parseInt(txtHours.getText());
-        hours++;
+        int hours;
+        if (txtHours.getText().equals(""))
+        {
+            hours = 0;
+        }
+        else
+        {
+            hours = Integer.parseInt(txtHours.getText());
+            hours++;
+        }
         txtHours.setText("" + hours);
     }
 
     @FXML
     private void handleSave()
     {
-        if(isManager){
-            
-        }
-        
         try
         {
-            model.addHoursForVolunteer(volunteer.getId(), new Date(), Integer.parseInt(txtHours.getText()));
+            saveToDB();
         }
-        catch (SQLException ex)
+        catch (SQLException | NumberFormatException ex)
         {
             Logger.getLogger(AddVolunteerHoursController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+       
         close();
+    }
+
+    private void saveToDB() throws SQLException, NumberFormatException
+    {
+        int id = volunteer.getId();
+        if (staffModel.level == 1)
+        {
+            String pref = txtPref.getText();
+            String note = txtNote.getText();
+            model.updateNoteAndPrefForVolunteer(id, pref, note);
+            volunteer.setPreference(pref);
+            volunteer.setNote(note);
+        }
+        
+        if (isHourSet)
+        {
+            model.updateHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()));
+        }
+        else
+        {
+            model.addHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()));
+        }
     }
 
     @FXML
@@ -161,5 +213,26 @@ public class AddVolunteerHoursController implements Initializable
         Stage stage = (Stage) btnClose.getScene().getWindow();
         stage.close();
     }
-    
+
+    private void populateHours()
+    {
+        try
+        {
+            int hours = model.getTodaysHours(volunteer.getId());
+            if (hours >= 0)
+            {
+                isHourSet = true;
+            }
+            else
+            {
+                hours = -1;
+            }
+            txtHours.setText("" + hours);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(AddVolunteerHoursController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

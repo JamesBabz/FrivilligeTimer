@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 public class Employee extends Person
 {
   
+    String password;
+    
     /**
      * The contructor
      *
@@ -23,16 +25,26 @@ public class Employee extends Person
      * @param lastName Gets the lastname of the employee
      * @param phoneNum Gets the phonenumber of the employee
      * @param email Gets the emailadress of the employee
+     * @param password
      * @param image
      */
-    public Employee(int id, String firstName, String lastName, String phoneNum, String email, BufferedImage image)
+    public Employee(int id, String firstName, String lastName, String phoneNum, String email, String password, BufferedImage image)
     {
         super(id, firstName, lastName, phoneNum, email, image);
+        this.password = password;
    
     }
 
     public Employee(String firstName, String lastName, String phoneNum, String email, BufferedImage image) {
         super(0, firstName, lastName, phoneNum, email, image);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
    

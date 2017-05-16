@@ -60,8 +60,9 @@
                                     <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                                  </items>
                               </Menu>
-                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
                               <MenuItem mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer Person" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
+                              <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern Person Fra Laug" />
                            </items>
                         </ContextMenu>
                      </contextMenu>

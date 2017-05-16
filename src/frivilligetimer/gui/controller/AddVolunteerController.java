@@ -22,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -69,7 +68,7 @@ public class AddVolunteerController implements Initializable
         }
 
         validateData();
-        
+
     }
 
     @FXML
@@ -81,9 +80,12 @@ public class AddVolunteerController implements Initializable
 
             model.addVolunteer(volunteer);
 
-            ImageManager iManager = new ImageManager();
+            if (file != null)
+            {
+                ImageManager iManager = new ImageManager();
 
-            iManager.updateImage(volunteer, file.getAbsolutePath());
+                iManager.updateImage(volunteer, file.getAbsolutePath());
+            }
 
             cancel();
         }
@@ -108,31 +110,32 @@ public class AddVolunteerController implements Initializable
         file = fileChooser.showOpenDialog(stage);
 
     }
-    
+
     private static String firstName = "";
     private static String lastName = "";
     private static String eMail = "";
     private static String phoneNumber = "";
 
-
     private void validateData()
-    {   
-        txtFirstName.textProperty().addListener((observable, oldVal, newVal) -> {
+    {
+        txtFirstName.textProperty().addListener((observable, oldVal, newVal) ->
+        {
             if (Pattern.matches("[^0-9]+", newVal) || newVal.isEmpty())
             {
                 firstName = newVal;
             }
             txtFirstName.setText(firstName);
         });
-        
-        txtLastName.textProperty().addListener((observable, oldVal, newVal) -> {
+
+        txtLastName.textProperty().addListener((observable, oldVal, newVal) ->
+        {
             if (Pattern.matches("[^0-9]+", newVal) || newVal.isEmpty())
             {
                 lastName = newVal;
             }
             txtLastName.setText(lastName);
         });
-        
+
         txtEmail.textProperty().addListener((observable, oldVal, newVal) ->
         {
             if (Pattern.matches("[[\\w]+[@]?[\\w\\.]+]+", newVal) || newVal.isEmpty())
@@ -141,8 +144,8 @@ public class AddVolunteerController implements Initializable
             }
             txtEmail.setText(eMail);
         });
-        
-        txtPhoneNumber.textProperty().addListener((observable, oldVal, newVal) -> 
+
+        txtPhoneNumber.textProperty().addListener((observable, oldVal, newVal) ->
         {
             if (Pattern.matches("[0-9]+", newVal) || newVal.isEmpty())
             {
@@ -152,7 +155,4 @@ public class AddVolunteerController implements Initializable
         });
     }
 
-    
-    
-    
 }
