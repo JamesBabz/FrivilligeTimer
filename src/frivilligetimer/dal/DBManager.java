@@ -346,6 +346,20 @@ public final class DBManager
 
         }
     }
+    
+    public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE laugid =?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, guild.getId());
+            ps.executeUpdate();
+        }
+    }
 
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
@@ -485,6 +499,19 @@ public final class DBManager
             ps.setInt(2, uid);
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             ps.setDate(3, sqlDate);
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
+    {
+        String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
+        try(Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, note);
+            ps.setString(2, pref);
+            ps.setInt(3, id);
             ps.executeUpdate();
         }
     }

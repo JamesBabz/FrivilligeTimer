@@ -25,11 +25,13 @@ public class Employee extends Person
      * @param lastName Gets the lastname of the employee
      * @param phoneNum Gets the phonenumber of the employee
      * @param email Gets the emailadress of the employee
+     * @param password
      * @param image
      */
     public Employee(int id, String firstName, String lastName, String phoneNum, String email, String password, BufferedImage image)
     {
         super(id, firstName, lastName, phoneNum, email, image);
+        this.password = password;
    
     }
 
