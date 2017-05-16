@@ -112,7 +112,7 @@ public final class DBManager
                         employees.add(employee);
                         break;
                     case 2:
-                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, note, preference, image);
+                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
                         volunteers.add(volunteer);
                         break;
                     default:

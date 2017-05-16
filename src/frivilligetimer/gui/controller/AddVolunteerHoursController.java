@@ -96,7 +96,7 @@ public class AddVolunteerHoursController implements Initializable
 
     private void populateFields()
     {
-         if (staffModel.level == 1)
+         if (staffModel.getLevel() == 1)
         {
             txtPref.setText(volunteer.getPreference());
             txtNote.setText(volunteer.getNote());
@@ -183,7 +183,7 @@ public class AddVolunteerHoursController implements Initializable
     private void saveToDB() throws SQLException, NumberFormatException
     {
         int id = volunteer.getId();
-        if (staffModel.level == 1)
+        if (staffModel.getLevel() == 1)
         {
             String pref = txtPref.getText();
             String note = txtNote.getText();
