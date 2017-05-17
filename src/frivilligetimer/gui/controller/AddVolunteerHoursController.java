@@ -225,7 +225,7 @@ public class AddVolunteerHoursController implements Initializable
             }
             else
             {
-                hours = -1;
+                hours = 0;
             }
             txtHours.setText("" + hours);
         }
