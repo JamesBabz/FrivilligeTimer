@@ -91,6 +91,12 @@ public class LoginviewController implements Initializable
 
     }
 
+    @FXML 
+    private void closeButton()
+    {
+        close();
+    }
+    
     private void close()
     {
         Stage stage = (Stage) txtEmail.getScene().getWindow();
