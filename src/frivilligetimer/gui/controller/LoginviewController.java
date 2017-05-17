@@ -24,7 +24,7 @@ import javafx.stage.StageStyle;
  *
  * @author Jacob Enemark
  */
-public class LoginViewController implements Initializable
+public class LoginviewController implements Initializable
 {
 
 
@@ -43,7 +43,7 @@ public class LoginViewController implements Initializable
         // TODO
     }
 
-    public LoginViewController() throws IOException, SQLException
+    public LoginviewController() throws IOException, SQLException
     {
         this.staffModel = StaffModel.getInstance();
     }
