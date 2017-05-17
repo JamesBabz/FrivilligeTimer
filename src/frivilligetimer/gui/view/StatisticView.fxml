@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="792.0" prefWidth="1282.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="frivilligetimer.gui.controller.StatisticViewController">
+   <children>
+      <BarChart fx:id="barGuilds" layoutX="320.0" layoutY="49.0" prefHeight="400.0" prefWidth="643.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <LineChart fx:id="lineVolunteers" layoutX="320.0" layoutY="49.0" prefHeight="400.0" prefWidth="643.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <TableView fx:id="tblOverview" layoutX="183.0" layoutY="449.0" prefHeight="339.0" prefWidth="916.0">
+        <columns>
+          <TableColumn fx:id="colName" prefWidth="737.0" text="Navn" />
+          <TableColumn fx:id="colHours" minWidth="0.0" prefWidth="178.0" text="Timer" />
+        </columns>
+      </TableView>
+      <ComboBox fx:id="cmbGuilds" layoutX="365.0" layoutY="24.0" prefWidth="150.0" />
+      <DatePicker fx:id="dpFrom" layoutX="538.0" layoutY="24.0" />
+      <DatePicker fx:id="dpTo" layoutX="733.0" layoutY="24.0" />
+   </children>
+</AnchorPane>
