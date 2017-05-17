@@ -187,7 +187,8 @@ public class AdminViewController implements Initializable
                         try
                         {
                             guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                        } catch (SQLException ex)
+                        }
+                        catch (SQLException ex)
                         {
                             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -220,7 +221,7 @@ public class AdminViewController implements Initializable
         {
             for (Volunteer volunteer : guild.getVolunteers())
             {
-                if(volunteer.getId() == selectedID)
+                if (volunteer.getId() == selectedID)
                 {
                     guild.removeVolunteer(volunteer);
                     break;
@@ -324,7 +325,15 @@ public class AdminViewController implements Initializable
     @FXML
     private void removeVolunteerFromGuild()
     {
-        
+
+    }
+
+    @FXML
+    private void handleStatClick()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
     }
 
 }
