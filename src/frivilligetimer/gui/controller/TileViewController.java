@@ -16,8 +16,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -76,6 +78,7 @@ public class TileViewController implements Initializable
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
+
     }
 
     /**
@@ -86,11 +89,12 @@ public class TileViewController implements Initializable
     {
         setLogo();
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
-        addAllVolunteerCells();
         btnLogOut.setVisible(false);
         lblWelcome.setVisible(false);
         listGuilds.setItems(guildModel.getAllGuildNames(true));
         addListener();
+        addAllVolunteerCells();
+
     }
 
     private void addListener()
@@ -117,10 +121,33 @@ public class TileViewController implements Initializable
 
     private void addAllVolunteerCells()
     {
-        for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
+        Task task = new Task<Void>()
         {
-            addNewVolunteerCellView(new VolunteerCellModel(volunteer));
-        }
+            @Override
+            public Void call() throws Exception
+            {
+                for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
+                {
+                    if (listGuilds.getSelectionModel().getSelectedIndex() == 0)
+                    {
+                        Platform.runLater(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                addNewVolunteerCellView(new VolunteerCellModel(volunteer));
+                            }
+                        });
+                    }
+
+                    Thread.sleep(100);
+                }
+                return null;
+            }
+        };
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
     }
 
     @FXML
