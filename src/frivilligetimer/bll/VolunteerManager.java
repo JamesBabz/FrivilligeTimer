@@ -79,9 +79,9 @@ public class VolunteerManager
         dbManager.updateVolunteer(volunteer);
     }
 
-    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        dbManager.addHoursForVolunteer(uid, date, hours);
+        dbManager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
     public int getTodaysHours(int id) throws SQLException

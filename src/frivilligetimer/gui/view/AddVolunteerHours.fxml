@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="anchorPane" fx:id="pane" prefHeight="670.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AddVolunteerHoursController">
+<AnchorPane id="anchorPane" fx:id="pane" prefHeight="718.0" prefWidth="721.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AddVolunteerHoursController">
     <stylesheets>
         <URL value="@../css/TileView.css" />
     </stylesheets>
@@ -73,11 +73,17 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="317.0" layoutY="395.0" text="Timer" AnchorPane.bottomAnchor="222.0">
+      <Label fx:id="lblHours" layoutX="317.0" layoutY="395.0" text="Timer" AnchorPane.bottomAnchor="222.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblguildError" layoutX="75.0" layoutY="443.0" text="Du er endnu ikke medlem af et laug." AnchorPane.bottomAnchor="222.0">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <ImageView fx:id="imgV" fitHeight="150.0" fitWidth="200.0" layoutX="505.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox fx:id="rbContainer" layoutX="239.0" layoutY="412.0" prefHeight="38.0" prefWidth="347.0" AnchorPane.bottomAnchor="275.0" />
     </children>
 </AnchorPane>
