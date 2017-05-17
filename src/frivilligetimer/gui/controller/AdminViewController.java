@@ -179,6 +179,7 @@ public class AdminViewController implements Initializable
                     {
                         for (Volunteer volunteer : guild.getVolunteers())
                         {
+
                             if (selectedVolunteer.getId() == volunteer.getId())
                             {
                                 isUnique = false;
@@ -328,7 +329,16 @@ public class AdminViewController implements Initializable
     @FXML
     private void removeVolunteerFromGuild()
     {
-        removeVolunteerFromAssignedGuild();
+removeVolunteerFromAssignedGuild();
+    }
+
+    @FXML
+    private void handleStatClick()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
+      
     }
 
     /**
