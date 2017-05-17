@@ -9,6 +9,7 @@ import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -44,6 +45,8 @@ public class VolunteerSingleCellController implements Initializable
     public VolunteerSingleCellController()
     {
         this.dataThread = new Thread(imageLoader());
+//        Platform.runLater(dataThread);
+
     }
 
     /**
@@ -54,8 +57,19 @@ public class VolunteerSingleCellController implements Initializable
     {
         model = VolunteerModel.getInstance();
         dataThread.start();
+
+
     }
 
+    @FXML
+    private void handleOpenHours()
+    {
+        model.setTileVolunteer(getModel().getVolunteer());
+        ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+
+    }
+    
     public VolunteerCellModel getModel()
     {
         return cellModel;
@@ -78,14 +92,4 @@ public class VolunteerSingleCellController implements Initializable
             imgV.setImage(img);
         });
     }
-
-    @FXML
-    private void handleOpenHours()
-    {
-        model.setTileVolunteer(getModel().getVolunteer());
-        ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
-
-    }
-
 }
