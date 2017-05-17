@@ -8,6 +8,7 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
+import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
@@ -15,19 +16,21 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -42,8 +45,9 @@ public class TileViewController implements Initializable
 {
 
 //    private VolunteerCellBoardModel boardModel;
-    private VolunteerModel volunteerModel;
-    private GuildModel guildModel;
+    private final VolunteerModel volunteerModel;
+    private final GuildModel guildModel;
+    private final StaffModel staffModel;
 
     @FXML
     private MenuBar btnMenu;
@@ -61,12 +65,17 @@ public class TileViewController implements Initializable
     private SplitPane splitPane;
     @FXML
     private AnchorPane listGuildsContainer;
+    @FXML
+    private Label lblWelcome;
+    @FXML
+    private Button btnLogOut;
 
     public TileViewController()
     {
 //        boardModel = VolunteerCellBoardModel.getInstance();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
+        staffModel = StaffModel.getInstance();
     }
 
     /**
@@ -78,9 +87,32 @@ public class TileViewController implements Initializable
         setLogo();
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
         addAllVolunteerCells();
-
+        btnLogOut.setVisible(false);
+        lblWelcome.setVisible(false);
         listGuilds.setItems(guildModel.getAllGuildNames(true));
+        addListener();
+    }
 
+    private void addListener()
+    {
+        staffModel.levelProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+            {
+                if (newValue.intValue() == 1)
+                {
+                    btnLogOut.setVisible(true);
+                    lblWelcome.setVisible(true);
+                    lblWelcome.setText("Velkommen " + staffModel.getLoggedInAs().getFullName());
+                }
+                else
+                {
+                    btnLogOut.setVisible(false);
+                    lblWelcome.setVisible(false);
+                }
+            }
+        });
     }
 
     private void addAllVolunteerCells()
@@ -97,7 +129,7 @@ public class TileViewController implements Initializable
         ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
 
         viewGen.generateView("/frivilligetimer/gui/view/Loginview.fxml", false, StageStyle.DECORATED, true, "Admin Login");
-        
+
     }
 
     /**
@@ -175,6 +207,12 @@ public class TileViewController implements Initializable
         {
             addNewVolunteerCellView(new VolunteerCellModel(volunteer));
         }
+    }
+
+    @FXML
+    private void handleLogOut()
+    {
+        staffModel.setLevel(2);
     }
 
 }

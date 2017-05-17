@@ -34,7 +34,6 @@ public class Volunteer extends Person
     {
         super(id, firstName, lastName, phoneNum, email, image);
         this.preference = preference;
-        this.preference = preference;
         this.note = note;
         this.image = image;
     }
