@@ -5,6 +5,7 @@
  */
 package frivilligetimer.gui.model;
 
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
@@ -87,6 +88,11 @@ public class VolunteerModel
         allVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
+    
+     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
+     {
+         manager.removeVolunteerFromAssignedGuild(volunteer, guild);
+     }
     
     public Volunteer getSelectedVolunteer() {
         return selectedVolunteer;

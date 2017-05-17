@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,10 +24,11 @@ import javafx.stage.StageStyle;
  *
  * @author Jacob Enemark
  */
-public class LoginviewController implements Initializable
+public class LoginViewController implements Initializable
 {
 
-    public final StaffModel model;
+
+    public final StaffModel staffModel;
 
     @FXML
     private TextField txtEmail;
@@ -36,15 +38,14 @@ public class LoginviewController implements Initializable
     /**
      * Initializes the controller class.
      */
-    @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
     }
 
-    public LoginviewController() throws IOException, SQLException
+    public LoginViewController() throws IOException, SQLException
     {
-        this.model = StaffModel.getInstance();
+        this.staffModel = StaffModel.getInstance();
     }
 
     @FXML
@@ -55,42 +56,82 @@ public class LoginviewController implements Initializable
 
     private void checkLoginInformation(String email, String password)
     {
-        if (model.getAllEmployees() != null)
+
+         boolean succes = false;
+
+        if (staffModel.getAllEmployees() != null)
+
         {
-            for (Employee employee : model.getAllEmployees())
+            for (Employee employee : staffModel.getAllEmployees())
             {
                 if (employee.getEmail() != null && employee.getPassword() != null)
                 {
                     if (email.matches(employee.getEmail()) && password.matches(employee.getPassword()))
                     {
-                        model.setLevel(1);
+                        succes = true;
+                        staffModel.setLoggedInAs(employee);
+                        staffModel.setLevel(1);
                         close();
                         break;
                     }
-                }
+                 }
             }
         }
-        if (model.getAllManagers() != null)
+        if (staffModel.getAllManagers() != null)
         {
-            for (Manager manager : model.getAllManagers())
+            for (Manager manager : staffModel.getAllManagers())
             {
 
                 if (email.matches(manager.getEmail()) && password.matches(manager.getPassword()))
                 {
-                    model.setLevel(0);
+                    staffModel.setLevel(0);
 
                     ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
 
                     vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin View");
+                    succes = true;
                     close();
                     break;
                 }
 
             }
         }
+         
+         if(!succes)
+         {
+                showErrorDialog("Login Error", "User not found", "Either the username or the password you provided"
+                + " could not be found in our database.");
+         }
+       
+       
+       
+      
 
     }
 
+        /**
+     * Shows an error dialog.
+     *
+     * @param title The title of the error.
+     * @param header The header - subtitle.
+     * @param content The error message.
+     */
+    private void showErrorDialog(String title, String header, String content)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
+    }
+    
+    @FXML 
+    private void closeButton()
+    {
+        close();
+    }
+    
     private void close()
     {
         Stage stage = (Stage) txtEmail.getScene().getWindow();

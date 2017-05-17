@@ -62,6 +62,17 @@ public class VolunteerManager
             Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
+     {
+        try
+        {
+            dbManager.removeVolunteerFromAssignedGuild(volunteer, guild);
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
 
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {

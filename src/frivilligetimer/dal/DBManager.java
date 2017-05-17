@@ -112,7 +112,7 @@ public final class DBManager
                         employees.add(employee);
                         break;
                     case 2:
-                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, note, preference, image);
+                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
                         volunteers.add(volunteer);
                         break;
                     default:
@@ -361,6 +361,20 @@ public final class DBManager
         }
     }
 
+        public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, volunteer.getId());
+            ps.setInt(2, guild.getId());
+            ps.executeUpdate();
+        }
+    }
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "DELETE from People WHERE ID = ?";
