@@ -28,6 +28,7 @@ public class VolunteerSingleCellController implements Initializable
 
     private VolunteerCellModel cellModel;
     private VolunteerModel model;
+    private final Thread dataThread;
 
     @FXML
     private Label lblPhone;
@@ -40,6 +41,11 @@ public class VolunteerSingleCellController implements Initializable
     @FXML
     private ImageView imgV;
 
+    public VolunteerSingleCellController()
+    {
+        this.dataThread = new Thread(imageLoader());
+    }
+
     /**
      * Initializes the controller class.
      */
@@ -47,6 +53,7 @@ public class VolunteerSingleCellController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         model = VolunteerModel.getInstance();
+        dataThread.start();
     }
 
     public VolunteerCellModel getModel()
@@ -60,8 +67,16 @@ public class VolunteerSingleCellController implements Initializable
         lblFName.textProperty().bind(model.fNameProperty());
         lblLName.textProperty().bind(model.lNameProperty());
         lblPhone.textProperty().bind(model.PhoneNumProperty());
-        Image img = model.getImage();
-        imgV.setImage(img);
+
+    }
+
+    private Runnable imageLoader()
+    {
+        return new Thread(() ->
+        {
+            Image img = this.cellModel.getImage();
+            imgV.setImage(img);
+        });
     }
 
     @FXML
