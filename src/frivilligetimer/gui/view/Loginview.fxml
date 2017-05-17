@@ -13,7 +13,7 @@
       <Label layoutX="30.0" layoutY="87.0" text="Password" />
       <Button defaultButton="true" layoutX="206.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
       <Button cancelButton="true" layoutX="134.0" layoutY="117.0" mnemonicParsing="false" onAction="#closeButton" text="Annuller" />
-      <Label layoutX="29.0" layoutY="14.0" text="Admin-Login">
+      <Label layoutX="29.0" layoutY="14.0" text="Login">
          <font>
             <Font size="17.0" />
          </font>
