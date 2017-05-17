@@ -5,6 +5,7 @@
  */
 package frivilligetimer.bll;
 
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class VolunteerManager
     {
         try
         {
+            dbManager.removeVolunteerFromGuilds(volunteer);
             dbManager.deleteVolunteer(volunteer);
         }
         catch (SQLException ex)
@@ -79,5 +81,10 @@ public class VolunteerManager
     public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
     {
         dbManager.updateHoursForVolunteer(id, date, hours);
+    }
+
+    public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
+    {
+        dbManager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
 }

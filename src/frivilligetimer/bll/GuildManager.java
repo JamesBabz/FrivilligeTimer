@@ -42,10 +42,11 @@ public class GuildManager
         dbManager.addGuild(guild);
     }
 
-    public void removeGuild(Guild guild)
+    public void deleteGuild(Guild guild)
     {
         try
         {
+             dbManager.removeVolunteersFromAssignedGuild(guild);
             dbManager.deleteGuild(guild);
         } catch (SQLException ex)
         {
