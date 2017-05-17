@@ -27,8 +27,8 @@ import javafx.stage.StageStyle;
 public class LoginViewController implements Initializable
 {
 
-    public final StaffModel model;
-   
+
+    public final StaffModel staffModel;
 
     @FXML
     private TextField txtEmail;
@@ -45,7 +45,7 @@ public class LoginViewController implements Initializable
 
     public LoginViewController() throws IOException, SQLException
     {
-        this.model = StaffModel.getInstance();
+        this.staffModel = StaffModel.getInstance();
     }
 
     @FXML
@@ -56,32 +56,35 @@ public class LoginViewController implements Initializable
 
     private void checkLoginInformation(String email, String password)
     {
+
          boolean succes = false;
-        
-        if (model.getAllEmployees() != null)
+
+        if (staffModel.getAllEmployees() != null)
+
         {
-            for (Employee employee : model.getAllEmployees())
+            for (Employee employee : staffModel.getAllEmployees())
             {
                 if (employee.getEmail() != null && employee.getPassword() != null)
                 {
                     if (email.matches(employee.getEmail()) && password.matches(employee.getPassword()))
                     {
-                        model.setLevel(1);
                         succes = true;
+                        staffModel.setLoggedInAs(employee);
+                        staffModel.setLevel(1);
                         close();
                         break;
                     }
                  }
             }
         }
-         if (model.getAllManagers() != null)
+        if (staffModel.getAllManagers() != null)
         {
-            for (Manager manager : model.getAllManagers())
+            for (Manager manager : staffModel.getAllManagers())
             {
 
                 if (email.matches(manager.getEmail()) && password.matches(manager.getPassword()))
                 {
-                    model.setLevel(0);
+                    staffModel.setLevel(0);
 
                     ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
 
