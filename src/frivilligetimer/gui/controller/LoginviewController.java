@@ -26,7 +26,7 @@ import javafx.stage.StageStyle;
 public class LoginviewController implements Initializable
 {
 
-    public final StaffModel model;
+    public final StaffModel staffModel;
 
     @FXML
     private TextField txtEmail;
@@ -44,7 +44,7 @@ public class LoginviewController implements Initializable
 
     public LoginviewController() throws IOException, SQLException
     {
-        this.model = StaffModel.getInstance();
+        this.staffModel = StaffModel.getInstance();
     }
 
     @FXML
@@ -55,29 +55,30 @@ public class LoginviewController implements Initializable
 
     private void checkLoginInformation(String email, String password)
     {
-        if (model.getAllEmployees() != null)
+        if (staffModel.getAllEmployees() != null)
         {
-            for (Employee employee : model.getAllEmployees())
+            for (Employee employee : staffModel.getAllEmployees())
             {
                 if (employee.getEmail() != null && employee.getPassword() != null)
                 {
                     if (email.matches(employee.getEmail()) && password.matches(employee.getPassword()))
                     {
-                        model.setLevel(1);
+                        staffModel.setLoggedInAs(employee);
+                        staffModel.setLevel(1);
                         close();
                         break;
                     }
                 }
             }
         }
-        if (model.getAllManagers() != null)
+        if (staffModel.getAllManagers() != null)
         {
-            for (Manager manager : model.getAllManagers())
+            for (Manager manager : staffModel.getAllManagers())
             {
 
                 if (email.matches(manager.getEmail()) && password.matches(manager.getPassword()))
                 {
-                    model.setLevel(0);
+                    staffModel.setLevel(0);
 
                     ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
 
