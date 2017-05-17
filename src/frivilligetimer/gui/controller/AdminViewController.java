@@ -8,11 +8,9 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.bll.ImageManager;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,13 +18,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -37,8 +32,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -172,7 +165,6 @@ public class AdminViewController implements Initializable
     {
         selectedVolunteer = tableVolunteer.selectionModelProperty().getValue().getSelectedItem();
         guildsSubMenu = new ArrayList<>();
-
         for (Guild guild : tableGuild.getItems())
         {
             MenuItem item = new MenuItem(guild.getName());
@@ -182,15 +174,27 @@ public class AdminViewController implements Initializable
                 @Override
                 public void handle(ActionEvent event)
                 {
+                    boolean isUnique = true;
                     if (item.getText().equals(guild.getName()))
                     {
-                        try
+                        for (Volunteer volunteer : guild.getVolunteers())
                         {
-                            guildModel.addVolunteerToGuild(guild, selectedVolunteer);
+
+                            if (selectedVolunteer.getId() == volunteer.getId())
+                            {
+                                isUnique = false;
+                            }
                         }
-                        catch (SQLException ex)
+                        if (isUnique)
                         {
-                            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+
+                            try
+                            {
+                                guildModel.addVolunteerToGuild(guild, selectedVolunteer);
+                            } catch (SQLException ex)
+                            {
+                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }
@@ -325,7 +329,7 @@ public class AdminViewController implements Initializable
     @FXML
     private void removeVolunteerFromGuild()
     {
-
+removeVolunteerFromAssignedGuild();
     }
 
     @FXML
@@ -334,6 +338,36 @@ public class AdminViewController implements Initializable
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
+      
+    }
+
+    /**
+     * Removes the selected volunteer from the assigned guild
+     */
+    private void removeVolunteerFromAssignedGuild()
+    {
+        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        if (guildModel.getVolunteersInCurrentGuild().contains(selectedVolunteer))
+        {
+            volunteerModel.removeVolunteerFromAssignedGuild(selectedVolunteer, selectedGuild);
+            tableVolunteer.getItems().remove(selectedVolunteer);
+
+            int selectedID = selectedVolunteer.getId();
+            for (Guild guild : guildModel.getAllGuildsForTable())
+            {
+                for (Volunteer volunteer : guild.getVolunteers())
+                {
+                    if (guild.getId() == selectedGuild.getId())
+                    {
+                        if (volunteer.getId() == selectedID)
+                        {
+                            guild.removeVolunteer(volunteer);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
