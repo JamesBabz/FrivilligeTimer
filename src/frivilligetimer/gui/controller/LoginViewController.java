@@ -27,7 +27,6 @@ import javafx.stage.StageStyle;
 public class LoginViewController implements Initializable
 {
 
-
     public final StaffModel staffModel;
 
     @FXML
@@ -57,7 +56,7 @@ public class LoginViewController implements Initializable
     private void checkLoginInformation(String email, String password)
     {
 
-         boolean succes = false;
+        boolean succes = false;
 
         if (staffModel.getAllEmployees() != null)
 
@@ -74,7 +73,7 @@ public class LoginViewController implements Initializable
                         close();
                         break;
                     }
-                 }
+                }
             }
         }
         if (staffModel.getAllManagers() != null)
@@ -89,6 +88,7 @@ public class LoginViewController implements Initializable
                     ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
 
                     vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin View");
+                    vg.setMaximized(true);
                     succes = true;
                     close();
                     break;
@@ -96,20 +96,16 @@ public class LoginViewController implements Initializable
 
             }
         }
-         
-         if(!succes)
-         {
-                showErrorDialog("Login fejl", "Brugeren blev ikke fundet", "Emailen eller koden"
-                + " kunne ikke findes i databasen.");
-         }
-       
-       
-       
-      
+
+        if (!succes)
+        {
+            showErrorDialog("Login fejl", "Brugeren blev ikke fundet", "Emailen eller koden"
+                    + " kunne ikke findes i databasen.");
+        }
 
     }
 
-        /**
+    /**
      * Shows an error dialog.
      *
      * @param title The title of the error.
@@ -125,13 +121,13 @@ public class LoginViewController implements Initializable
 
         alert.showAndWait();
     }
-    
-    @FXML 
+
+    @FXML
     private void closeButton()
     {
         close();
     }
-    
+
     private void close()
     {
         Stage stage = (Stage) txtEmail.getScene().getWindow();
