@@ -44,6 +44,7 @@ public final class DBManager
     private final List<Manager> managers;
     private final List<Guild> guilds;
     private final List<String> volunteersInGuild;
+    private final List<String> employeesInGuild;
 
     /**
      * The default constructor for the database manager.
@@ -56,10 +57,12 @@ public final class DBManager
         this.managers = new ArrayList<>();
         this.guilds = new ArrayList<>();
         this.volunteersInGuild = new ArrayList<>();
+        this.employeesInGuild = new ArrayList<>();
 
         setAllPeople();
         setAllGuilds();
         setAllVolunteersInGuilds();
+        setAllEmployeesInGuilds();
     }
 
     /**
@@ -162,6 +165,28 @@ public final class DBManager
 
         }
     }
+    
+        public void setAllEmployeesInGuilds() throws SQLServerException, SQLException
+    {
+        String sql = " SELECT* FROM AssignedGuilds";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int uid = rs.getInt("uid");
+                int laugid = rs.getInt("laugid");
+
+                String string = uid + "," + laugid;
+                employeesInGuild.add(string);
+            }
+
+        }
+    }
+    
+    
 
     /**
      * Gets all the volunteers
@@ -214,6 +239,11 @@ public final class DBManager
     public List<String> getVolunteersInGuild()
     {
         return volunteersInGuild;
+    }
+    
+    public List<String> getEmployeesInGuild()
+    {
+        return employeesInGuild;
     }
 
     public int getTodaysHours(int id) throws SQLException
@@ -412,6 +442,23 @@ public final class DBManager
 
         }
     }
+    
+        public void addEmployeeToGuild(int laugid, int uid) throws SQLException
+    {
+        String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
+
+        Connection con = cm.getConnection();
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, uid);
+            ps.setInt(2, laugid);
+
+            ps.executeUpdate();
+
+        }
+    }
+    
 
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
@@ -530,5 +577,7 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
+
+
 
 }
