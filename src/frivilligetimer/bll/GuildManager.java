@@ -67,4 +67,15 @@ public class GuildManager
     public void updateGuild(Guild guild) throws SQLException {
         dbManager.updateGuild(guild);
     }
+
+    public void addEmployeeToGuild(int laugid, int uid) throws SQLException
+    {
+        dbManager.addEmployeeToGuild(laugid, uid);
+        
+    }
+    
+    public List<String> getEmployeesInGuild()
+    {
+        return dbManager.getEmployeesInGuild();
+    }
 }
