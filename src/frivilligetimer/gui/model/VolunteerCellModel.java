@@ -37,7 +37,7 @@ public class VolunteerCellModel
         }
         else
         {
-            image = new Image("frivilligetimer/gui/image/profile-placeholder.png");
+            image = new Image("frivilligetimer/gui/image/profile-placeholder.jpg");
         }
 
     }
@@ -97,6 +97,4 @@ public class VolunteerCellModel
         return image;
     }
     
-    
-
 }

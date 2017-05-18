@@ -488,9 +488,9 @@ public final class DBManager
         }
     }
 
-    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        String sql = "INSERT INTO Hours (uid, date, hours) VALUES (?,?,?)";
+        String sql = "INSERT INTO Hours (uid, date, hours, laugid) VALUES (?,?,?,?)";
         try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -498,6 +498,7 @@ public final class DBManager
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             ps.setDate(2, sqlDate);
             ps.setInt(3, hours);
+            ps.setInt(4, guildId);
             ps.executeUpdate();
         }
 
