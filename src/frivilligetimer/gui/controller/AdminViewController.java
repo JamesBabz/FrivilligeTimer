@@ -272,7 +272,7 @@ public class AdminViewController implements Initializable
 
     @FXML
     private void ShowVolunteersInCurrentGuild(MouseEvent event)
-    {
+     {
         if (event.getClickCount() == 2)
         {
             Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
@@ -291,14 +291,20 @@ public class AdminViewController implements Initializable
                 }
             }
             tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-            tableEmployee.setItems(guildModel.getEmployeesInCurrentGuild());
+            tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+            for (Employee item : tableEmployee.getItems())
+            {
+                for (Employee employee : guildModel.getEmployeesInCurrentGuild())
+                {
+                    if (item.getId() == employee.getId())
+                    {
+                        tableEmployee.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                        tableEmployee.getSelectionModel().select(item);
+                    }
+                }
+            }
             tableGuild.getSelectionModel().select(selectedGuild);
         }
-    }
-
-    private void showEmployeesInGuild()
-    {
-
     }
 
     @FXML
