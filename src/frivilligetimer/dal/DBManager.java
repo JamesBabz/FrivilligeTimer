@@ -133,7 +133,7 @@ public final class DBManager
 
     public void setAllGuilds() throws SQLServerException, SQLException
     {
-        String sql = "SELECT * FROM Guilds";
+        String sql = "SELECT * FROM Guilds WHERE isActive = 1";
 
         
         try (Connection con = cm.getConnection())
@@ -146,11 +146,10 @@ public final class DBManager
                 String name = rs.getString("Name");
                 Boolean isActive = rs.getBoolean("isActive");
 
-                if(isActive)
-                {
+               
                 Guild guild = new Guild(id, name);
                 guilds.add(guild);
-                }
+                
             }
 
         }
@@ -224,6 +223,14 @@ public final class DBManager
      */
     public List<Employee> getAllEmployees()
     {
+        employees.clear();
+        try
+        {
+            setAllPeople();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return employees;
     }
 
@@ -435,6 +442,21 @@ public final class DBManager
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setInt(1, volunteer.getId());
+            ps.setInt(2, guild.getId());
+            ps.executeUpdate();
+        }
+    }
+    
+    public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, employee.getId());
             ps.setInt(2, guild.getId());
             ps.executeUpdate();
         }
