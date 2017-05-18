@@ -92,6 +92,7 @@ public final class DBManager
                 int level = rs.getInt("Position");
                 String password = rs.getString("Password");
                 byte[] imageBytes = rs.getBytes("ImageBinary");
+                Boolean isActive = rs.getBoolean("isActive");
                 BufferedImage image = null;
                 if (imageBytes != null)
                 {
@@ -103,7 +104,9 @@ public final class DBManager
                         e.printStackTrace();
                     }
                 }
-
+                
+                if(isActive)
+                {
                 switch (level)
                 {
                     case 0:
@@ -121,6 +124,7 @@ public final class DBManager
                     default:
                         break;
                 }
+                }
 
             }
         }
@@ -130,6 +134,7 @@ public final class DBManager
     {
         String sql = "SELECT * FROM Guilds";
 
+        
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
@@ -138,9 +143,13 @@ public final class DBManager
             {
                 int id = rs.getInt("ID");
                 String name = rs.getString("Name");
+                Boolean isActive = rs.getBoolean("isActive");
 
+                if(isActive)
+                {
                 Guild guild = new Guild(id, name);
                 guilds.add(guild);
+                }
             }
 
         }
@@ -333,7 +342,7 @@ public final class DBManager
 
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
-        String sql = "DELETE from People WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -363,7 +372,7 @@ public final class DBManager
 
     public void deleteGuild(Guild guild) throws SQLException
     {
-        String sql = "DELETE from Guilds WHERE ID = ?";
+        String sql = "UPDATE Guilds SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -407,7 +416,7 @@ public final class DBManager
     }
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
-        String sql = "DELETE from People WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
