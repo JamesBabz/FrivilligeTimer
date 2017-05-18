@@ -80,9 +80,12 @@ public class AdminViewController implements Initializable
     private final GuildModel guildModel;
     private final StaffModel staffModel;
     private Volunteer selectedVolunteer;
+    private Employee selectedEmployee;
     private List<MenuItem> guildsSubMenu;
     @FXML
     private Menu menuAddEmployeeToGuild;
+    @FXML
+    private MenuItem menuItemRemoveEmployee;
 
     /**
      * Initializes the controller class.
@@ -219,7 +222,7 @@ public class AdminViewController implements Initializable
     @FXML
     private void handleDeleteVolunteer()
     {
-        Volunteer selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getItems().remove(selectedVolunteer);
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.deleteVolunteer(selectedVolunteer);
@@ -278,27 +281,34 @@ public class AdminViewController implements Initializable
             Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
             colVolunteer.setText("Frivillige i " + selectedGuild.getName());
             colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
-            for (Guild guild : guildModel.getAllGuildsForTable())
-            {
-                if (guild == selectedGuild)
-                {
 
-                    guildModel.getVolunteersInCurrentGuild().clear();
-                    guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+            guildModel.getVolunteersInCurrentGuild().clear();
+            guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
 
-                    guildModel.getEmployeesInCurrentGuild().clear();
-                    guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
-                }
-            }
+            guildModel.getEmployeesInCurrentGuild().clear();
+            guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
+
             tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-            tableEmployee.setItems(guildModel.getEmployeesInCurrentGuild());
-            tableGuild.getSelectionModel().select(selectedGuild);
+
+            showEmployeesAssignedToGuild();
+//            tableGuild.getSelectionModel().select(selectedGuild);
         }
     }
 
-    private void showEmployeesInGuild()
+    private void showEmployeesAssignedToGuild()
     {
-
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        for (Employee item : tableEmployee.getItems())
+        {
+            for (Employee employee : guildModel.getEmployeesInCurrentGuild())
+            {
+                if (item.getId() == employee.getId())
+                {
+                    tableEmployee.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                    tableEmployee.getSelectionModel().select(item);
+                }
+            }
+        }
     }
 
     @FXML
@@ -346,7 +356,13 @@ public class AdminViewController implements Initializable
     @FXML
     private void removeVolunteerFromGuild()
     {
-removeVolunteerFromAssignedGuild();
+        removeVolunteerFromAssignedGuild();
+    }
+
+    @FXML
+    private void removeEmployeeFromGuild(ActionEvent event)
+    {
+        removeEmployeeFromAssignedGuild();
     }
 
     @FXML
@@ -355,7 +371,7 @@ removeVolunteerFromAssignedGuild();
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
-      
+
     }
 
     /**
@@ -379,6 +395,33 @@ removeVolunteerFromAssignedGuild();
                         if (volunteer.getId() == selectedID)
                         {
                             guild.removeVolunteer(volunteer);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeEmployeeFromAssignedGuild()
+    {
+        selectedEmployee = tableEmployee.getSelectionModel().getSelectedItem();
+        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
+        {
+            staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
+            tableEmployee.getItems().remove(selectedEmployee);
+
+            int selectedID = selectedEmployee.getId();
+            for (Guild guild : guildModel.getAllGuildsForTable())
+            {
+                for (Employee employee : guild.getEmployees())
+                {
+                    if (guild.getId() == selectedGuild.getId())
+                    {
+                        if (employee.getId() == selectedID)
+                        {
+                            guild.removeEmployee(employee);
                             break;
                         }
                     }
