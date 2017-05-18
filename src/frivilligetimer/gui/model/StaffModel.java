@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,16 +24,17 @@ import javafx.collections.ObservableList;
  */
 public class StaffModel
 {
+
     private static StaffModel instance;
-    public int level;
     StaffManager manager;
-    
+    private final IntegerProperty level = new SimpleIntegerProperty();
+    private Employee loggedInAs;
+
     public Employee selectedEmployee;
-    
-     private final ObservableList<Employee> allEmployees;
- 
-    
-        public static StaffModel getInstance()
+
+    private final ObservableList<Employee> allEmployees;
+
+    public static StaffModel getInstance()
     {
         if (instance == null)
         {
@@ -40,72 +43,98 @@ public class StaffModel
         return instance;
     }
 
-
-    private StaffModel() 
+    private StaffModel()
     {
         try
         {
             manager = new StaffManager();
-        } catch (IOException ex)
-        {
-            Logger.getLogger(StaffModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(StaffModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        catch (SQLException ex)
+        {
+            Logger.getLogger(StaffModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         allEmployees = FXCollections.observableArrayList();
     }
-    
+
     public List<Manager> getAllManagers()
     {
         return manager.getAllManagers();
     }
-    
+
     public List<Employee> getAllEmployees()
     {
         return manager.getAllEmployees();
     }
-    
-        /**
+
+    /**
      * Gets all employees in the tableview "Tovholdere"
+     *
      * @return a list of all employees
      */
     public ObservableList<Employee> getAllGuildManagersForTable()
     {
-       allEmployees.addAll(manager.getAllEmployees());
-       return allEmployees;
+        allEmployees.clear();
+        allEmployees.addAll(manager.getAllEmployees());
+        return allEmployees;
     }
-    
-        public void addEmployee(Employee employee) throws SQLException
+
+    public void addEmployee(Employee employee) throws SQLException
     {
         allEmployees.add(employee);
         manager.addEmployee(employee);
     }
 
-    public void deleteEmployee(Employee employee) {
+    public void deleteEmployee(Employee employee)
+    {
         allEmployees.remove(employee);
         manager.removeEmployee(employee);
     }
-    
-     public Employee getSelectedEmployee() {
+
+    public Employee getSelectedEmployee()
+    {
         return selectedEmployee;
     }
 
-    public void setSelectedEmployee(Employee selectedEmployee) {
+    public void setSelectedEmployee(Employee selectedEmployee)
+    {
         this.selectedEmployee = selectedEmployee;
     }
-    
+
     public void editEmployee(Employee employee) throws SQLException
     {
-       manager.updateEmployee(selectedEmployee);
+        manager.updateEmployee(selectedEmployee);
     }
-    
-    public int getLevel() {
+
+    public int getLevel()
+    {
+        return level.get();
+    }
+
+    public void setLevel(int value)
+    {
+        level.set(value);
+    }
+
+    public IntegerProperty levelProperty()
+    {
         return level;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public Employee getLoggedInAs()
+    {
+        return loggedInAs;
     }
+
+    public void setLoggedInAs(Employee e)
+    {
+        this.loggedInAs = e;
+    }
+    
+    
+
 }

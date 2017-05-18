@@ -62,20 +62,31 @@ public class VolunteerManager
             Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
+     {
+        try
+        {
+            dbManager.removeVolunteerFromAssignedGuild(volunteer, guild);
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
 
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
         dbManager.updateVolunteer(volunteer);
     }
 
-    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        dbManager.addHoursForVolunteer(uid, date, hours);
+        dbManager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
-    public int getTodaysHours(int id) throws SQLException
+    public int getTodaysHours(int id, int guildid) throws SQLException
     {
-        return dbManager.getTodaysHours(id);
+        return dbManager.getTodaysHours(id, guildid);
     }
 
     public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
