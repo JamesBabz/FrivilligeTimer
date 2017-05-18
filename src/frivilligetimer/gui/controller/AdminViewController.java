@@ -278,23 +278,34 @@ public class AdminViewController implements Initializable
     {
         if (event.getClickCount() == 2)
         {
-            Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
-            colVolunteer.setText("Frivillige i " + selectedGuild.getName());
-            colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
-
-            guildModel.getVolunteersInCurrentGuild().clear();
-            guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
-
-            guildModel.getEmployeesInCurrentGuild().clear();
-            guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
-
-            tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-
+            populateTablesForCurrentGuild();
             showEmployeesAssignedToGuild();
-//            tableGuild.getSelectionModel().select(selectedGuild);
         }
     }
 
+    /**
+     * Sets the employee and volunteer table for chosen guild
+     */
+    private void populateTablesForCurrentGuild()
+    {
+        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        colVolunteer.setText("Frivillige i " + selectedGuild.getName());
+        colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
+
+        guildModel.getVolunteersInCurrentGuild().clear();
+        guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+
+        guildModel.getEmployeesInCurrentGuild().clear();
+        guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
+
+        tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
+
+    }
+
+    /**
+     * Selects the employees who is assigned to the chosen guild
+     * the table sets them
+     */
     private void showEmployeesAssignedToGuild()
     {
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
@@ -430,6 +441,12 @@ public class AdminViewController implements Initializable
         }
     }
 
+    /**
+     * sets the menuitems with each guild in the contextmenu
+     * Adds the selected employee to the selected guild
+     * method is called in handleContextGuildMenuForEmployee()
+     * @param menu 
+     */
     private void addEmployeeToGuild(Menu menu)
     {
         Employee selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
@@ -450,7 +467,6 @@ public class AdminViewController implements Initializable
                         {
                             if (selectedEmployee.getId() == employee.getId())
                             {
-                                System.out.println("in if");
                                 isUnique = false;
                             }
                         }
