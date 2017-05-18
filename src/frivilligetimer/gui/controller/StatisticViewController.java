@@ -73,7 +73,6 @@ public class StatisticViewController implements Initializable
 
         XYChart.Series allGuilds = new XYChart.Series();
         allGuilds.setName("Laug");
-        guildModel.populateGuilds();
         for (Guild guild : guildModel.getAllGuildsForTable())
         {
             guildModel.setVolunteersInGuild(guild);
