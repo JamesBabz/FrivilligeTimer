@@ -99,8 +99,8 @@ public class LoginViewController implements Initializable
          
          if(!succes)
          {
-                showErrorDialog("Login Error", "User not found", "Either the username or the password you provided"
-                + " could not be found in our database.");
+                showErrorDialog("Login fejl", "Brugeren blev ikke fundet", "Emailen eller koden"
+                + " kunne ikke findes i databasen.");
          }
        
        

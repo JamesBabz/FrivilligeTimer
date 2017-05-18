@@ -117,9 +117,9 @@ public class VolunteerModel
         this.tileVolunteer = tileVolunteer;
     }
 
-  public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+  public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        manager.addHoursForVolunteer(uid, date, hours);
+        manager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
     public int getTodaysHours(int id) throws SQLException
