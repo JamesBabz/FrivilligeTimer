@@ -99,7 +99,8 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         e.printStackTrace();
                     }
@@ -208,7 +209,8 @@ public final class DBManager
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -255,28 +257,51 @@ public final class DBManager
         return employeesInGuild;
     }
 
-    public int getTodaysHours(int id) throws SQLException
+//    public int[] getTodaysHours(int id) throws SQLException
+//    {
+//        String sql = "SELECT * FROM Hours";
+//        int hours = -1;
+//        int guildid = -1;
+//        Date today = new java.sql.Date(new Date().getTime());
+//        try (Connection con = cm.getConnection())
+//        {
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery(sql);
+//            while (rs.next())
+//            {
+//                int uid = rs.getInt("uid");
+//                Date date = rs.getDate("Date");
+//                int h = rs.getInt("hours");
+//                int gid = rs.getInt("laugid");
+//                if (uid == id && date.toString().equals(today.toString()))
+//                {
+//                    hours = h;
+//                    guildid = gid;
+//                }
+//            }
+//
+//        }
+//        int[] returnArray =
+//        {
+//            hours, guildid
+//        };
+//        return returnArray;
+//    }
+    public int getTodaysHours(int id, int guildid) throws SQLException
     {
-        String sql = "SELECT * FROM Hours";
+        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(new Date().getTime()).toString() + "' AND laugid = " + guildid;
         int hours = -1;
-        Date today = new java.sql.Date(new Date().getTime());
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next())
             {
-                int uid = rs.getInt("uid");
-                Date date = rs.getDate("Date");
-                int h = rs.getInt("hours");
-
-                if (uid == id && date.toString().equals(today.toString()))
-                {
-                    hours = h;
-                }
+                hours = rs.getInt("hours");
             }
 
         }
+
         return hours;
     }
 
@@ -385,35 +410,36 @@ public final class DBManager
 
         }
     }
-    
+
     public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE laugid =?";
-        
-        try(Connection con = cm.getConnection())
+
+        try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setInt(1, guild.getId());
             ps.executeUpdate();
         }
     }
 
-        public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
+    public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
-        
-        try(Connection con = cm.getConnection())
+
+        try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setInt(1, volunteer.getId());
             ps.setInt(2, guild.getId());
             ps.executeUpdate();
         }
     }
+
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
@@ -577,7 +603,7 @@ public final class DBManager
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
     {
         String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
-        try(Connection con = cm.getConnection())
+        try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, note);
