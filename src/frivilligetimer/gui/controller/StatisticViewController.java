@@ -83,14 +83,14 @@ public class StatisticViewController implements Initializable
             {
                 int id = volunteer.getId();
                 System.out.println(id);
-                try
-                {
-                    hours += volunteerModel.getTodaysHours(id);
-                }
-                catch (SQLException ex)
-                {
-                    Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try
+//                {
+//                    hours += volunteerModel.getTodaysHours(id);
+//                }
+//                catch (SQLException ex)
+//                {
+//                    Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
             allGuilds.getData().add(new XYChart.Data(guildName, hours));
         }
