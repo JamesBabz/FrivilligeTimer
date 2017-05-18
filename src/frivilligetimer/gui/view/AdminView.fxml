@@ -79,6 +79,11 @@
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet Person" />
                               <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændrer Medarbejder" />
+                              <Menu fx:id="menuAddEmployeeToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenuForEmployee" text="Tilføj Medarbejder Til Laug">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Action 1" />
+                                </items>
+                              </Menu>
                           </items>
                         </ContextMenu>
                      </contextMenu>

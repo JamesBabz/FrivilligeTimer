@@ -78,6 +78,7 @@ public class StaffModel
      */
     public ObservableList<Employee> getAllGuildManagersForTable()
     {
+        allEmployees.clear();
         allEmployees.addAll(manager.getAllEmployees());
         return allEmployees;
     }
