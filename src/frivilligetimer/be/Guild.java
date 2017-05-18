@@ -19,6 +19,7 @@ public class Guild
     private int id;
     private final StringProperty name = new SimpleStringProperty();
     private ArrayList<Volunteer> volunteers = new ArrayList<>(); 
+    private ArrayList<Employee> employees = new ArrayList<>();
 
     public Guild(int id, String name)
     {
@@ -69,6 +70,21 @@ public class Guild
     public ArrayList<Volunteer> getVolunteers()
     {
         return volunteers;
+    }
+
+    public void addEmployee(Employee employee)
+    {
+        employees.add(employee);
+    }
+    
+    public void removeEmployee(Employee employee)
+    {
+        employees.remove(employee);
+    }
+    
+    public ArrayList<Employee> getEmployees()
+    {
+        return employees;
     }
 
 }

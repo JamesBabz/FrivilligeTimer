@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +27,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -79,6 +81,8 @@ public class AdminViewController implements Initializable
     private final StaffModel staffModel;
     private Volunteer selectedVolunteer;
     private List<MenuItem> guildsSubMenu;
+    @FXML
+    private Menu menuAddEmployeeToGuild;
 
     /**
      * Initializes the controller class.
@@ -261,6 +265,9 @@ public class AdminViewController implements Initializable
     {
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         colVolunteer.setText("Frivillige");
+
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        colGuildManager.setText("Medarbejdere");
     }
 
     @FXML
@@ -270,6 +277,7 @@ public class AdminViewController implements Initializable
         {
             Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
             colVolunteer.setText("Frivillige i " + selectedGuild.getName());
+            colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
             for (Guild guild : guildModel.getAllGuildsForTable())
             {
                 if (guild == selectedGuild)
@@ -277,11 +285,20 @@ public class AdminViewController implements Initializable
 
                     guildModel.getVolunteersInCurrentGuild().clear();
                     guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+
+                    guildModel.getEmployeesInCurrentGuild().clear();
+                    guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
                 }
             }
             tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
+            tableEmployee.setItems(guildModel.getEmployeesInCurrentGuild());
             tableGuild.getSelectionModel().select(selectedGuild);
         }
+    }
+
+    private void showEmployeesInGuild()
+    {
+
     }
 
     @FXML
@@ -368,6 +385,56 @@ removeVolunteerFromAssignedGuild();
                 }
             }
         }
+    }
+
+    private void addEmployeeToGuild(Menu menu)
+    {
+        Employee selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
+        guildsSubMenu = new ArrayList<>();
+        for (Guild guild : tableGuild.getItems())
+        {
+            MenuItem item = new MenuItem(guild.getName());
+            guildsSubMenu.add(item);
+            item.setOnAction(new EventHandler<ActionEvent>()
+            {
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    boolean isUnique = true;
+                    if (item.getText().equals(guild.getName()))
+                    {
+                        for (Employee employee : guild.getEmployees())
+                        {
+                            if (selectedEmployee.getId() == employee.getId())
+                            {
+                                System.out.println("in if");
+                                isUnique = false;
+                            }
+                        }
+                        if (isUnique)
+                        {
+                            try
+                            {
+                                guildModel.addEmployeeToGuild(guild, selectedEmployee);
+                            } catch (SQLException ex)
+                            {
+                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                }
+
+            });
+
+        }
+        menu.getItems().setAll(guildsSubMenu);
+
+    }
+
+    @FXML
+    private void handleContextGuildMenuForEmployee()
+    {
+        addEmployeeToGuild(menuAddEmployeeToGuild);
     }
 
 }
