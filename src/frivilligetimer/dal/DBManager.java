@@ -133,7 +133,7 @@ public final class DBManager
 
     public void setAllGuilds() throws SQLServerException, SQLException
     {
-        String sql = "SELECT * FROM Guilds";
+        String sql = "SELECT * FROM Guilds WHERE isActive = 1";
 
         
         try (Connection con = cm.getConnection())
@@ -146,11 +146,10 @@ public final class DBManager
                 String name = rs.getString("Name");
                 Boolean isActive = rs.getBoolean("isActive");
 
-                if(isActive)
-                {
+               
                 Guild guild = new Guild(id, name);
                 guilds.add(guild);
-                }
+                
             }
 
         }
