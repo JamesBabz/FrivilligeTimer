@@ -5,6 +5,9 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,6 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javax.xml.bind.Marshaller;
 
 /**
  * FXML Controller class
@@ -102,6 +108,12 @@ public class AddVolunteerHoursController implements Initializable
         selectedGuild = guildModel.getSelectedGuild();
         populateFields();
 
+        initializeListeners();
+
+    }
+
+    private void initializeListeners()
+    {
         // force the hour field to be numeric only
         txtHours.textProperty().addListener(new ChangeListener<String>()
         {
@@ -112,6 +124,16 @@ public class AddVolunteerHoursController implements Initializable
                 {
                     txtHours.setText(newValue.replaceAll("[^\\d]", ""));
                 }
+            }
+        });
+
+        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue)
+            {
+                selectedGuild = (Guild) newValue.getUserData();
+                populateHours();
             }
         });
 
@@ -139,12 +161,12 @@ public class AddVolunteerHoursController implements Initializable
         {
 //            if (createRadioButtons())
 //            {
-                txtHours.setDisable(true);
-                btnIncrease.setDisable(true);
-                btnDecrease.setDisable(true);
-                btnSave.setDisable(true);
-                lblguildError.setVisible(true);
-                lblHours.setVisible(false);
+            txtHours.setDisable(true);
+            btnIncrease.setDisable(true);
+            btnDecrease.setDisable(true);
+            btnSave.setDisable(true);
+            lblguildError.setVisible(true);
+            lblHours.setVisible(false);
 //            }
 //            else
 //            {
@@ -158,7 +180,10 @@ public class AddVolunteerHoursController implements Initializable
             lblHours.setVisible(true);
         }
         setImage();
-        populateHours();
+        if (selectedGuild != null)
+        {
+            populateHours();
+        }
     }
 
     private List<Guild> getAllGuildsForVolunteer()
@@ -185,17 +210,20 @@ public class AddVolunteerHoursController implements Initializable
         for (Guild guild : guilds)
         {
             RadioButton rb = new RadioButton(guild.getName());
-            if (first)
-            {
-                rb.setSelected(true);
-                first = false;
-            }
+
             rb.setUserData(guild);
             rb.setToggleGroup(group);
             rb.setFont(Font.font(32));
             rbContainer.getChildren().add(rb);
             heightChange += 50;
+            if (first)
+            {
+                rb.setSelected(true);
+                first = false;
+                selectedGuild = (Guild) group.getSelectedToggle().getUserData();
+            }
         }
+
         pane.setPrefHeight(pane.getPrefHeight() + heightChange);
         return first;
     }
@@ -268,10 +296,7 @@ public class AddVolunteerHoursController implements Initializable
     private void saveToDB() throws SQLException, NumberFormatException
     {
         int id = volunteer.getId();
-        if (selectedGuild == null)
-        {
-            selectedGuild = (Guild) group.getSelectedToggle().getUserData();
-        }
+
         int guildId = selectedGuild.getId();
         if (staffModel.getLevel() == 1)
         {
@@ -308,13 +333,14 @@ public class AddVolunteerHoursController implements Initializable
     {
         try
         {
-            int hours = volunteerModel.getTodaysHours(volunteer.getId());
+            int hours = volunteerModel.getTodaysHours(volunteer.getId(), selectedGuild.getId());
             if (hours >= 0)
             {
                 isHourSet = true;
             }
             else
             {
+                isHourSet = false;
                 hours = 0;
             }
             txtHours.setText("" + hours);
