@@ -7,7 +7,6 @@ package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,7 +30,7 @@ public class VolunteerModel
 
     private static VolunteerModel instance;
 
-    private final ObservableList<Volunteer> allVolunteers;
+    private final ObservableList<Volunteer> allActiveVolunteers;
 
     public static VolunteerModel getInstance()
     {
@@ -50,15 +49,17 @@ public class VolunteerModel
         try
         {
             manager = new VolunteerManager();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        allVolunteers = FXCollections.observableArrayList();
+        allActiveVolunteers = FXCollections.observableArrayList();
     }
 
     /**
@@ -68,43 +69,45 @@ public class VolunteerModel
      */
     public ObservableList<Volunteer> getAllVolunteersForTable()
     {
-        allVolunteers.clear();
-        for (Volunteer volunteer : manager.getAllVolunteers())
+        allActiveVolunteers.clear();
+        for (Volunteer volunteer : manager.getAllActiveVolunteers())
         {
-            allVolunteers.add(volunteer);
+            allActiveVolunteers.add(volunteer);
         }
-        return allVolunteers;
+        return allActiveVolunteers;
     }
 
     public void addVolunteer(Volunteer volunteer) throws SQLException
     {
-        allVolunteers.add(volunteer);
+        allActiveVolunteers.add(volunteer);
         manager.addVolunteer(volunteer);
 
     }
-    
+
     public void deleteVolunteer(Volunteer volunteer)
     {
-        allVolunteers.remove(volunteer);
+        allActiveVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
-    
-     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
-     {
-         manager.removeVolunteerFromAssignedGuild(volunteer, guild);
-     }
-    
-    public Volunteer getSelectedVolunteer() {
+
+    public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
+    {
+        manager.removeVolunteerFromAssignedGuild(volunteer, guild);
+    }
+
+    public Volunteer getSelectedVolunteer()
+    {
         return selectedVolunteer;
     }
 
-    public void setSelectedVolunteer(Volunteer selectedVolunteer) {
+    public void setSelectedVolunteer(Volunteer selectedVolunteer)
+    {
         this.selectedVolunteer = selectedVolunteer;
     }
-    
+
     public void editVolunteer(Volunteer volunteer) throws SQLException
     {
-       manager.updateVolunteer(selectedVolunteer);
+        manager.updateVolunteer(selectedVolunteer);
     }
 
     public Volunteer getTileVolunteer()
@@ -117,7 +120,7 @@ public class VolunteerModel
         this.tileVolunteer = tileVolunteer;
     }
 
-  public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
         manager.addHoursForVolunteer(uid, date, hours, guildId);
     }
@@ -137,5 +140,8 @@ public class VolunteerModel
         manager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
 
-
+    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException
+    {
+        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id);
+    }
 }
