@@ -137,5 +137,7 @@ public class VolunteerModel
         manager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
 
-
+    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException{
+        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id);
+    }
 }

@@ -9,8 +9,10 @@ import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.VolunteerModel;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,33 +71,39 @@ public class StatisticViewController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        lineVolunteers.setVisible(false);
 
+        //MOCK DATA
+        Calendar from = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
+
+        from.set(Calendar.DAY_OF_YEAR, 1);
+        to.set(Calendar.DAY_OF_YEAR, 365);
+        //MOCKDATA END
+
+        lineVolunteers.setVisible(false);
         XYChart.Series allGuilds = new XYChart.Series();
         allGuilds.setName("Laug");
         for (Guild guild : guildModel.getAllGuildsForTable())
         {
             guildModel.setVolunteersInGuild(guild);
-            String guildName = guild.getName();
             int hours = 0;
-            for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+            try
             {
-                int id = volunteer.getId();
-                System.out.println(id);
-//                try
-//                {
-//                    hours += volunteerModel.getTodaysHours(id);
-//                }
-//                catch (SQLException ex)
-//                {
-//                    Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
             }
-            allGuilds.getData().add(new XYChart.Data(guildName, hours));
+            catch (SQLException ex)
+            {
+                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
         }
 
         barGuilds.getData().add(allGuilds);
 
     }
-
 }
