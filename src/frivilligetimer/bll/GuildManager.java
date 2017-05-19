@@ -37,6 +37,11 @@ public class GuildManager
     {
         return dbManager.getAllActiveGuilds();
     }
+    
+    public List<Guild> getAllGuilds()
+    {
+        return dbManager.getAllGuilds();
+    }
 
     public void addGuild(Guild guild) throws SQLException
     {
