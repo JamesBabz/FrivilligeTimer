@@ -91,6 +91,11 @@ public final class GuildModel
     {
         return allActiveGuilds;
     }
+    
+    public List<Guild> getAllGuilds()
+    {
+        return manager.getAllGuilds();
+    }
 
     public void setAllGuilds()
     {
