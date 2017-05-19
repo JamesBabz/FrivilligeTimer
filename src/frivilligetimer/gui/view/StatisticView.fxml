@@ -7,10 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="792.0" prefWidth="1282.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="frivilligetimer.gui.controller.StatisticViewController">
+<AnchorPane id="AnchorPane" prefHeight="792.0" prefWidth="1282.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.StatisticViewController">
    <children>
-      <BarChart fx:id="barGuilds" layoutX="320.0" layoutY="49.0" prefHeight="400.0" prefWidth="643.0">
+      <BarChart fx:id="barGuilds" layoutX="320.0" layoutY="87.0" prefHeight="362.0" prefWidth="1282.0" AnchorPane.bottomAnchor="343.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -18,7 +17,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
-      <LineChart fx:id="lineVolunteers" layoutX="320.0" layoutY="49.0" prefHeight="400.0" prefWidth="643.0">
+      <LineChart fx:id="lineVolunteers" prefHeight="359.0" prefWidth="924.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -26,14 +25,15 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <TableView fx:id="tblOverview" layoutX="183.0" layoutY="449.0" prefHeight="339.0" prefWidth="916.0">
+      <TableView fx:id="tblOverview" layoutX="183.0" layoutY="449.0" prefHeight="339.0" prefWidth="1060.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columns>
-          <TableColumn fx:id="colName" prefWidth="737.0" text="Navn" />
-          <TableColumn fx:id="colHours" minWidth="0.0" prefWidth="178.0" text="Timer" />
+          <TableColumn fx:id="colName" prefWidth="967.0" text="Navn" />
+          <TableColumn fx:id="colHours" minWidth="0.0" prefWidth="314.0" text="Timer" />
         </columns>
       </TableView>
       <ComboBox fx:id="cmbGuilds" layoutX="365.0" layoutY="24.0" prefWidth="150.0" />
       <DatePicker fx:id="dpFrom" layoutX="538.0" layoutY="24.0" />
       <DatePicker fx:id="dpTo" layoutX="733.0" layoutY="24.0" />
+      <VBox fx:id="graphContainer" alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="343.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0" />
    </children>
 </AnchorPane>

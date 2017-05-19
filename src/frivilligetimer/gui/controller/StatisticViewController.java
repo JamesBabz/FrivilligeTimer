@@ -9,11 +9,18 @@ import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.VolunteerModel;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -25,6 +32,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -34,8 +43,6 @@ import javafx.scene.control.TableView;
 public class StatisticViewController implements Initializable
 {
 
-    private final CategoryAxis xAxis = new CategoryAxis();
-    private final NumberAxis yAxis = new NumberAxis();
     private final GuildModel guildModel;
     private final VolunteerModel volunteerModel;
 
@@ -50,15 +57,16 @@ public class StatisticViewController implements Initializable
     @FXML
     private TableColumn<?, ?> colHours;
     @FXML
-    private ComboBox<?> cmbGuilds;
+    private ComboBox<String> cmbGuilds;
     @FXML
     private DatePicker dpFrom;
     @FXML
     private DatePicker dpTo;
+    @FXML
+    private VBox graphContainer;
 
     public StatisticViewController()
     {
-        this.barGuilds = new BarChart<>(xAxis, yAxis);
         guildModel = GuildModel.getInstance();
         volunteerModel = VolunteerModel.getInstance();
     }
@@ -70,32 +78,79 @@ public class StatisticViewController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         lineVolunteers.setVisible(false);
+        barGuilds.setVisible(false);
 
-        XYChart.Series allGuilds = new XYChart.Series();
-        allGuilds.setName("Laug");
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        setInitialGraph();
+
+        cmbGuilds.getItems().addAll(guildModel.getAllGuildNames(true));
+        cmbGuilds.getSelectionModel().selectFirst();
+        cmbGuilds.valueProperty().addListener(new ChangeListener<String>()
         {
-            guildModel.setVolunteersInGuild(guild);
-            String guildName = guild.getName();
-            int hours = 0;
-            for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
             {
-                int id = volunteer.getId();
-                System.out.println(id);
-//                try
-//                {
-//                    hours += volunteerModel.getTodaysHours(id);
-//                }
-//                catch (SQLException ex)
-//                {
-//                    Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                Calendar from = Calendar.getInstance();
+                Calendar to = Calendar.getInstance();
+                from.setTime(Date.from(dpFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                to.setTime(Date.from(dpTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                if ("Alle Laug".equals(newValue))
+                {
+                    setBarChartForGuilds(from, to);
+                }
+                else
+                {
+
+                }
             }
-            allGuilds.getData().add(new XYChart.Data(guildName, hours));
-        }
-
-        barGuilds.getData().add(allGuilds);
-
+        });
     }
 
+    private void setInitialGraph()
+    {
+        Calendar from = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
+
+        from.set(Calendar.DATE, 1);
+        int daysInMonth = to.getActualMaximum(Calendar.DATE);
+        to.set(Calendar.DATE, daysInMonth);
+
+        dpFrom.setValue(from.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        dpTo.setValue(to.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        setBarChartForGuilds(from, to);
+    }
+
+    private void setBarChartForGuilds(Calendar from, Calendar to)
+    {
+//        lineVolunteers.setVisible(false);
+//        barGuilds.setVisible(true);
+        graphContainer.getChildren().clear();
+        BarChart barGuild;
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        barGuild = new BarChart<>(xAxis, yAxis);
+        XYChart.Series allGuilds = new XYChart.Series();
+        allGuilds.setName("Timer");
+        for (Guild guild : guildModel.getAllGuilds())
+        {
+            guildModel.setVolunteersInGuild(guild);
+            int hours = 0;
+            try
+            {
+                hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
+        }
+
+        barGuild.getData().add(allGuilds);
+        graphContainer.getChildren().add(barGuild);
+        barGuild.prefHeightProperty().bind(graphContainer.heightProperty());
+    }
 }
