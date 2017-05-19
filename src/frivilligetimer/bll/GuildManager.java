@@ -33,7 +33,7 @@ public class GuildManager
      *
      * @return a list of guilds
      */
-    public List<Guild> getAllGuilds()
+    public List<Guild> getAllActiveGuilds()
     {
         return dbManager.getAllActiveGuilds();
     }
