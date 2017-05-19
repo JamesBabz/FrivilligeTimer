@@ -13,6 +13,7 @@ import frivilligetimer.bll.StaffManager;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -262,7 +263,9 @@ public final class GuildModel
         manager.addEmployeeToGuild(selectedGuild.getId(), selectedEmployee.getId());
     }
     
-
+public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
+        return manager.getWorkedHoursInPeriodForGuild(from, to, id);
+    }
   
 
 }
