@@ -96,13 +96,13 @@ public final class GuildModel
     public void setAllGuilds()
     {
         allGuilds.clear();
-        allGuilds.addAll(manager.getAllGuilds());
+        allGuilds.addAll(manager.getAllActiveGuilds());
     }
     
     private ObservableList<Volunteer>getAllVolunteers()
     {
         allVolunteers.clear();
-        allVolunteers.addAll(volunteerManager.getAllVolunteers());
+        allVolunteers.addAll(volunteerManager.getAllActiveVolunteers());
         return allVolunteers;
     }
     
@@ -239,7 +239,7 @@ public final class GuildModel
         {
             guildNames.add("Alle Laug");
         }
-        for (Guild guild : manager.getAllGuilds())
+        for (Guild guild : manager.getAllActiveGuilds())
         {
             guildNames.add(guild.getName());
         }

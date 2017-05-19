@@ -40,7 +40,7 @@ public class VolunteerManager
      *
      * @return a list of all volunteers
      */
-    public List<Volunteer> getAllVolunteers()
+    public List<Volunteer> getAllActiveVolunteers()
     {
         return dbManager.getAllActiveVolunteers();
     }
