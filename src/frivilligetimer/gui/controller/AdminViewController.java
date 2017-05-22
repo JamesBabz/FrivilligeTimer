@@ -31,14 +31,19 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class for AdminView
@@ -83,14 +88,13 @@ public class AdminViewController implements Initializable
     @FXML
     private MenuItem menuItemRemoveEmployee;
 
-    
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
-    
+
     private Volunteer selectedVolunteer;
     private Employee selectedEmployee;
-    
+
     private List<MenuItem> guildsSubMenu;
 
     /**
@@ -353,6 +357,8 @@ public class AdminViewController implements Initializable
                             try
                             {
                                 guildModel.addEmployeeToGuild(guild, selectedEmployee);
+                                populateTablesForCurrentGuild();
+                                showEmployeesAssignedToGuild();
                             } catch (SQLException ex)
                             {
                                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -422,7 +428,6 @@ public class AdminViewController implements Initializable
         if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
         {
             staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
-            tableEmployee.getItems().remove(selectedEmployee);
 
             int selectedID = selectedEmployee.getId();
             for (Guild guild : guildModel.getAllGuildsForTable())
@@ -440,6 +445,8 @@ public class AdminViewController implements Initializable
                 }
             }
         }
+        populateTablesForCurrentGuild();
+        showEmployeesAssignedToGuild();
     }
 
     @FXML
@@ -458,8 +465,10 @@ public class AdminViewController implements Initializable
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         colVolunteer.setText("Frivillige");
 
+        guildModel.getEmployeesInCurrentGuild().clear();
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
         colGuildManager.setText("Medarbejdere");
+
     }
 
     @FXML
@@ -497,6 +506,7 @@ public class AdminViewController implements Initializable
      */
     private void showEmployeesAssignedToGuild()
     {
+        tableEmployee.getItems().clear();
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
         for (Employee item : tableEmployee.getItems())
         {
@@ -504,13 +514,53 @@ public class AdminViewController implements Initializable
             {
                 if (item.getId() == employee.getId())
                 {
-                    tableEmployee.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                    tableEmployee.getSelectionModel().select(item);
+
+                    setTextSizeOnEmployeesInCurrentGuild();
                 }
             }
         }
     }
 
+    private void setTextSizeOnEmployeesInCurrentGuild()
+    {
+        colGuildManager.setCellFactory(new Callback<TableColumn<Employee, String>, TableCell<Employee, String>>()
+        {
+            @Override
+            public TableCell<Employee, String> call(TableColumn<Employee, String> param)
+            {
+                return new TableCell<Employee, String>()
+                {
+
+                    @Override
+                    public void updateItem(String item, boolean empty)
+                    {
+                        super.updateItem(item, empty);
+                        if (!isEmpty())
+                        {
+                            for (Employee employeeToMark : guildModel.getEmployeesInCurrentGuild())
+                            {
+
+                                if (item.equals(employeeToMark.getFullName()))
+                                {
+                                    this.setTextFill(Color.GREEN);
+                                    this.setFont(Font.font(16));
+
+                                }
+
+                            }
+                        } else
+                        {
+                            this.setTextFill(Color.valueOf("#323232"));
+                            this.setFont(Font.font(USE_COMPUTED_SIZE));
+
+                        }
+                        setText(item);
+                    }
+                };
+            }
+        });
+    }
+    
     @FXML
     private void deleteVolunteers() {
         deleteInactiveVolunteers();
@@ -557,6 +607,5 @@ public class AdminViewController implements Initializable
         alert.showAndWait();
     }
  
-    
     
 }
