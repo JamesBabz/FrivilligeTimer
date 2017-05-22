@@ -357,8 +357,13 @@ public class AdminViewController implements Initializable
                             try
                             {
                                 guildModel.addEmployeeToGuild(guild, selectedEmployee);
-                                populateTablesForCurrentGuild();
-                                showEmployeesAssignedToGuild();
+                                
+                                if (!colGuildManager.getText().equals("Medarbejdere"))
+                                {
+                                    populateTablesForCurrentGuild();
+                                    showEmployeesAssignedToGuild();
+                                }
+                                
                             } catch (SQLException ex)
                             {
                                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -445,8 +450,10 @@ public class AdminViewController implements Initializable
                 }
             }
         }
+
         populateTablesForCurrentGuild();
         showEmployeesAssignedToGuild();
+
     }
 
     @FXML
@@ -560,15 +567,17 @@ public class AdminViewController implements Initializable
             }
         });
     }
-    
+
     @FXML
-    private void deleteVolunteers() {
+    private void deleteVolunteers()
+    {
         deleteInactiveVolunteers();
-      
-                  }
-    
-    private void deleteInactiveVolunteers(){
-        
+
+    }
+
+    private void deleteInactiveVolunteers()
+    {
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Fjern inaktive");
         alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
@@ -576,21 +585,22 @@ public class AdminViewController implements Initializable
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK)
         {
-              volunteerModel.deleteInactiveVolunteers();
-            try {
+            volunteerModel.deleteInactiveVolunteers();
+            try
+            {
                 guildModel.deleteInactiveGuilds();
-            } catch (SQLException ex) {
+            } catch (SQLException ex)
+            {
                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else
+        } else
         {
             // ... user chose CANCEL or closed the dialog
         }
-        
+
     }
-    
-        /**
+
+    /**
      * Shows an error dialog.
      *
      * @param title The title of the error.
@@ -606,6 +616,5 @@ public class AdminViewController implements Initializable
 
         alert.showAndWait();
     }
- 
-    
+
 }
