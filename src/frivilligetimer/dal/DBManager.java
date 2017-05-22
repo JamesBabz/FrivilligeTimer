@@ -738,4 +738,19 @@ public final class DBManager
         }
     }
 
+    public void deleteInactiveGuilds() throws SQLServerException, SQLException {
+       String sql = "DELETE from Guilds WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+         
+            ps.executeUpdate();
+            inactiveGuilds.clear();
+
+        }
+    }
+
 }
