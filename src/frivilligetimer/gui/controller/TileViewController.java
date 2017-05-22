@@ -128,17 +128,19 @@ public class TileViewController implements Initializable
             {
                 for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
                 {
-                    if (listGuilds.getSelectionModel().getSelectedIndex() == 0)
+
+                    Platform.runLater(new Runnable()
                     {
-                        Platform.runLater(new Runnable()
+                        @Override
+                        public void run()
                         {
-                            @Override
-                            public void run()
+                            if (listGuilds.getSelectionModel().getSelectedIndex() == 0 || listGuilds.getSelectionModel().getSelectedItem() == null)
                             {
                                 addNewVolunteerCellView(new VolunteerCellModel(volunteer));
                             }
-                        });
-                    }
+
+                        }
+                    });
 
                     Thread.sleep(100);
                 }
