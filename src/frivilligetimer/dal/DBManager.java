@@ -139,6 +139,22 @@ public final class DBManager
             }
         }
     }
+    
+       public void deleteInactiveVolunteers() throws SQLException
+    {
+        String sql = "DELETE from People WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+         
+            ps.executeUpdate();
+            inactiveVolunteers.clear();
+
+        }
+    }
 
     public void setAllGuilds() throws SQLServerException, SQLException
     {
