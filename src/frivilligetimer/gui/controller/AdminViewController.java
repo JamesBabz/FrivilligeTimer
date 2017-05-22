@@ -19,8 +19,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,6 +35,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -94,8 +96,12 @@ public class AdminViewController implements Initializable
 
     private Volunteer selectedVolunteer;
     private Employee selectedEmployee;
-
+    private ObservableList<Volunteer> currentVolunteerInView;
+    private Guild selectedGuild;
+   
     private List<MenuItem> guildsSubMenu;
+    @FXML
+    private TextField txtSearchField;
 
     /**
      * Initializes the controller class.
@@ -115,6 +121,7 @@ public class AdminViewController implements Initializable
         menuItemRemoveEmployee.setVisible(false);
         menuItemRemoveVolunteer.setVisible(false);
         populateTables();
+        searchOnUpdate();
 
     }
 
@@ -123,6 +130,7 @@ public class AdminViewController implements Initializable
      */
     public AdminViewController()
     {
+        this.currentVolunteerInView = FXCollections.observableArrayList();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
@@ -626,5 +634,32 @@ public class AdminViewController implements Initializable
 
         alert.showAndWait();
     }
+    
+    /**
+     * makes it possibel for the admin to search for Volunteers on first name, last name and phonenummber
+     */
+    private void searchOnUpdate() {
+        txtSearchField.textProperty().addListener((listener, oldVal, newVal)
+                -> {
+            ObservableList<Volunteer> searchedVolunteer = FXCollections.observableArrayList();
+            searchedVolunteer.clear();
+            ObservableList<Volunteer> allVolunteerInCurrentView = currentVolunteerInView;
+            if (selectedGuild == null) {
+                allVolunteerInCurrentView.setAll(volunteerModel.getAllVolunteersForTable());
+            } else {
+                allVolunteerInCurrentView.setAll(selectedGuild.getVolunteers());
+            }
 
+            for (Volunteer m : allVolunteerInCurrentView) {
+                if (m.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        || m.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        || m.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        && !searchedVolunteer.contains(m)) {
+                    searchedVolunteer.add(m);
+                }
+            }
+
+            tableVolunteer.setItems(searchedVolunteer);
+        });
+    }
 }
