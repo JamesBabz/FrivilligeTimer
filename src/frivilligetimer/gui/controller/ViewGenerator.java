@@ -78,4 +78,9 @@ public class ViewGenerator
 
         newStage.show();
     }
+
+    void setMaximized(boolean bool)
+    {
+        newStage.setMaximized(bool);
+    }
 }

@@ -9,6 +9,7 @@ import frivilligetimer.be.Guild;
 import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,11 @@ public class GuildManager
      *
      * @return a list of guilds
      */
+    public List<Guild> getAllActiveGuilds()
+    {
+        return dbManager.getAllActiveGuilds();
+    }
+    
     public List<Guild> getAllGuilds()
     {
         return dbManager.getAllGuilds();
@@ -66,5 +72,20 @@ public class GuildManager
     
     public void updateGuild(Guild guild) throws SQLException {
         dbManager.updateGuild(guild);
+    }
+
+    public void addEmployeeToGuild(int laugid, int uid) throws SQLException
+    {
+        dbManager.addEmployeeToGuild(laugid, uid);
+        
+    }
+    
+    public List<String> getEmployeesInGuild()
+    {
+        return dbManager.getEmployeesInGuild();
+    }
+    
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
+        return dbManager.getWorkedHoursInPeriod(from, to, id, false);
     }
 }

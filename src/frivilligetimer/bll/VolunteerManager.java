@@ -40,9 +40,9 @@ public class VolunteerManager
      *
      * @return a list of all volunteers
      */
-    public List<Volunteer> getAllVolunteers()
+    public List<Volunteer> getAllActiveVolunteers()
     {
-        return dbManager.getAllVolunteers();
+        return dbManager.getAllActiveVolunteers();
     }
 
     public void addVolunteer(Volunteer volunteer) throws SQLException
@@ -79,14 +79,14 @@ public class VolunteerManager
         dbManager.updateVolunteer(volunteer);
     }
 
-    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        dbManager.addHoursForVolunteer(uid, date, hours);
+        dbManager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
-    public int getTodaysHours(int id) throws SQLException
+    public int getTodaysHours(int id, int guildid) throws SQLException
     {
-        return dbManager.getTodaysHours(id);
+        return dbManager.getTodaysHours(id, guildid);
     }
 
     public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
@@ -97,5 +97,9 @@ public class VolunteerManager
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
     {
         dbManager.updateNoteAndPrefForVolunteer(id, pref, note);
+    }
+    
+    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException{
+        return dbManager.getWorkedHoursInPeriod(from, to, id, true);
     }
 }

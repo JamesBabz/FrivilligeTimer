@@ -6,6 +6,7 @@
 package frivilligetimer.gui.model;
 
 import frivilligetimer.be.Employee;
+import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.bll.StaffManager;
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class StaffModel
      */
     public ObservableList<Employee> getAllGuildManagersForTable()
     {
+        allEmployees.clear();
         allEmployees.addAll(manager.getAllEmployees());
         return allEmployees;
     }
@@ -132,6 +134,11 @@ public class StaffModel
     public void setLoggedInAs(Employee e)
     {
         this.loggedInAs = e;
+    }
+
+    public void removeVolunteerFromAssignedGuild(Employee selectedEmployee, Guild selectedGuild)
+    {
+        manager.removeEmployeeFromAssignedGuild(selectedEmployee, selectedGuild);
     }
     
     

@@ -40,10 +40,13 @@ public final class DBManager
 
     private ConnectionManager cm;
     private final List<Volunteer> volunteers;
+    private final List<Volunteer> inactiveVolunteers;
     private final List<Employee> employees;
     private final List<Manager> managers;
     private final List<Guild> guilds;
+    private final List<Guild> inactiveGuilds;
     private final List<String> volunteersInGuild;
+    private final List<String> employeesInGuild;
 
     /**
      * The default constructor for the database manager.
@@ -51,15 +54,19 @@ public final class DBManager
     public DBManager() throws IOException, SQLException
     {
         this.volunteers = new ArrayList<>();
+        this.inactiveVolunteers = new ArrayList<>();
         this.cm = new ConnectionManager();
         this.employees = new ArrayList<>();
         this.managers = new ArrayList<>();
         this.guilds = new ArrayList<>();
+        this.inactiveGuilds = new ArrayList<>();
         this.volunteersInGuild = new ArrayList<>();
+        this.employeesInGuild = new ArrayList<>();
 
         setAllPeople();
         setAllGuilds();
         setAllVolunteersInGuilds();
+        setAllEmployeesInGuilds();
     }
 
     /**
@@ -89,34 +96,44 @@ public final class DBManager
                 int level = rs.getInt("Position");
                 String password = rs.getString("Password");
                 byte[] imageBytes = rs.getBytes("ImageBinary");
+                Boolean isActive = rs.getBoolean("isActive");
                 BufferedImage image = null;
                 if (imageBytes != null)
                 {
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         e.printStackTrace();
                     }
                 }
 
-                switch (level)
+                if (isActive)
                 {
-                    case 0:
-                        Manager manager = new Manager(id, fName, lName, phonenum, email, password, image);
-                        managers.add(manager);
-                        break;
-                    case 1:
-                        Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
-                        employees.add(employee);
-                        break;
-                    case 2:
-                        Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
-                        volunteers.add(volunteer);
-                        break;
-                    default:
-                        break;
+                    switch (level)
+                    {
+                        case 0:
+                            Manager manager = new Manager(id, fName, lName, phonenum, email, password, image);
+                            managers.add(manager);
+                            break;
+                        case 1:
+                            Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
+                            employees.add(employee);
+                            break;
+                        case 2:
+                            Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
+                            volunteers.add(volunteer);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (level == 2)
+                {
+                    Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
+                    inactiveVolunteers.add(volunteer);
                 }
 
             }
@@ -135,9 +152,19 @@ public final class DBManager
             {
                 int id = rs.getInt("ID");
                 String name = rs.getString("Name");
+                Boolean isActive = rs.getBoolean("isActive");
 
-                Guild guild = new Guild(id, name);
-                guilds.add(guild);
+                if (isActive)
+                {
+                    Guild guild = new Guild(id, name);
+                    guilds.add(guild);
+                }
+                else
+                {
+                    Guild guild = new Guild(id, name);
+                    inactiveGuilds.add(guild);
+                }
+
             }
 
         }
@@ -163,6 +190,66 @@ public final class DBManager
         }
     }
 
+    public void setAllEmployeesInGuilds() throws SQLServerException, SQLException
+    {
+        String sql = " SELECT* FROM AssignedGuilds";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                int uid = rs.getInt("uid");
+                int laugid = rs.getInt("laugid");
+
+                String string = uid + "," + laugid;
+                employeesInGuild.add(string);
+            }
+
+        }
+    }
+
+    /**
+     * Gets all the active volunteers
+     *
+     * @return a list of all active volunteers
+     */
+    public List<Volunteer> getAllActiveVolunteers()
+    {
+        volunteers.clear();
+        inactiveVolunteers.clear();
+        try
+        {
+            setAllPeople();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return volunteers;
+    }
+    
+    /**
+     * Gets all the inactive volunteers
+     *
+     * @return a list of all inactive volunteers
+     */
+    public List<Volunteer> getAllInactiveVolunteers()
+    {
+        volunteers.clear();
+        inactiveVolunteers.clear();
+        try
+        {
+            setAllPeople();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return inactiveVolunteers;
+    }
+    
     /**
      * Gets all the volunteers
      *
@@ -171,14 +258,19 @@ public final class DBManager
     public List<Volunteer> getAllVolunteers()
     {
         volunteers.clear();
+        inactiveVolunteers.clear();
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return volunteers;
+        List<Volunteer> returnList = new ArrayList<>();
+        returnList.addAll(volunteers);
+        returnList.addAll(inactiveVolunteers);
+        return returnList;
     }
 
     /**
@@ -188,6 +280,14 @@ public final class DBManager
      */
     public List<Employee> getAllEmployees()
     {
+        employees.clear();
+        try
+        {
+            setAllPeople();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return employees;
     }
 
@@ -202,13 +302,36 @@ public final class DBManager
     }
 
     /**
-     * Gets all guilds
+     * Gets all active guilds
      *
-     * @return a list of all guilds
+     * @return a list of all active guilds
+     */
+    public List<Guild> getAllActiveGuilds()
+    {
+        return guilds;
+    }
+
+    /**
+     * Gets all active guilds
+     *
+     * @return a list of all active guilds
+     */
+    public List<Guild> getAllInactiveGuilds()
+    {
+        return inactiveGuilds;
+    }
+
+    /**
+     * Gets all active guilds
+     *
+     * @return a list of all active guilds
      */
     public List<Guild> getAllGuilds()
     {
-        return guilds;
+        List<Guild> returnList = new ArrayList<>();
+        returnList.addAll(guilds);
+        returnList.addAll(inactiveGuilds);
+        return returnList;
     }
 
     public List<String> getVolunteersInGuild()
@@ -216,27 +339,63 @@ public final class DBManager
         return volunteersInGuild;
     }
 
-    public int getTodaysHours(int id) throws SQLException
+    public List<String> getEmployeesInGuild()
     {
-        String sql = "SELECT * FROM Hours";
+        return employeesInGuild;
+    }
+
+    public int getTodaysHours(int id, int guildid) throws SQLException
+    {
+        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(new Date().getTime()).toString() + "' AND laugid = " + guildid;
         int hours = -1;
-        Date today = new java.sql.Date(new Date().getTime());
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next())
             {
-                int uid = rs.getInt("uid");
-                Date date = rs.getDate("Date");
-                int h = rs.getInt("hours");
-
-                if (uid == id && date.toString().equals(today.toString()))
-                {
-                    hours = h;
-                }
+                hours = rs.getInt("hours");
             }
 
+        }
+
+        return hours;
+    }
+
+    /**
+     *
+     * @param from The start date for the hours to pull
+     * @param to The end date for the hours to pull
+     * @param id the id of the person/guild
+     * @param isPerson True if you want hours for a person, false if you want it
+     * for a guild
+     * @return Returns amount of hours in the period
+     */
+    public int getWorkedHoursInPeriod(Date from, Date to, int id, boolean isPerson) throws SQLException, IOException
+    {
+        from = new java.sql.Date(from.getTime());
+        to = new java.sql.Date(to.getTime());
+        ConnectionManager cm;
+        cm = new ConnectionManager();
+        String whereId;
+        if (isPerson)
+        {
+            whereId = "AND uid = " + id;
+        }
+        else
+        {
+            whereId = "AND laugid = " + id;
+        }
+        String sql = "SELECT hours from Hours WHERE date BETWEEN '" + from + "' AND '" + to + "' " + whereId;
+        int hours = 0;
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next())
+            {
+                hours += rs.getInt("hours");
+            }
         }
         return hours;
     }
@@ -303,7 +462,7 @@ public final class DBManager
 
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
-        String sql = "DELETE from People WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -333,7 +492,7 @@ public final class DBManager
 
     public void deleteGuild(Guild guild) throws SQLException
     {
-        String sql = "DELETE from Guilds WHERE ID = ?";
+        String sql = "UPDATE Guilds SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -346,22 +505,37 @@ public final class DBManager
 
         }
     }
-    
+
     public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE laugid =?";
-        
-        try(Connection con = cm.getConnection())
+
+        try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setInt(1, guild.getId());
             ps.executeUpdate();
         }
     }
 
-        public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
+    public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, volunteer.getId());
+            ps.setInt(2, guild.getId());
+            ps.executeUpdate();
+        }
+    }
+    
+    public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
         
@@ -370,14 +544,15 @@ public final class DBManager
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
             
-            ps.setInt(1, volunteer.getId());
+            ps.setInt(1, employee.getId());
             ps.setInt(2, guild.getId());
             ps.executeUpdate();
         }
     }
+
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
-        String sql = "DELETE from People WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -398,6 +573,22 @@ public final class DBManager
      * @throws SQLException
      */
     public void addVolunteerToGuild(int laugid, int uid) throws SQLException
+    {
+        String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
+
+        Connection con = cm.getConnection();
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, uid);
+            ps.setInt(2, laugid);
+
+            ps.executeUpdate();
+
+        }
+    }
+
+    public void addEmployeeToGuild(int laugid, int uid) throws SQLException
     {
         String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
 
@@ -488,9 +679,9 @@ public final class DBManager
         }
     }
 
-    public void addHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        String sql = "INSERT INTO Hours (uid, date, hours) VALUES (?,?,?)";
+        String sql = "INSERT INTO Hours (uid, date, hours, laugid) VALUES (?,?,?,?)";
         try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -498,6 +689,7 @@ public final class DBManager
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             ps.setDate(2, sqlDate);
             ps.setInt(3, hours);
+            ps.setInt(4, guildId);
             ps.executeUpdate();
         }
 
@@ -520,7 +712,7 @@ public final class DBManager
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
     {
         String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
-        try(Connection con = cm.getConnection())
+        try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, note);

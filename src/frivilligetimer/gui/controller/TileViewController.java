@@ -156,7 +156,6 @@ public class TileViewController implements Initializable
         ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
 
         viewGen.generateView("/frivilligetimer/gui/view/Loginview.fxml", false, StageStyle.DECORATED, true, "Login");
-
     }
 
     /**
@@ -210,6 +209,7 @@ public class TileViewController implements Initializable
         volunteerBoard.getChildren().remove(0, volunteerBoard.getChildren().size());
         if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Laug"))
         {
+            guildModel.setSelectedGuild(null);
             addAllVolunteerCells();
         }
         else
@@ -227,6 +227,7 @@ public class TileViewController implements Initializable
         {
             if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
             {
+                guildModel.setSelectedGuild(guild);
                 guildModel.setVolunteersInGuild(guild);
             }
         }
