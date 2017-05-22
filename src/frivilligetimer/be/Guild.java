@@ -86,5 +86,11 @@ public class Guild
     {
         return employees;
     }
+    
+    @Override
+    public String toString()
+    {
+        return name.get();
+    }
 
 }
