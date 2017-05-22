@@ -89,7 +89,7 @@ public class GuildManager
         return dbManager.getWorkedHoursInPeriod(from, to, id, false);
     }
 
-    public void deleteInactiveGuilds() {
+    public void deleteInactiveGuilds() throws SQLException {
        dbManager.deleteInactiveGuilds();
     }
 }
