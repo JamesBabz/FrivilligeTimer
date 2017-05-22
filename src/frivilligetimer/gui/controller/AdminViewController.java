@@ -113,6 +113,7 @@ public class AdminViewController implements Initializable
         colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
         menuItemRemoveEmployee.setVisible(false);
+        menuItemRemoveVolunteer.setVisible(false);
         populateTables();
 
     }
@@ -474,6 +475,8 @@ public class AdminViewController implements Initializable
     {
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         colVolunteer.setText("Frivillige");
+        menuItemRemoveVolunteer.setVisible(false);
+        menuAddVolToGuild.setVisible(true);
 
         guildModel.getEmployeesInCurrentGuild().clear();
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
@@ -490,6 +493,8 @@ public class AdminViewController implements Initializable
             populateTablesForCurrentGuild();
             showEmployeesAssignedToGuild();
             menuItemRemoveEmployee.setVisible(true);
+            menuItemRemoveVolunteer.setVisible(true);
+            menuAddVolToGuild.setVisible(false);
         }
     }
 
@@ -574,7 +579,7 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void deleteVolunteers()
+    private void deleteAllInActive()
     {
         deleteInactiveVolunteers();
 
