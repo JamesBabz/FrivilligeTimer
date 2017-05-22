@@ -19,8 +19,10 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -45,11 +47,8 @@ public class StatisticViewController implements Initializable
 
     private final GuildModel guildModel;
     private final VolunteerModel volunteerModel;
+    private LineChart lineVolunteers;
 
-    @FXML
-    private BarChart<String, Number> barGuilds;
-    @FXML
-    private LineChart<?, Volunteer> lineVolunteers;
     @FXML
     private TableView<?> tblOverview;
     @FXML
@@ -57,7 +56,7 @@ public class StatisticViewController implements Initializable
     @FXML
     private TableColumn<?, ?> colHours;
     @FXML
-    private ComboBox<String> cmbGuilds;
+    private ComboBox<Object> cmbGuilds;
     @FXML
     private DatePicker dpFrom;
     @FXML
@@ -77,17 +76,25 @@ public class StatisticViewController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        lineVolunteers.setVisible(false);
-        barGuilds.setVisible(false);
 
         setInitialGraph();
+        initiateComboBox();
+    }
 
-        cmbGuilds.getItems().addAll(guildModel.getAllGuildNames(true));
+    private void initiateComboBox()
+    {
+        cmbGuilds.getItems().add("Alle Laug");
+        cmbGuilds.getItems().addAll(guildModel.getAllGuilds());
         cmbGuilds.getSelectionModel().selectFirst();
-        cmbGuilds.valueProperty().addListener(new ChangeListener<String>()
+        cmbListener();
+    }
+
+    private void cmbListener()
+    {
+        cmbGuilds.valueProperty().addListener(new ChangeListener<Object>()
         {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue)
             {
                 Calendar from = Calendar.getInstance();
                 Calendar to = Calendar.getInstance();
@@ -99,9 +106,10 @@ public class StatisticViewController implements Initializable
                 }
                 else
                 {
-
+                    setLineChartForVolunteers(from, to, (Guild) newValue);
                 }
             }
+
         });
     }
 
@@ -121,13 +129,11 @@ public class StatisticViewController implements Initializable
 
     private void setBarChartForGuilds(Calendar from, Calendar to)
     {
-//        lineVolunteers.setVisible(false);
-//        barGuilds.setVisible(true);
         graphContainer.getChildren().clear();
-        BarChart barGuild;
+        BarChart barGuilds;
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
-        barGuild = new BarChart<>(xAxis, yAxis);
+        barGuilds = new BarChart<>(xAxis, yAxis);
         XYChart.Series allGuilds = new XYChart.Series();
         allGuilds.setName("Timer");
         for (Guild guild : guildModel.getAllGuilds())
@@ -149,8 +155,79 @@ public class StatisticViewController implements Initializable
             allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
         }
 
-        barGuild.getData().add(allGuilds);
-        graphContainer.getChildren().add(barGuild);
-        barGuild.prefHeightProperty().bind(graphContainer.heightProperty());
+        barGuilds.getData().add(allGuilds);
+        graphContainer.getChildren().add(barGuilds);
+        barGuilds.prefHeightProperty().bind(graphContainer.heightProperty());
+    }
+
+    private void setLineChartForVolunteers(Calendar from, Calendar to, Guild guild)
+    {
+        graphContainer.getChildren().clear();
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        lineVolunteers = new LineChart<>(xAxis, yAxis);
+        guildModel.setSelectedGuild(guild);
+        guildModel.setVolunteersInGuild(guild);
+        graphContainer.getChildren().add(lineVolunteers);
+        lineVolunteers.prefHeightProperty().bind(graphContainer.heightProperty());
+
+//        Task task = new Task<Void>()
+//        {
+//            @Override
+//            protected Void call() throws Exception
+//            {
+//        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+//        {
+//                    Platform.runLater(new Runnable()
+//                    {
+//                        @Override
+//                        public void run()
+//                        {
+//            populateLineChart(volunteer, from, to, guild);
+//                        }
+//                    });
+//                    Thread.sleep(200);
+//        }
+//
+//                return null;
+//            }
+//        };
+//
+//        Thread t = new Thread(task);
+//        t.setDaemon(true);
+//        t.start();
+        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+        {
+            populateLineChart(volunteer, from, to, guild);
+        }
+
+    }
+
+    private void populateLineChart(Volunteer volunteer, Calendar from, Calendar to, Guild guild)
+    {
+        XYChart.Series currentVolunteer = new XYChart.Series();
+        currentVolunteer.setName(volunteer.getFullName());
+        Calendar date = Calendar.getInstance();
+        date.setTime(from.getTime());
+
+        do
+        {
+            int hours = 0;
+            try
+            {
+                hours = volunteerModel.getTodaysHours(volunteer.getId(), date.getTime(), guild.getId());
+            }
+            catch (SQLException ex)
+            {
+                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            currentVolunteer.getData().add(new XYChart.Data<>(date.getTime().toString().substring(0, 10), hours));
+
+            date.add(Calendar.DAY_OF_YEAR, 1);
+
+        }
+        while (date.before(to));
+        lineVolunteers.getData().add(currentVolunteer);
     }
 }

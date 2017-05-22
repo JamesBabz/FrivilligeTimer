@@ -57,7 +57,10 @@
             <Font size="36.0" />
          </font>
       </Text>
-      <TextArea fx:id="txtNote" layoutX="187.0" layoutY="224.0" prefHeight="168.0" prefWidth="518.0" />
+      <TextArea fx:id="txtNote" layoutX="187.0" layoutY="224.0" prefHeight="168.0" prefWidth="518.0">
+         <font>
+            <Font size="24.0" />
+         </font></TextArea>
       <Label fx:id="lblName" layoutX="9.0" layoutY="6.0" prefHeight="53.0" prefWidth="500.0" text="NAME" AnchorPane.topAnchor="6.0">
          <font>
             <Font size="36.0" />
