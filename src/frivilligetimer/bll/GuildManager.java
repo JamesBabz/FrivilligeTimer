@@ -88,4 +88,8 @@ public class GuildManager
     public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
         return dbManager.getWorkedHoursInPeriod(from, to, id, false);
     }
+
+    public void deleteInactiveGuilds() {
+       dbManager.deleteInactiveGuilds();
+    }
 }

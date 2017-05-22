@@ -118,6 +118,6 @@
          </top>
       </BorderPane>
       <ImageView fx:id="imageLogo" fitHeight="41.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
-      <Button layoutX="588.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteVolunteers" text="Fjern personer" AnchorPane.rightAnchor="12.0" />
+      <Button layoutX="588.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteVolunteers" text="Fjern personer og laug" AnchorPane.rightAnchor="12.0" />
    </children>
 </AnchorPane>
