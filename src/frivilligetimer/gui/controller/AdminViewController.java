@@ -527,7 +527,11 @@ public class AdminViewController implements Initializable
         if (result.get() == ButtonType.OK)
         {
               volunteerModel.deleteInactiveVolunteers();
-              guildModel.deleteInactiveGuilds();
+            try {
+                guildModel.deleteInactiveGuilds();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else
         {

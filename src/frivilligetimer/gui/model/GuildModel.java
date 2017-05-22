@@ -274,7 +274,7 @@ public final class GuildModel
         return manager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
 
-    public void deleteInactiveGuilds() {
+    public void deleteInactiveGuilds() throws SQLException {
         manager.deleteInactiveGuilds();
             }
 
