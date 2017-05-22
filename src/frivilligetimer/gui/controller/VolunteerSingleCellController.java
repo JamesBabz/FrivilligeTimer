@@ -45,7 +45,7 @@ public class VolunteerSingleCellController implements Initializable
     public VolunteerSingleCellController()
     {
         this.dataThread = new Thread(imageLoader());
-//        Platform.runLater(dataThread);
+        Platform.runLater(dataThread);
 
     }
 
@@ -56,9 +56,6 @@ public class VolunteerSingleCellController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         model = VolunteerModel.getInstance();
-        dataThread.start();
-
-
     }
 
     @FXML
