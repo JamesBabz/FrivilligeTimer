@@ -521,12 +521,13 @@ public class AdminViewController implements Initializable
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Fjern inaktive");
-        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive?");
+        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK)
         {
               volunteerModel.deleteInactiveVolunteers();
+              guildModel.deleteInactiveGuilds();
         }
         else
         {
