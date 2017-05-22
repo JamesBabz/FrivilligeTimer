@@ -333,8 +333,9 @@ public class AddVolunteerHoursController implements Initializable
     {
         try
         {
-            int hours = volunteerModel.getTodaysHours(volunteer.getId(),new Date(), selectedGuild.getId());
-            if (hours > 0)
+            int hours;
+            hours = volunteerModel.getTodaysHours(volunteer.getId(),new Date(), selectedGuild.getId());
+            if (hours >= 0)
             {
                 isHourSet = true;
             }

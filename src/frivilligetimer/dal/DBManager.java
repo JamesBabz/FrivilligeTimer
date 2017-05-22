@@ -363,7 +363,7 @@ public final class DBManager
     public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
         String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(date.getTime()).toString() + "' AND laugid = " + guildid;
-        int hours = 0;
+        int hours = -1;
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
