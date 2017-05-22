@@ -336,10 +336,10 @@ public final class DBManager
         return employeesInGuild;
     }
 
-    public int getTodaysHours(int id, int guildid) throws SQLException
+    public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
-        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(new Date().getTime()).toString() + "' AND laugid = " + guildid;
-        int hours = -1;
+        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(date.getTime()).toString() + "' AND laugid = " + guildid;
+        int hours = 0;
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();

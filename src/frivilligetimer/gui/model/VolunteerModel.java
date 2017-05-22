@@ -125,9 +125,9 @@ public class VolunteerModel
         manager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
-    public int getTodaysHours(int id, int guildid) throws SQLException
+    public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
-        return manager.getTodaysHours(id, guildid);
+        return manager.getTodaysHours(id, date, guildid);
     }
 
     public void updateHoursForVolunteer(int id, Date date, int hours) throws SQLException
