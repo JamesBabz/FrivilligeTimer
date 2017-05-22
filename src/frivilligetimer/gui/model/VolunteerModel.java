@@ -89,6 +89,12 @@ public class VolunteerModel
         allActiveVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
+    
+    public void deleteInactiveVolunteers()
+    {
+        
+        manager.deleteInactiveVolunteer();
+    }
 
     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
     {

@@ -15,6 +15,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -557,4 +560,52 @@ public class AdminViewController implements Initializable
             }
         });
     }
+    
+    @FXML
+    private void deleteVolunteers() {
+        deleteInactiveVolunteers();
+      
+                  }
+    
+    private void deleteInactiveVolunteers(){
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Fjern inaktive");
+        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK)
+        {
+              volunteerModel.deleteInactiveVolunteers();
+            try {
+                guildModel.deleteInactiveGuilds();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else
+        {
+            // ... user chose CANCEL or closed the dialog
+        }
+        
+    }
+    
+        /**
+     * Shows an error dialog.
+     *
+     * @param title The title of the error.
+     * @param header The header - subtitle.
+     * @param content The error message.
+     */
+    private void showErrorDialog(String title, String header, String content)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
+    }
+ 
+    
 }
