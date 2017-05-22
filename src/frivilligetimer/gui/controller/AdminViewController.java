@@ -15,30 +15,40 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 /**
- * FXML Controller class
+ * FXML Controller class for AdminView
  *
  * @author Bruger
  */
@@ -75,14 +85,23 @@ public class AdminViewController implements Initializable
     private Menu menuAddVolToGuild;
     @FXML
     private MenuItem menuItemRemoveVolunteer;
+    @FXML
+    private Menu menuAddEmployeeToGuild;
+    @FXML
+    private MenuItem menuItemRemoveEmployee;
 
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
+
     private Volunteer selectedVolunteer;
+    private Employee selectedEmployee;
+    private ObservableList<Volunteer> currentVolunteerInView;
+    private Guild selectedGuild;
+   
     private List<MenuItem> guildsSubMenu;
     @FXML
-    private Menu menuAddEmployeeToGuild;
+    private TextField txtSearchField;
 
     /**
      * Initializes the controller class.
@@ -99,7 +118,10 @@ public class AdminViewController implements Initializable
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
         colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
+        menuItemRemoveEmployee.setVisible(false);
+        menuItemRemoveVolunteer.setVisible(false);
         populateTables();
+        searchOnUpdate();
 
     }
 
@@ -108,6 +130,7 @@ public class AdminViewController implements Initializable
      */
     public AdminViewController()
     {
+        this.currentVolunteerInView = FXCollections.observableArrayList();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
@@ -160,8 +183,101 @@ public class AdminViewController implements Initializable
 
     }
 
+    @FXML
+    private void handleDeleteVolunteer()
+    {
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getItems().remove(selectedVolunteer);
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.deleteVolunteer(selectedVolunteer);
+
+        int selectedID = selectedVolunteer.getId();
+        for (Guild guild : guildModel.getAllGuildsForTable())
+        {
+            for (Volunteer volunteer : guild.getVolunteers())
+            {
+                if (volunteer.getId() == selectedID)
+                {
+                    guild.removeVolunteer(volunteer);
+                    break;
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void handleDeleteGuild()
+    {
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getItems().remove(selectedItem);
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.deleteGuild(selectedItem);
+    }
+
+    @FXML
+    private void handleDeleteEmployee()
+    {
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getItems().remove(selectedItem);
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.deleteEmployee(selectedItem);
+    }
+
+    @FXML
+    private void editVolunteer()
+    {
+
+        Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.setSelectedVolunteer(selectedItem);
+
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Person");
+
+    }
+
+    @FXML
+    private void editEmployee()
+    {
+
+        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
+        tableEmployee.getSelectionModel().clearSelection();
+        staffModel.setSelectedEmployee(selectedItem);
+
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
+
+    }
+
+    @FXML
+    private void editGuild()
+    {
+
+        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
+        tableGuild.getSelectionModel().clearSelection();
+        guildModel.setSelectedGuild(selectedItem);
+
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
+
+    }
+
+    @FXML
+    private void handleStatClick()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
+
+    }
+
     /**
-     * Sets all the guilds in the contextMenu, rightClick in the table.
+     * Sets all the guilds in the contextMenu, rightClick in the table. Adds the
+     * selected volunteer to selected guild the metod is called in
+     * handleContextGuildMenu
      *
      * @param menu of all the guilds to be shown
      */
@@ -216,150 +332,73 @@ public class AdminViewController implements Initializable
 
     }
 
-    @FXML
-    private void handleDeleteVolunteer()
-    {
-        Volunteer selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
-        tableVolunteer.getItems().remove(selectedVolunteer);
-        tableVolunteer.getSelectionModel().clearSelection();
-        volunteerModel.deleteVolunteer(selectedVolunteer);
-
-        int selectedID = selectedVolunteer.getId();
-        for (Guild guild : guildModel.getAllGuildsForTable())
-        {
-            for (Volunteer volunteer : guild.getVolunteers())
-            {
-                if (volunteer.getId() == selectedID)
-                {
-                    guild.removeVolunteer(volunteer);
-                    break;
-                }
-            }
-        }
-    }
-
-    @FXML
-    private void handleDeleteGuild()
-    {
-        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
-        tableGuild.getItems().remove(selectedItem);
-        tableGuild.getSelectionModel().clearSelection();
-        guildModel.deleteGuild(selectedItem);
-    }
-
-    @FXML
-    private void handleDeleteEmployee()
-    {
-        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
-        tableEmployee.getItems().remove(selectedItem);
-        tableEmployee.getSelectionModel().clearSelection();
-        staffModel.deleteEmployee(selectedItem);
-    }
-
     /**
-     * Shows all the volunteers in the table when the user click "Vis alle
-     * personer"
+     * sets the menuitems with each guild in the contextmenu Adds the selected
+     * employee to the selected guild method is called in
+     * handleContextGuildMenuForEmployee()
+     *
+     * @param menu
      */
-    @FXML
-    private void ShowAllVolunteersInTable()
+    private void addEmployeeToGuild(Menu menu)
     {
-        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
-        colVolunteer.setText("Frivillige");
-
-        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
-        colGuildManager.setText("Medarbejdere");
-    }
-
-    @FXML
-    private void ShowVolunteersInCurrentGuild(MouseEvent event)
-    {
-        if (event.getClickCount() == 2)
+        Employee selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
+        guildsSubMenu = new ArrayList<>();
+        for (Guild guild : tableGuild.getItems())
         {
-            Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
-            colVolunteer.setText("Frivillige i " + selectedGuild.getName());
-            colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
-            for (Guild guild : guildModel.getAllGuildsForTable())
+            MenuItem item = new MenuItem(guild.getName());
+            guildsSubMenu.add(item);
+            item.setOnAction(new EventHandler<ActionEvent>()
             {
-                if (guild == selectedGuild)
+                @Override
+                public void handle(ActionEvent event)
                 {
+                    boolean isUnique = true;
+                    if (item.getText().equals(guild.getName()))
+                    {
+                        for (Employee employee : guild.getEmployees())
+                        {
+                            if (selectedEmployee.getId() == employee.getId())
+                            {
+                                isUnique = false;
+                            }
+                        }
+                        if (isUnique)
+                        {
+                            try
+                            {
+                                guildModel.addEmployeeToGuild(guild, selectedEmployee);
 
-                    guildModel.getVolunteersInCurrentGuild().clear();
-                    guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+                                if (!colGuildManager.getText().equals("Medarbejdere"))
+                                {
+                                    populateTablesForCurrentGuild();
+                                    showEmployeesAssignedToGuild();
+                                }
 
-                    guildModel.getEmployeesInCurrentGuild().clear();
-                    guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
+                            } catch (SQLException ex)
+                            {
+                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
                 }
-            }
-            tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
-            tableEmployee.setItems(guildModel.getEmployeesInCurrentGuild());
-            tableGuild.getSelectionModel().select(selectedGuild);
+
+            });
+
         }
-    }
-
-    private void showEmployeesInGuild()
-    {
+        menu.getItems().setAll(guildsSubMenu);
 
     }
 
     @FXML
-    private void editVolunteer()
+    private void handleContextGuildMenuForEmployee()
     {
-
-        Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
-        tableVolunteer.getSelectionModel().clearSelection();
-        volunteerModel.setSelectedVolunteer(selectedItem);
-
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Person");
-
-    }
-
-    @FXML
-    private void editEmployee()
-    {
-
-        Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
-        tableEmployee.getSelectionModel().clearSelection();
-        staffModel.setSelectedEmployee(selectedItem);
-
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
-
-    }
-
-    @FXML
-    private void editGuild()
-    {
-
-        Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
-        tableGuild.getSelectionModel().clearSelection();
-        guildModel.setSelectedGuild(selectedItem);
-
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
-
-    }
-
-    @FXML
-    private void removeVolunteerFromGuild()
-    {
-removeVolunteerFromAssignedGuild();
-    }
-
-    @FXML
-    private void handleStatClick()
-    {
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
-      
+        addEmployeeToGuild(menuAddEmployeeToGuild);
     }
 
     /**
-     * Removes the selected volunteer from the assigned guild
+     * Removes the selected volunteer from the selected assigned guild removes
+     * trough volunteermodel/manager -> db, and the list <volunteers> in be
+     * Guild
      */
     private void removeVolunteerFromAssignedGuild()
     {
@@ -387,54 +426,240 @@ removeVolunteerFromAssignedGuild();
         }
     }
 
-    private void addEmployeeToGuild(Menu menu)
+    @FXML
+    private void removeVolunteerFromGuild()
     {
-        Employee selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
-        guildsSubMenu = new ArrayList<>();
-        for (Guild guild : tableGuild.getItems())
+        removeVolunteerFromAssignedGuild();
+    }
+
+    /**
+     * remove selected Employee from the selected assigned guild removes trough
+     * staffmodel/manager -> database, and and the list <employees> in BE guild
+     */
+    private void removeEmployeeFromAssignedGuild()
+    {
+        selectedEmployee = tableEmployee.getSelectionModel().getSelectedItem();
+        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
         {
-            MenuItem item = new MenuItem(guild.getName());
-            guildsSubMenu.add(item);
-            item.setOnAction(new EventHandler<ActionEvent>()
+            staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
+
+            int selectedID = selectedEmployee.getId();
+            for (Guild guild : guildModel.getAllGuildsForTable())
             {
-                @Override
-                public void handle(ActionEvent event)
+                for (Employee employee : guild.getEmployees())
                 {
-                    boolean isUnique = true;
-                    if (item.getText().equals(guild.getName()))
+                    if (guild.getId() == selectedGuild.getId())
                     {
-                        for (Employee employee : guild.getEmployees())
+                        if (employee.getId() == selectedID)
                         {
-                            if (selectedEmployee.getId() == employee.getId())
-                            {
-                                System.out.println("in if");
-                                isUnique = false;
-                            }
-                        }
-                        if (isUnique)
-                        {
-                            try
-                            {
-                                guildModel.addEmployeeToGuild(guild, selectedEmployee);
-                            } catch (SQLException ex)
-                            {
-                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            guild.removeEmployee(employee);
+                            break;
                         }
                     }
                 }
-
-            });
-
+            }
         }
-        menu.getItems().setAll(guildsSubMenu);
+
+        populateTablesForCurrentGuild();
+        showEmployeesAssignedToGuild();
 
     }
 
     @FXML
-    private void handleContextGuildMenuForEmployee()
+    private void removeEmployeeFromGuild(ActionEvent event)
     {
-        addEmployeeToGuild(menuAddEmployeeToGuild);
+
+        removeEmployeeFromAssignedGuild();
+
     }
 
+    /**
+     * Shows all the volunteers in the table when the user click "Vis alle
+     * personer"
+     */
+    @FXML
+    private void ShowAllVolunteersInTable()
+    {
+        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
+        colVolunteer.setText("Frivillige");
+        menuItemRemoveVolunteer.setVisible(false);
+        menuAddVolToGuild.setVisible(true);
+
+        guildModel.getEmployeesInCurrentGuild().clear();
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        colGuildManager.setText("Medarbejdere");
+        menuItemRemoveEmployee.setVisible(false);
+
+    }
+
+    @FXML
+    private void ShowVolunteersInCurrentGuild(MouseEvent event)
+    {
+        if (event.getClickCount() == 2)
+        {
+            populateTablesForCurrentGuild();
+            showEmployeesAssignedToGuild();
+            menuItemRemoveEmployee.setVisible(true);
+            menuItemRemoveVolunteer.setVisible(true);
+            menuAddVolToGuild.setVisible(false);
+        }
+    }
+
+    /**
+     * Sets the employee and volunteer table for chosen guild
+     */
+    private void populateTablesForCurrentGuild()
+    {
+        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        colVolunteer.setText("Frivillige i " + selectedGuild.getName());
+        colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
+
+        guildModel.getVolunteersInCurrentGuild().clear();
+        guildModel.getVolunteersInCurrentGuild().addAll(selectedGuild.getVolunteers());
+
+        guildModel.getEmployeesInCurrentGuild().clear();
+        guildModel.getEmployeesInCurrentGuild().addAll(selectedGuild.getEmployees());
+
+        tableVolunteer.setItems(guildModel.getVolunteersInCurrentGuild());
+
+    }
+
+    /**
+     * Selects the employees who is assigned to the chosen guild the table sets
+     * them
+     */
+    private void showEmployeesAssignedToGuild()
+    {
+        tableEmployee.getItems().clear();
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        for (Employee item : tableEmployee.getItems())
+        {
+            for (Employee employee : guildModel.getEmployeesInCurrentGuild())
+            {
+                if (item.getId() == employee.getId())
+                {
+
+                    setTextSizeOnEmployeesInCurrentGuild();
+                }
+            }
+        }
+    }
+
+    private void setTextSizeOnEmployeesInCurrentGuild()
+    {
+        colGuildManager.setCellFactory(new Callback<TableColumn<Employee, String>, TableCell<Employee, String>>()
+        {
+            @Override
+            public TableCell<Employee, String> call(TableColumn<Employee, String> param)
+            {
+                return new TableCell<Employee, String>()
+                {
+
+                    @Override
+                    public void updateItem(String item, boolean empty)
+                    {
+                        super.updateItem(item, empty);
+                        if (!isEmpty())
+                        {
+                            for (Employee employeeToMark : guildModel.getEmployeesInCurrentGuild())
+                            {
+
+                                if (item.equals(employeeToMark.getFullName()))
+                                {
+                                    this.setTextFill(Color.GREEN);
+                                    this.setFont(Font.font(16));
+
+                                }
+
+                            }
+                        } else
+                        {
+                            this.setTextFill(Color.valueOf("#323232"));
+                            this.setFont(Font.font(USE_COMPUTED_SIZE));
+
+                        }
+                        setText(item);
+                    }
+                };
+            }
+        });
+    }
+
+    @FXML
+    private void deleteAllInActive()
+    {
+        deleteInactiveVolunteers();
+
+    }
+
+    private void deleteInactiveVolunteers()
+    {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Fjern inaktive");
+        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK)
+        {
+            volunteerModel.deleteInactiveVolunteers();
+            try
+            {
+                guildModel.deleteInactiveGuilds();
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else
+        {
+            // ... user chose CANCEL or closed the dialog
+        }
+
+    }
+
+    /**
+     * Shows an error dialog.
+     *
+     * @param title The title of the error.
+     * @param header The header - subtitle.
+     * @param content The error message.
+     */
+    private void showErrorDialog(String title, String header, String content)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
+    }
+    
+    /**
+     * makes it possibel for the admin to search for Volunteers on first name, last name and phonenummber
+     */
+    private void searchOnUpdate() {
+        txtSearchField.textProperty().addListener((listener, oldVal, newVal)
+                -> {
+            ObservableList<Volunteer> searchedVolunteer = FXCollections.observableArrayList();
+            searchedVolunteer.clear();
+            ObservableList<Volunteer> allVolunteerInCurrentView = currentVolunteerInView;
+            if (selectedGuild == null) {
+                allVolunteerInCurrentView.setAll(volunteerModel.getAllVolunteersForTable());
+            } else {
+                allVolunteerInCurrentView.setAll(selectedGuild.getVolunteers());
+            }
+
+            for (Volunteer m : allVolunteerInCurrentView) {
+                if (m.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        || m.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        || m.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                        && !searchedVolunteer.contains(m)) {
+                    searchedVolunteer.add(m);
+                }
+            }
+
+            tableVolunteer.setItems(searchedVolunteer);
+        });
+    }
 }

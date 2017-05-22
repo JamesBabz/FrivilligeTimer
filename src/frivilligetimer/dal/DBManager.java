@@ -139,6 +139,22 @@ public final class DBManager
             }
         }
     }
+    
+       public void deleteInactiveVolunteers() throws SQLException
+    {
+        String sql = "DELETE from People WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+         
+            ps.executeUpdate();
+            inactiveVolunteers.clear();
+
+        }
+    }
 
     public void setAllGuilds() throws SQLServerException, SQLException
     {
@@ -280,6 +296,14 @@ public final class DBManager
      */
     public List<Employee> getAllEmployees()
     {
+        employees.clear();
+        try
+        {
+            setAllPeople();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return employees;
     }
 
@@ -526,6 +550,21 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
+    
+    public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
+    {
+        String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
+        
+        try(Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, employee.getId());
+            ps.setInt(2, guild.getId());
+            ps.executeUpdate();
+        }
+    }
 
     public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
     {
@@ -696,6 +735,21 @@ public final class DBManager
             ps.setString(2, pref);
             ps.setInt(3, id);
             ps.executeUpdate();
+        }
+    }
+
+    public void deleteInactiveGuilds() throws SQLServerException, SQLException {
+       String sql = "DELETE from Guilds WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+         
+            ps.executeUpdate();
+            inactiveGuilds.clear();
+
         }
     }
 

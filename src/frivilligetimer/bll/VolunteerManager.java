@@ -63,6 +63,15 @@ public class VolunteerManager
         }
     }
     
+    public void deleteInactiveVolunteer()
+    {
+        try {
+            dbManager.deleteInactiveVolunteers();
+        } catch (SQLException ex) {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            }
+    
      public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
      {
         try
