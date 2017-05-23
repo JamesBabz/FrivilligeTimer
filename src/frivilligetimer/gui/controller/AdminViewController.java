@@ -22,7 +22,9 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -39,7 +41,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -669,5 +676,91 @@ public class AdminViewController implements Initializable
 
             tableVolunteer.setItems(searchedVolunteer);
         });
+    }
+
+    @FXML
+    private void handleDragDetected(MouseEvent event)
+    {
+        tableVolunteer.setOnDragDetected(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+                if (selectedVolunteer != null)
+                {
+                    Dragboard db = tableVolunteer.startDragAndDrop(TransferMode.ANY);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(selectedVolunteer.toString());
+                    db.setContent(content);
+                    event.consume();
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleDragOver(DragEvent event)
+    {
+
+        Dragboard db = event.getDragboard();
+        if (event.getDragboard().hasString())
+        {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
+
+    }
+
+    @FXML
+    private void handleDragDropped(DragEvent event)
+    {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (event.getDragboard().hasString())
+        {
+            for (Volunteer volunteer : tableVolunteer.getItems())
+            {
+                if (volunteer.toString().equals(db.getString()))
+                {
+            
+                        if (event.getTarget() != null)
+                        {
+                            String target = event.getTarget().toString();
+                            System.out.println(target);
+                            
+                            for (Guild item : tableGuild.getItems())
+                            {
+//                                if(event.getTarget().toString())
+                            }
+                        }
+                    }
+                
+            }
+
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+
+        //
+        //        Dragboard db = event.getDragboard();
+        //        boolean success = false;
+        //        if (event.getDragboard().hasString())
+        //        {
+        //            for (Volunteer volunteer : tableVolunteer.getItems())
+        //            {
+        //                if (volunteer.toString().equals(db.getString()))
+        //                {
+        //
+        //                    success = true;
+        //
+        //                }
+        //            }
+        //
+        //        }
+        //
+        //        event.setDropCompleted(success);
+        //        event.consume();
     }
 }

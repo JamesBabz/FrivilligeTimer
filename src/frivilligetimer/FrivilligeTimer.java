@@ -22,7 +22,7 @@ public class FrivilligeTimer extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("gui/view/TileView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/view/AdminView.fxml"));
         
         Scene scene = new Scene(root);
         
