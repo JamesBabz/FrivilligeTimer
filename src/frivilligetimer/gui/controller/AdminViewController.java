@@ -98,7 +98,7 @@ public class AdminViewController implements Initializable
     private Employee selectedEmployee;
     private ObservableList<Volunteer> currentVolunteerInView;
     private Guild selectedGuild;
-   
+
     private List<MenuItem> guildsSubMenu;
     @FXML
     private TextField txtSearchField;
@@ -402,7 +402,8 @@ public class AdminViewController implements Initializable
      */
     private void removeVolunteerFromAssignedGuild()
     {
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
         if (guildModel.getVolunteersInCurrentGuild().contains(selectedVolunteer))
         {
             volunteerModel.removeVolunteerFromAssignedGuild(selectedVolunteer, selectedGuild);
@@ -439,7 +440,7 @@ public class AdminViewController implements Initializable
     private void removeEmployeeFromAssignedGuild()
     {
         selectedEmployee = tableEmployee.getSelectionModel().getSelectedItem();
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
         if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
         {
             staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
@@ -597,8 +598,8 @@ public class AdminViewController implements Initializable
     {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Fjern inaktive");
-        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
+        alert.setTitle("Slet inaktive");
+        alert.setHeaderText("Er du sikker på, at du vil fjerne alle inaktive personer og laug?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK)
@@ -634,27 +635,34 @@ public class AdminViewController implements Initializable
 
         alert.showAndWait();
     }
-    
+
     /**
-     * makes it possibel for the admin to search for Volunteers on first name, last name and phonenummber
+     * makes it possibel for the admin to search for Volunteers on first name,
+     * last name and phonenummber
      */
-    private void searchOnUpdate() {
+    private void searchOnUpdate()
+    {
         txtSearchField.textProperty().addListener((listener, oldVal, newVal)
-                -> {
+                ->
+        {
             ObservableList<Volunteer> searchedVolunteer = FXCollections.observableArrayList();
             searchedVolunteer.clear();
             ObservableList<Volunteer> allVolunteerInCurrentView = currentVolunteerInView;
-            if (selectedGuild == null) {
+            if (selectedGuild == null)
+            {
                 allVolunteerInCurrentView.setAll(volunteerModel.getAllVolunteersForTable());
-            } else {
+            } else
+            {
                 allVolunteerInCurrentView.setAll(selectedGuild.getVolunteers());
             }
 
-            for (Volunteer m : allVolunteerInCurrentView) {
+            for (Volunteer m : allVolunteerInCurrentView)
+            {
                 if (m.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
                         || m.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
                         || m.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                        && !searchedVolunteer.contains(m)) {
+                        && !searchedVolunteer.contains(m))
+                {
                     searchedVolunteer.add(m);
                 }
             }
