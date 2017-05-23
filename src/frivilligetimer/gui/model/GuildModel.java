@@ -273,7 +273,7 @@ public final class GuildModel
         manager.addEmployeeToGuild(selectedGuild.getId(), selectedEmployee.getId());
     }
 
-    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
     {
         return manager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
