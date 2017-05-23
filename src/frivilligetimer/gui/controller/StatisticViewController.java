@@ -12,11 +12,12 @@ import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -34,7 +35,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -140,18 +140,18 @@ public class StatisticViewController implements Initializable
         {
             guildModel.setVolunteersInGuild(guild);
             int hours = 0;
-            try
-            {
-                hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (IOException ex)
-            {
-                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try
+//            {
+//                hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
+//            }
+//            catch (SQLException ex)
+//            {
+//                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            catch (IOException ex)
+//            {
+//                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
         }
 
@@ -171,36 +171,38 @@ public class StatisticViewController implements Initializable
         graphContainer.getChildren().add(lineVolunteers);
         lineVolunteers.prefHeightProperty().bind(graphContainer.heightProperty());
 
-//        Task task = new Task<Void>()
-//        {
-//            @Override
-//            protected Void call() throws Exception
-//            {
+        Task task = new Task<Void>()
+        {
+            @Override
+            protected Void call() throws Exception
+            {
+                for (Volunteer volunteer : guildModel.getVolunteersInGuild())
+                {
+                    Platform.runLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            populateLineChart(volunteer, from, to, guild);
+                        }
+                    });
+                    Thread.sleep(200);
+                }
+
+                return null;
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+
+        Thread th = new Thread();
+
 //        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
 //        {
-//                    Platform.runLater(new Runnable()
-//                    {
-//                        @Override
-//                        public void run()
-//                        {
 //            populateLineChart(volunteer, from, to, guild);
-//                        }
-//                    });
-//                    Thread.sleep(200);
 //        }
-//
-//                return null;
-//            }
-//        };
-//
-//        Thread t = new Thread(task);
-//        t.setDaemon(true);
-//        t.start();
-        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
-        {
-            populateLineChart(volunteer, from, to, guild);
-        }
-
     }
 
     private void populateLineChart(Volunteer volunteer, Calendar from, Calendar to, Guild guild)
@@ -210,24 +212,20 @@ public class StatisticViewController implements Initializable
         Calendar date = Calendar.getInstance();
         date.setTime(from.getTime());
 
-        do
+        TreeMap<java.sql.Date, Integer> lineChartValues = null;
+        try
         {
-            int hours = 0;
-            try
-            {
-                hours = volunteerModel.getTodaysHours(volunteer.getId(), date.getTime(), guild.getId());
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            currentVolunteer.getData().add(new XYChart.Data<>(date.getTime().toString().substring(0, 10), hours));
-
-            date.add(Calendar.DAY_OF_YEAR, 1);
-
+            lineChartValues = volunteerModel.getWorkedHoursInPeriodForVolunteer(from.getTime(), to.getTime(), volunteer.getId(), guild.getId());
         }
-        while (date.before(to));
+        catch (SQLException | IOException ex)
+        {
+            Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for (Map.Entry<java.sql.Date, Integer> lineChartValue : lineChartValues.entrySet())
+        {
+            currentVolunteer.getData().add(new XYChart.Data<>(lineChartValue.getKey().toString(), lineChartValue.getValue()));
+        }
         lineVolunteers.getData().add(currentVolunteer);
     }
 }
