@@ -21,9 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
@@ -394,26 +392,29 @@ public final class DBManager
      */
     public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
     {
-        from = new java.sql.Date(from.getTime());
-        to = new java.sql.Date(to.getTime());
+        java.sql.Date sqlFrom = new java.sql.Date(from.getTime());
+        java.sql.Date sqlTo = new java.sql.Date(to.getTime());
         ConnectionManager cm;
         cm = new ConnectionManager();
         TreeMap<java.sql.Date, Integer> lineChartValues = new TreeMap();
         java.sql.Date date = new java.sql.Date(from.getTime());
-        int hours;
-
+        int hours = 0;
         do
         {
-            lineChartValues.put((java.sql.Date) date.clone(), 0);
+            lineChartValues.put((java.sql.Date) date.clone(), hours);
             date.setTime(date.getTime() + 86_400_000);
         }
         while (date.before(to));
-        String sql = "SELECT date, hours from Hours WHERE date BETWEEN '" + from + "' AND '" + to + "' AND uid = " + id + " AND laugid = " + guildid;
+        String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND uid = ? AND laugid = ?";
 
         try (Connection con = cm.getConnection())
         {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, sqlFrom);
+            ps.setDate(2, sqlTo);
+            ps.setInt(3, id);
+            ps.setInt(4, guildid);
+            ResultSet rs = ps.executeQuery();
             while (rs.next())
             {
                 hours = rs.getInt("hours");
@@ -424,38 +425,29 @@ public final class DBManager
         return lineChartValues;
     }
 
-    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
     {
-        from = new java.sql.Date(from.getTime());
-        to = new java.sql.Date(to.getTime());
+        java.sql.Date sqlFrom = new java.sql.Date(from.getTime());
+        java.sql.Date sqlTo = new java.sql.Date(to.getTime());
         ConnectionManager cm;
         cm = new ConnectionManager();
-        String whereId;
-        TreeMap<java.sql.Date, Integer> lineChartValues = new TreeMap();
-        java.sql.Date date = new java.sql.Date(from.getTime());
-        int hours;
+        int hours = 0;
 
-        do
-        {
-            lineChartValues.put(date, 0);
-            date.setTime(date.getTime() + 86_400_000);
-        }
-        while (date.before(to));
-
-        String sql = "SELECT date, hours from Hours WHERE date BETWEEN '" + from + "' AND '" + to + "' AND uid = " + id;
+        String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND laugid = ?";
 
         try (Connection con = cm.getConnection())
         {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, sqlFrom);
+            ps.setDate(2, sqlTo);
+            ps.setInt(3, id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next())
             {
-                hours = rs.getInt("hours");
-                java.sql.Date d = rs.getDate("date");
-                lineChartValues.put(d, hours);
+                hours += rs.getInt("hours");
             }
         }
-        return lineChartValues;
+        return hours;
     }
 
     public void addGuild(Guild guild) throws SQLServerException, SQLException

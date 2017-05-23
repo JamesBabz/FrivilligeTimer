@@ -86,7 +86,7 @@ public class GuildManager
         return dbManager.getEmployeesInGuild();
     }
     
-    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
         return dbManager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
 

@@ -15,14 +15,14 @@ import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,6 +35,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 /**
@@ -50,11 +51,17 @@ public class StatisticViewController implements Initializable
     private LineChart lineVolunteers;
 
     @FXML
-    private TableView<?> tblOverview;
+    private TableView<Guild> tblGuildsOverview;
     @FXML
-    private TableColumn<?, ?> colName;
+    private TableView<Volunteer> tblVolunteersOverview;
     @FXML
-    private TableColumn<?, ?> colHours;
+    private TableColumn<Guild, String> colGuildName;
+    @FXML
+    private TableColumn<Guild, Integer> colGuildHours;
+    @FXML
+    private TableColumn<Volunteer, String> colVolunteerName;
+    @FXML
+    private TableColumn<Volunteer, Integer> colVolunteerHours;
     @FXML
     private ComboBox<Object> cmbGuilds;
     @FXML
@@ -79,6 +86,12 @@ public class StatisticViewController implements Initializable
 
         setInitialGraph();
         initiateComboBox();
+        colGuildName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colGuildHours.setCellValueFactory(new PropertyValueFactory<>("hoursInCurrentPeriod"));
+        tblGuildsOverview.setItems(guildModel.getAllGuildsForTable());
+        colVolunteerName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colVolunteerHours.setCellValueFactory(new PropertyValueFactory<>("hoursInCurrentPeriod"));
+        tblVolunteersOverview.setItems(guildModel.getVolunteersInGuild());
     }
 
     private void initiateComboBox()
@@ -86,31 +99,6 @@ public class StatisticViewController implements Initializable
         cmbGuilds.getItems().add("Alle Laug");
         cmbGuilds.getItems().addAll(guildModel.getAllGuilds());
         cmbGuilds.getSelectionModel().selectFirst();
-        cmbListener();
-    }
-
-    private void cmbListener()
-    {
-        cmbGuilds.valueProperty().addListener(new ChangeListener<Object>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue)
-            {
-                Calendar from = Calendar.getInstance();
-                Calendar to = Calendar.getInstance();
-                from.setTime(Date.from(dpFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                to.setTime(Date.from(dpTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                if ("Alle Laug".equals(newValue))
-                {
-                    setBarChartForGuilds(from, to);
-                }
-                else
-                {
-                    setLineChartForVolunteers(from, to, (Guild) newValue);
-                }
-            }
-
-        });
     }
 
     private void setInitialGraph()
@@ -124,44 +112,72 @@ public class StatisticViewController implements Initializable
 
         dpFrom.setValue(from.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         dpTo.setValue(to.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        setBarChartForGuilds(from, to);
+        setValuesForGuilds(from, to);
     }
 
-    private void setBarChartForGuilds(Calendar from, Calendar to)
+    private void setValuesForGuilds(Calendar from, Calendar to)
     {
+        tblGuildsOverview.setVisible(true);
+        tblVolunteersOverview.setVisible(false);
+        List<Guild> allGuilds = guildModel.getAllGuilds();
         graphContainer.getChildren().clear();
         BarChart barGuilds;
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         barGuilds = new BarChart<>(xAxis, yAxis);
-        XYChart.Series allGuilds = new XYChart.Series();
-        allGuilds.setName("Timer");
-        for (Guild guild : guildModel.getAllGuilds())
-        {
-            guildModel.setVolunteersInGuild(guild);
-            int hours = 0;
-//            try
-//            {
-//                hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
-//            }
-//            catch (SQLException ex)
-//            {
-//                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            catch (IOException ex)
-//            {
-//                Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-            allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
-        }
-
-        barGuilds.getData().add(allGuilds);
+        XYChart.Series allGuildsSeries = new XYChart.Series();
+        allGuildsSeries.setName("Timer");
+        barGuilds.getData().add(allGuildsSeries);
         graphContainer.getChildren().add(barGuilds);
         barGuilds.prefHeightProperty().bind(graphContainer.heightProperty());
+        Task task = new Task<Void>()
+        {
+            @Override
+            protected Void call() throws Exception
+            {
+                for (Guild guild : allGuilds)
+                {
+                    Platform.runLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            populateBarChart(guild, from, to, allGuildsSeries);
+                        }
+
+                    });
+                    Thread.sleep(200);
+                }
+
+                return null;
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
     }
 
-    private void setLineChartForVolunteers(Calendar from, Calendar to, Guild guild)
+    private void populateBarChart(Guild guild, Calendar from, Calendar to, XYChart.Series allGuilds)
     {
+        guildModel.setVolunteersInGuild(guild);
+        int hours = 0;
+        try
+        {
+            hours = guildModel.getWorkedHoursInPeriodForGuild(from.getTime(), to.getTime(), guild.getId());
+            guild.setHoursInCurrentPeriod(hours);
+        }
+        catch (SQLException | IOException ex)
+        {
+            Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        allGuilds.getData().add(new XYChart.Data(guild.getName(), hours));
+    }
+
+    private void setValuesForVolunteers(Calendar from, Calendar to, Guild guild)
+    {
+        tblGuildsOverview.setVisible(false);
+        tblVolunteersOverview.setVisible(true);
         graphContainer.getChildren().clear();
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -196,13 +212,6 @@ public class StatisticViewController implements Initializable
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
-
-        Thread th = new Thread();
-
-//        for (Volunteer volunteer : guildModel.getVolunteersInGuild())
-//        {
-//            populateLineChart(volunteer, from, to, guild);
-//        }
     }
 
     private void populateLineChart(Volunteer volunteer, Calendar from, Calendar to, Guild guild)
@@ -211,6 +220,7 @@ public class StatisticViewController implements Initializable
         currentVolunteer.setName(volunteer.getFullName());
         Calendar date = Calendar.getInstance();
         date.setTime(from.getTime());
+        int hoursInCurrentPeriod = 0;
 
         TreeMap<java.sql.Date, Integer> lineChartValues = null;
         try
@@ -224,8 +234,37 @@ public class StatisticViewController implements Initializable
         
         for (Map.Entry<java.sql.Date, Integer> lineChartValue : lineChartValues.entrySet())
         {
+            hoursInCurrentPeriod += lineChartValue.getValue();
+            System.out.println(hoursInCurrentPeriod);
             currentVolunteer.getData().add(new XYChart.Data<>(lineChartValue.getKey().toString(), lineChartValue.getValue()));
         }
+        volunteer.setHoursInCurrentPeriod(hoursInCurrentPeriod);
         lineVolunteers.getData().add(currentVolunteer);
     }
+
+    @FXML
+    private void showStat()
+    {
+        if (dpFrom.getValue() != null && dpTo.getValue() != null)
+        {
+            updateGraph();
+        }
+    }
+
+    private void updateGraph()
+    {
+        Calendar from = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
+        from.setTime(Date.from(dpFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        to.setTime(Date.from(dpTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if ("Alle Laug".equals(cmbGuilds.getValue()))
+        {
+            setValuesForGuilds(from, to);
+        }
+        else
+        {
+            setValuesForVolunteers(from, to, (Guild) cmbGuilds.getValue());
+        }
+    }
+
 }
