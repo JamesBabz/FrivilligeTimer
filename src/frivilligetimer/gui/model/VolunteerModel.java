@@ -11,6 +11,7 @@ import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -146,8 +147,8 @@ public class VolunteerModel
         manager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
 
-    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
     {
-        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id);
+        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
     }
 }

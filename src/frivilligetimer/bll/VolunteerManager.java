@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,7 +109,7 @@ public class VolunteerManager
         dbManager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
     
-    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException{
-        return dbManager.getWorkedHoursInPeriod(from, to, id, true);
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException{
+        return dbManager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
     }
 }
