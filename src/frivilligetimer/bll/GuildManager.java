@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,8 +86,8 @@ public class GuildManager
         return dbManager.getEmployeesInGuild();
     }
     
-    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
-        return dbManager.getWorkedHoursInPeriod(from, to, id, false);
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
+        return dbManager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
 
     public void deleteInactiveGuilds() throws SQLException {
