@@ -11,6 +11,7 @@ import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -89,6 +90,12 @@ public class VolunteerModel
         allActiveVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
+    
+    public void deleteInactiveVolunteers()
+    {
+        
+        manager.deleteInactiveVolunteer();
+    }
 
     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
     {
@@ -125,9 +132,9 @@ public class VolunteerModel
         manager.addHoursForVolunteer(uid, date, hours, guildId);
     }
 
-    public int getTodaysHours(int id, int guildid) throws SQLException
+    public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
-        return manager.getTodaysHours(id, guildid);
+        return manager.getTodaysHours(id, date, guildid);
     }
 
     public void updateHoursForVolunteer(int id, Date date, int hours) throws SQLException
@@ -140,8 +147,8 @@ public class VolunteerModel
         manager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
 
-    public int getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id) throws SQLException, IOException
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
     {
-        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id);
+        return manager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
     }
 }

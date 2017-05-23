@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -140,6 +140,21 @@ public final class DBManager
         }
     }
 
+    public void deleteInactiveVolunteers() throws SQLException
+    {
+        String sql = "DELETE from People WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.executeUpdate();
+            inactiveVolunteers.clear();
+
+        }
+    }
+
     public void setAllGuilds() throws SQLServerException, SQLException
     {
         String sql = "SELECT * FROM Guilds";
@@ -229,7 +244,7 @@ public final class DBManager
         }
         return volunteers;
     }
-    
+
     /**
      * Gets all the inactive volunteers
      *
@@ -249,7 +264,7 @@ public final class DBManager
         }
         return inactiveVolunteers;
     }
-    
+
     /**
      * Gets all the volunteers
      *
@@ -284,7 +299,8 @@ public final class DBManager
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -344,9 +360,9 @@ public final class DBManager
         return employeesInGuild;
     }
 
-    public int getTodaysHours(int id, int guildid) throws SQLException
+    public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
-        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(new Date().getTime()).toString() + "' AND laugid = " + guildid;
+        String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(date.getTime()).toString() + "' AND laugid = " + guildid;
         int hours = -1;
         try (Connection con = cm.getConnection())
         {
@@ -367,31 +383,65 @@ public final class DBManager
      * @param from The start date for the hours to pull
      * @param to The end date for the hours to pull
      * @param id the id of the person/guild
+     * @param guildid
      * @param isPerson True if you want hours for a person, false if you want it
      * for a guild
      * @return Returns amount of hours in the period
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
      */
-    public int getWorkedHoursInPeriod(Date from, Date to, int id, boolean isPerson) throws SQLException, IOException
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
     {
-        from = new java.sql.Date(from.getTime());
-        to = new java.sql.Date(to.getTime());
+        java.sql.Date sqlFrom = new java.sql.Date(from.getTime());
+        java.sql.Date sqlTo = new java.sql.Date(to.getTime());
         ConnectionManager cm;
         cm = new ConnectionManager();
-        String whereId;
-        if (isPerson)
-        {
-            whereId = "AND uid = " + id;
-        }
-        else
-        {
-            whereId = "AND laugid = " + id;
-        }
-        String sql = "SELECT hours from Hours WHERE date BETWEEN '" + from + "' AND '" + to + "' " + whereId;
+        TreeMap<java.sql.Date, Integer> lineChartValues = new TreeMap();
+        java.sql.Date date = new java.sql.Date(from.getTime());
         int hours = 0;
+        do
+        {
+            lineChartValues.put((java.sql.Date) date.clone(), hours);
+            date.setTime(date.getTime() + 86_400_000);
+        }
+        while (date.before(to));
+        String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND uid = ? AND laugid = ?";
+
         try (Connection con = cm.getConnection())
         {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, sqlFrom);
+            ps.setDate(2, sqlTo);
+            ps.setInt(3, id);
+            ps.setInt(4, guildid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                hours = rs.getInt("hours");
+                java.sql.Date d = rs.getDate("date");
+                lineChartValues.put(d, hours);
+            }
+        }
+        return lineChartValues;
+    }
+
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
+    {
+        java.sql.Date sqlFrom = new java.sql.Date(from.getTime());
+        java.sql.Date sqlTo = new java.sql.Date(to.getTime());
+        ConnectionManager cm;
+        cm = new ConnectionManager();
+        int hours = 0;
+
+        String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND laugid = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, sqlFrom);
+            ps.setDate(2, sqlTo);
+            ps.setInt(3, id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next())
             {
                 hours += rs.getInt("hours");
@@ -534,16 +584,16 @@ public final class DBManager
             ps.executeUpdate();
         }
     }
-    
+
     public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
-        
-        try(Connection con = cm.getConnection())
+
+        try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setInt(1, employee.getId());
             ps.setInt(2, guild.getId());
             ps.executeUpdate();
@@ -719,6 +769,21 @@ public final class DBManager
             ps.setString(2, pref);
             ps.setInt(3, id);
             ps.executeUpdate();
+        }
+    }
+
+    public void deleteInactiveGuilds() throws SQLServerException, SQLException
+    {
+        String sql = "DELETE from Guilds WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.executeUpdate();
+            inactiveGuilds.clear();
+
         }
     }
 
