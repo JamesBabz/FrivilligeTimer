@@ -14,12 +14,19 @@ import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -90,6 +97,7 @@ public class AdminViewController implements Initializable {
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
+    private final AdminModel adminModel;
 
     private Volunteer selectedVolunteer;
     private Employee selectedEmployee;
@@ -118,13 +126,18 @@ public class AdminViewController implements Initializable {
         menuItemRemoveVolunteer.setVisible(false);
         populateTables();
         searchOnUpdate();
-
+        try {
+            alertBox();
+        } catch (ParseException ex) {
+            Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * Default contructor
      */
     public AdminViewController() {
+        this.adminModel = AdminModel.getInstance();
         this.currentVolunteerInView = new ArrayList<Volunteer>();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
@@ -554,8 +567,24 @@ public class AdminViewController implements Initializable {
 
         alert.showAndWait();
     }
+    
+     /**
+     * Shows an error dialog.
+     *
+     * @param title The title of the error.
+     * @param header The header - subtitle.
+     * @param content The error message.
+     */
+     private void ShowReminderDialog(String title, String header, String content)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
 
-    private AdminModel adminModel = AdminModel.getInstance();
+        alert.showAndWait();
+    }
+    
 
     /**
      * makes it possibel for the admin to search for Volunteers on first name,
@@ -585,4 +614,25 @@ public class AdminViewController implements Initializable {
             tableVolunteer.setItems(adminModel.getSearchedVolunteer());
         });
     }
+    
+    private void alertBox() throws ParseException
+    {
+        Timer timer = new Timer();
+        
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+               Platform.runLater(() -> {
+                             ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
+
+               });
+                
+            }
+        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-23"));
+        
+       
+        
+        
+    }
+    
 }
