@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
 
+<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
       <BorderPane prefHeight="569.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -26,8 +36,8 @@
                            <contextMenu>
                               <ContextMenu fx:id="contextGuild">
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
                                     <MenuItem mnemonicParsing="false" onAction="#editGuild" text="Ændrer laug" />
+                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -52,9 +62,9 @@
                                     <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                                  </items>
                               </Menu>
+                              <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern Person Fra Laug" />
                               <MenuItem mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer Person" />
                               <MenuItem mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
-                              <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern Person Fra Laug" />
                            </items>
                         </ContextMenu>
                      </contextMenu>
@@ -69,14 +79,14 @@
                      <contextMenu>
                         <ContextMenu fx:id="contextEmployee">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet Person" />
-                              <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændrer Medarbejder" />
                               <Menu fx:id="menuAddEmployeeToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenuForEmployee" text="Tilføj Medarbejder Til Laug">
                                 <items>
                                   <MenuItem mnemonicParsing="false" text="Action 1" />
                                 </items>
                               </Menu>
+                              <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændrer Medarbejder" />
                               <MenuItem fx:id="menuItemRemoveEmployee" mnemonicParsing="false" onAction="#removeEmployeeFromGuild" text="Fjern Medarbejder Fra Laug" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet Person" />
                           </items>
                         </ContextMenu>
                      </contextMenu>
@@ -98,10 +108,10 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Menu">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
                         <MenuItem fx:id="Volunteradd" mnemonicParsing="false" onAction="#addVolunteer" text="Tilføj Frivillig" />
                         <MenuItem fx:id="guildAdd" mnemonicParsing="false" onAction="#addGuild" text="Tilføj Laug" />
                         <MenuItem mnemonicParsing="false" onAction="#addEmployee" text="Tilføj Medarbejder" />
+                        <MenuItem mnemonicParsing="false" onAction="#deleteAllInActive" text="Slet inaktive Personer og Laug" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Statistik">
@@ -118,6 +128,7 @@
          </top>
       </BorderPane>
       <ImageView fx:id="imageLogo" fitHeight="41.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
-      <Button layoutX="588.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteVolunteers" text="Fjern personer og laug" AnchorPane.rightAnchor="12.0" />
+      <Label layoutX="150.0" layoutY="68.0" prefHeight="17.0" prefWidth="52.0" text="Søgefelt:" AnchorPane.leftAnchor="150.0" />
+      <TextField fx:id="txtSearchField" layoutX="184.0" layoutY="64.0" prefHeight="25.0" prefWidth="68.0" AnchorPane.leftAnchor="201.0" />
    </children>
 </AnchorPane>

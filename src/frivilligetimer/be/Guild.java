@@ -6,6 +6,8 @@
 package frivilligetimer.be;
 
 import java.util.ArrayList;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,6 +22,7 @@ public class Guild
     private final StringProperty name = new SimpleStringProperty();
     private ArrayList<Volunteer> volunteers = new ArrayList<>(); 
     private ArrayList<Employee> employees = new ArrayList<>();
+    private final IntegerProperty hoursInCurrentPeriod = new SimpleIntegerProperty();
 
     public Guild(int id, String name)
     {
@@ -86,5 +89,27 @@ public class Guild
     {
         return employees;
     }
+    
+    @Override
+    public String toString()
+    {
+        return name.get();
+    }
+    
+    public int getHoursInCurrentPeriod()
+    {
+        return hoursInCurrentPeriod.get();
+    }
+
+    public void setHoursInCurrentPeriod(int value)
+    {
+        hoursInCurrentPeriod.set(value);
+    }
+
+    public IntegerProperty hoursInCurrentPeriodProperty()
+    {
+        return hoursInCurrentPeriod;
+    }
+    
 
 }

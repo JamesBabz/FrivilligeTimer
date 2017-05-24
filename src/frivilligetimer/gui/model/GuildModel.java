@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -91,7 +92,7 @@ public final class GuildModel
     {
         return allActiveGuilds;
     }
-    
+
     public List<Guild> getAllGuilds()
     {
         return manager.getAllGuilds();
@@ -184,6 +185,8 @@ public final class GuildModel
     public void populateGuildsWithVolunteers()
     {
 
+        List<Volunteer> allVol;
+        allVol = getAllVolunteers();
         for (String string : getAllVolunteersInGuilds())
         {
             String[] data = string.split(",");
@@ -194,7 +197,7 @@ public final class GuildModel
             {
                 if (laugid == guild.getId())
                 {
-                    for (Volunteer volunteer : getAllVolunteers())
+                    for (Volunteer volunteer : allVol)
                     {
                         if (uid == volunteer.getId())
                         {
@@ -209,7 +212,8 @@ public final class GuildModel
 
     public void populateGuildsWithEmployees()
     {
-
+        List<Employee> allEmp;
+        allEmp = getAllEmployees();
         for (String string : getEmployeesInguilds())
         {
             String[] data = string.split(",");
@@ -220,7 +224,7 @@ public final class GuildModel
             {
                 if (laugid == guild.getId())
                 {
-                    for (Employee employee : getAllEmployees())
+                    for (Employee employee : allEmp)
                     {
                         if (uid == employee.getId())
                         {
@@ -274,8 +278,9 @@ public final class GuildModel
         return manager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
 
-    public void deleteInactiveGuilds() throws SQLException {
+    public void deleteInactiveGuilds() throws SQLException
+    {
         manager.deleteInactiveGuilds();
-            }
+    }
 
 }
