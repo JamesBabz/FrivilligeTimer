@@ -6,6 +6,8 @@
 package frivilligetimer.be;
 
 import java.awt.image.BufferedImage;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * The Buisness entity of the volunteer. This class extends Person
@@ -17,6 +19,8 @@ public class Volunteer extends Person
     private String preference;
     private String note;
     private BufferedImage image;
+    private final IntegerProperty hoursInCurrentPeriod = new SimpleIntegerProperty();
+
 
 
     /**
@@ -64,9 +68,27 @@ public class Volunteer extends Person
         this.note = note;
     }
 
+
     @Override
     public String toString()
     {
         return getFullName();
     }
+
+    public int getHoursInCurrentPeriod()
+    {
+        return hoursInCurrentPeriod.get();
+    }
+
+    public void setHoursInCurrentPeriod(int value)
+    {
+        hoursInCurrentPeriod.set(value);
+    }
+
+    public IntegerProperty hoursInCurrentPeriodProperty()
+    {
+        return hoursInCurrentPeriod;
+    }
+    
+
 }
