@@ -27,6 +27,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -681,22 +682,17 @@ public class AdminViewController implements Initializable
     @FXML
     private void handleDragDetected(MouseEvent event)
     {
-        tableVolunteer.setOnDragDetected(new EventHandler<MouseEvent>()
+
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        if (selectedVolunteer != null)
         {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
-                if (selectedVolunteer != null)
-                {
-                    Dragboard db = tableVolunteer.startDragAndDrop(TransferMode.ANY);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putString(selectedVolunteer.toString());
-                    db.setContent(content);
-                    event.consume();
-                }
-            }
-        });
+            Dragboard db = tableVolunteer.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(selectedVolunteer.toString());
+            db.setContent(content);
+            event.consume();
+        }
+
     }
 
     @FXML
@@ -713,54 +709,47 @@ public class AdminViewController implements Initializable
     }
 
     @FXML
-    private void handleDragDropped(DragEvent event)
+    private void handleDragDropped(DragEvent event) throws SQLException
     {
         Dragboard db = event.getDragboard();
         boolean success = false;
+
+        List<Guild> allGuilds = guildModel.getAllGuilds();
+        Node node = event.getPickResult().getIntersectedNode();
+        if (node.toString().startsWith("Text"))
+        {
+            node = node.getParent();
+        }
+
+        String st = node.toString();
+        st = st.substring(st.indexOf("'") + 1, st.length() - 1);
+
         if (event.getDragboard().hasString())
         {
             for (Volunteer volunteer : tableVolunteer.getItems())
             {
                 if (volunteer.toString().equals(db.getString()))
                 {
-            
-                        if (event.getTarget() != null)
+                    if (event.getTarget() != null)
+                    {
+                        if (allGuilds.toString().contains(st))
                         {
-                            String target = event.getTarget().toString();
-                            System.out.println(target);
-                            
-                            for (Guild item : tableGuild.getItems())
+                            for (Guild guild : allGuilds)
                             {
-//                                if(event.getTarget().toString())
+                                if (guild.getName().equals(st) && !guild.getVolunteers().toString().contains(volunteer.toString()))
+                                {
+                                    guildModel.addVolunteerToGuild(guild, volunteer);
+                                }
                             }
                         }
                     }
-                
+                }
+
             }
 
             success = true;
         }
         event.setDropCompleted(success);
         event.consume();
-
-        //
-        //        Dragboard db = event.getDragboard();
-        //        boolean success = false;
-        //        if (event.getDragboard().hasString())
-        //        {
-        //            for (Volunteer volunteer : tableVolunteer.getItems())
-        //            {
-        //                if (volunteer.toString().equals(db.getString()))
-        //                {
-        //
-        //                    success = true;
-        //
-        //                }
-        //            }
-        //
-        //        }
-        //
-        //        event.setDropCompleted(success);
-        //        event.consume();
     }
 }

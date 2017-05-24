@@ -64,4 +64,9 @@ public class Volunteer extends Person
         this.note = note;
     }
 
+    @Override
+    public String toString()
+    {
+        return getFullName();
+    }
 }
