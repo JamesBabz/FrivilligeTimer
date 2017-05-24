@@ -68,6 +68,13 @@ public class Volunteer extends Person
         this.note = note;
     }
 
+
+    @Override
+    public String toString()
+    {
+        return getFullName();
+    }
+
     public int getHoursInCurrentPeriod()
     {
         return hoursInCurrentPeriod.get();
@@ -83,4 +90,5 @@ public class Volunteer extends Person
         return hoursInCurrentPeriod;
     }
     
+
 }

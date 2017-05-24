@@ -16,8 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
       <BorderPane prefHeight="569.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -29,7 +28,7 @@
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Button>
-                        <TableView fx:id="tableGuild" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="426.0" prefWidth="147.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableGuild" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="426.0" prefWidth="147.0" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="colGuild" editable="false" prefWidth="136.0" resizable="false" text="Laug " />
                           </columns>
@@ -50,7 +49,7 @@
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <TableView fx:id="tableVolunteer" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
+                  <TableView fx:id="tableVolunteer" onDragDetected="#handleDragDetected" onDragOver="#handleDragOver" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="colVolunteer" prefWidth="260.0" resizable="false" text="Frivillige" />
                     </columns>
