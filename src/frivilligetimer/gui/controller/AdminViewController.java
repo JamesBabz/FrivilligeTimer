@@ -580,6 +580,23 @@ public class AdminViewController implements Initializable {
 
         alert.showAndWait();
     }
+    
+             /**
+     * Shows an error dialog.
+     *
+     * @param title The title of the error.
+     * @param header The header - subtitle.
+     * @param content The error message.
+     */
+     private void ShowReminderDialog(String title, String header, String content)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
+    }
 
 
     /**
