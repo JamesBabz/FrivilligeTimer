@@ -5,6 +5,9 @@
  */
 package frivilligetimer.gui.controller;
 
+import frivilligetimer.be.Guild;
+import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.model.GuildModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -16,6 +19,9 @@ import javafx.fxml.Initializable;
  */
 public class EmailViewController implements Initializable
 {
+    
+    private GuildModel gModel;
+    private Guild selGuild;
 
     /**
      * Initializes the controller class.
@@ -25,5 +31,17 @@ public class EmailViewController implements Initializable
     {
         // TODO
     }    
+
+    public EmailViewController()
+    {
+        gModel = gModel.getInstance();
+        selGuild = gModel.getSelectedGuild();
+        for (Volunteer volunteer : selGuild.getVolunteers())
+        {
+            System.out.println(volunteer.getFullName());
+        }
+    }
+    
+    
     
 }
