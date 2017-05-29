@@ -28,9 +28,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -44,7 +47,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -286,13 +294,15 @@ public class AdminViewController implements Initializable {
                     boolean isUnique = true;
                     if (item.getText().equals(guild.getName())) {
                         for (Volunteer volunteer : guild.getVolunteers()) {
-
+                            
                             if (selectedVolunteer.getId() == volunteer.getId()) {
                                 isUnique = false;
+                                    showErrorDialog("Fejl", "", "Denne person er allerede i dette laug."
+                                             );
                             }
                         }
                         if (isUnique) {
-
+                            
                             try {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
                             } catch (SQLException ex) {
@@ -335,12 +345,13 @@ public class AdminViewController implements Initializable {
                         for (Employee employee : guild.getEmployees()) {
                             if (selectedEmployee.getId() == employee.getId()) {
                                 isUnique = false;
+                               
                             }
                         }
                         if (isUnique) {
                             try {
                                 guildModel.addEmployeeToGuild(guild, selectedEmployee);
-
+                             
                                 if (!colGuildManager.getText().equals("Medarbejdere")) {
                                     populateTablesForCurrentGuild();
                                     showEmployeesAssignedToGuild();
@@ -370,9 +381,14 @@ public class AdminViewController implements Initializable {
      * trough volunteermodel/manager -> db, and the list <volunteers> in be
      * Guild
      */
-    private void removeVolunteerFromAssignedGuild() {
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
-        if (guildModel.getVolunteersInCurrentGuild().contains(selectedVolunteer)) {
+
+    private void removeVolunteerFromAssignedGuild()
+    {
+        selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        if (guildModel.getVolunteersInCurrentGuild().contains(selectedVolunteer))
+        {
+
             volunteerModel.removeVolunteerFromAssignedGuild(selectedVolunteer, selectedGuild);
             tableVolunteer.getItems().remove(selectedVolunteer);
 
@@ -401,7 +417,7 @@ public class AdminViewController implements Initializable {
      */
     private void removeEmployeeFromAssignedGuild() {
         selectedEmployee = tableEmployee.getSelectionModel().getSelectedItem();
-        Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
+        selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
         if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
         {
             staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
@@ -535,8 +551,8 @@ public class AdminViewController implements Initializable {
     private void deleteInactiveVolunteers() {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Fjern inaktive");
-        alert.setHeaderText("Er du sikker på du vil fjerne alle inaktive personer og laug?");
+        alert.setTitle("Slet inaktive");
+        alert.setHeaderText("Er du sikker på, at du vil fjerne alle inaktive personer og laug?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
@@ -568,7 +584,7 @@ public class AdminViewController implements Initializable {
         alert.showAndWait();
     }
     
-     /**
+             /**
      * Shows an error dialog.
      *
      * @param title The title of the error.
@@ -584,12 +600,13 @@ public class AdminViewController implements Initializable {
 
         alert.showAndWait();
     }
-    
+
 
     /**
      * makes it possibel for the admin to search for Volunteers on first name,
      * last name and phonenummber
      */
+
     private void searchOnUpdate() {
 
         txtSearchField.textProperty().addListener((listener, oldVal, newVal)
@@ -608,12 +625,89 @@ public class AdminViewController implements Initializable {
                         || m.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
                         && !adminModel.getSearchedVolunteer().contains(m)) {
                     adminModel.getSearchedVolunteer().add(m);
+
                 }
             }
 
             tableVolunteer.setItems(adminModel.getSearchedVolunteer());
         });
     }
+
+
+    @FXML
+    private void handleDragDetected(MouseEvent event)
+    {
+
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        if (selectedVolunteer != null)
+        {
+            Dragboard db = tableVolunteer.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(selectedVolunteer.toString());
+            db.setContent(content);
+            event.consume();
+        }
+
+    }
+
+    @FXML
+    private void handleDragOver(DragEvent event)
+    {
+
+        Dragboard db = event.getDragboard();
+        if (event.getDragboard().hasString())
+        {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
+
+    }
+
+    @FXML
+    private void handleDragDropped(DragEvent event) throws SQLException
+    {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+
+        List<Guild> allGuilds = guildModel.getAllGuilds();
+        Node node = event.getPickResult().getIntersectedNode();
+        if (node.toString().startsWith("Text"))
+        {
+            node = node.getParent();
+        }
+
+        String st = node.toString();
+        st = st.substring(st.indexOf("'") + 1, st.length() - 1);
+
+        if (event.getDragboard().hasString())
+        {
+            for (Volunteer volunteer : tableVolunteer.getItems())
+            {
+                if (volunteer.toString().equals(db.getString()))
+                {
+                    if (event.getTarget() != null)
+                    {
+                        if (allGuilds.toString().contains(st))
+                        {
+                            for (Guild guild : allGuilds)
+                            {
+                                if (guild.getName().equals(st) && !guild.getVolunteers().toString().contains(volunteer.toString()))
+                                {
+                                    guildModel.addVolunteerToGuild(guild, volunteer);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+
     
     private void alertBox() throws ParseException
     {
@@ -628,7 +722,7 @@ public class AdminViewController implements Initializable {
                });
                 
             }
-        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-23"));
+        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-24"));
         
        
         

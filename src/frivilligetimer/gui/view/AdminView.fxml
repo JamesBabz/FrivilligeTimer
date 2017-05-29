@@ -33,7 +33,7 @@
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Button>
-                        <TableView fx:id="tableGuild" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="426.0" prefWidth="147.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableGuild" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="426.0" prefWidth="147.0" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="colGuild" editable="false" prefWidth="136.0" resizable="false" text="Laug " />
                           </columns>
@@ -54,7 +54,7 @@
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <TableView fx:id="tableVolunteer" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
+                  <TableView fx:id="tableVolunteer" onDragDetected="#handleDragDetected" onDragOver="#handleDragOver" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="colVolunteer" prefWidth="260.0" resizable="false" text="Frivillige" />
                     </columns>
@@ -133,7 +133,6 @@
          </top>
       </BorderPane>
       <ImageView fx:id="imageLogo" fitHeight="41.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
-      <Label layoutX="150.0" layoutY="68.0" prefHeight="17.0" prefWidth="52.0" text="Søgefelt:" AnchorPane.leftAnchor="150.0" />
-      <TextField fx:id="txtSearchField" layoutX="184.0" layoutY="64.0" prefHeight="25.0" prefWidth="68.0" AnchorPane.leftAnchor="201.0" />
+      <TextField fx:id="txtSearchField" layoutX="200.0" layoutY="64.0" prefHeight="25.0" prefWidth="128.0" promptText="Søg" AnchorPane.leftAnchor="201.0" />
    </children>
 </AnchorPane>
