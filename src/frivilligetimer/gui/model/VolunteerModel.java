@@ -32,6 +32,8 @@ public class VolunteerModel
     private static VolunteerModel instance;
 
     private final ObservableList<Volunteer> allActiveVolunteers;
+    private ObservableList<Volunteer> searchedVolunteer;
+    private ObservableList<Volunteer> allVolunteerInCurrentView;
 
     public static VolunteerModel getInstance()
     {
@@ -61,6 +63,8 @@ public class VolunteerModel
         }
 
         allActiveVolunteers = FXCollections.observableArrayList();
+        searchedVolunteer = FXCollections.observableArrayList();
+        allVolunteerInCurrentView = FXCollections.observableArrayList();
     }
 
     /**
@@ -150,5 +154,25 @@ public class VolunteerModel
     public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
     {
         return manager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
+    }
+    
+    public ObservableList<Volunteer> getSearchedVolunteers()
+    {
+        return searchedVolunteer;
+    }
+
+    public ObservableList<Volunteer> getAllVolunteerInCurrentView()
+    {
+        return allVolunteerInCurrentView;
+    }
+
+    public void setSearchedVolunteer(ObservableList<Volunteer> searchedVolunteer)
+    {
+        this.searchedVolunteer = searchedVolunteer;
+    }
+
+    public void setAllVolunteerInCurrentView(ObservableList<Volunteer> allVolunteerInCurrentView)
+    {
+        this.allVolunteerInCurrentView = allVolunteerInCurrentView;
     }
 }
