@@ -294,13 +294,15 @@ public class AdminViewController implements Initializable {
                     boolean isUnique = true;
                     if (item.getText().equals(guild.getName())) {
                         for (Volunteer volunteer : guild.getVolunteers()) {
-
+                            
                             if (selectedVolunteer.getId() == volunteer.getId()) {
                                 isUnique = false;
+                                    showErrorDialog("Fejl", "", "Denne person er allerede i dette laug."
+                                             );
                             }
                         }
                         if (isUnique) {
-
+                            
                             try {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
                             } catch (SQLException ex) {
@@ -343,12 +345,13 @@ public class AdminViewController implements Initializable {
                         for (Employee employee : guild.getEmployees()) {
                             if (selectedEmployee.getId() == employee.getId()) {
                                 isUnique = false;
+                               
                             }
                         }
                         if (isUnique) {
                             try {
                                 guildModel.addEmployeeToGuild(guild, selectedEmployee);
-
+                             
                                 if (!colGuildManager.getText().equals("Medarbejdere")) {
                                     populateTablesForCurrentGuild();
                                     showEmployeesAssignedToGuild();
@@ -719,11 +722,25 @@ public class AdminViewController implements Initializable {
                });
                 
             }
-        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-23"));
+        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-24"));
         
        
         
         
     }
 
+    @FXML
+    private void handleMailClick()
+    {
+        Guild guild = tableGuild.getSelectionModel().getSelectedItem();
+        if(guild != null)
+        {
+            
+        guildModel.setSelectedGuild(guild);
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
+        }
+    }
+    
 }
