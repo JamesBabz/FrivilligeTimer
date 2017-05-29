@@ -8,7 +8,6 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
-import frivilligetimer.gui.model.AdminModel;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
@@ -101,7 +100,6 @@ public class AdminViewController implements Initializable
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
-    private final AdminModel adminModel;
 
     private Volunteer selectedVolunteer;
     private Employee selectedEmployee;
@@ -145,12 +143,11 @@ public class AdminViewController implements Initializable
      */
     public AdminViewController()
     {
-        this.adminModel = AdminModel.getInstance();
         this.currentVolunteerInView = new ArrayList<>();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
-
+        this.currentVolunteerInView = new ArrayList<Volunteer>();
     }
 
     /**
@@ -515,7 +512,8 @@ public class AdminViewController implements Initializable
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
         colGuildManager.setText("Medarbejdere");
         menuItemRemoveEmployee.setVisible(false);
-
+        
+        tableGuild.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -681,35 +679,35 @@ public class AdminViewController implements Initializable
      * makes it possibel for the admin to search for Volunteers on first name,
      * last name and phonenummber
      */
-    private void searchOnUpdate()
+    private void searchOnUpdate() 
     {
 
-        txtSearchField.textProperty().addListener((listener, oldVal, newVal)
-                ->
+        txtSearchField.textProperty().addListener(new ChangeListener<String>()
         {
-            adminModel.getSearchedVolunteer().clear();
-            adminModel.getAllVolunteerInCurrentView().addAll(currentVolunteerInView);
-            if (selectedGuild == null)
+            @Override
+            public void changed(ObservableValue<? extends String> listener, String oldVal, String newVal)
             {
-                adminModel.getAllVolunteerInCurrentView().setAll(volunteerModel.getAllVolunteersForTable());
-            } else
-            {
-                adminModel.getAllVolunteerInCurrentView().setAll(selectedGuild.getVolunteers());
-            }
-
-            for (Volunteer m : adminModel.getAllVolunteerInCurrentView())
-            {
-                if (m.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                        || m.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                        || m.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                        && !adminModel.getSearchedVolunteer().contains(m))
-                {
-                    adminModel.getSearchedVolunteer().add(m);
-
+                volunteerModel.getSearchedVolunteers().clear();
+                if (tableGuild.getSelectionModel().getSelectedItem() == null) {
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                } else {
+                    volunteerModel.setAllVolunteerInCurrentView(tableGuild.getSelectionModel().getSelectedItem().getVolunteers());
                 }
+                
+                for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView()) {
+                    if (volunteer.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
+                            && !volunteerModel.getSearchedVolunteers().contains(volunteer))
+                    {
+                        volunteerModel.getSearchedVolunteers().add(volunteer);
+                        
+                    }
+                }
+                
+                tableVolunteer.setItems(volunteerModel.getSearchedVolunteers());
             }
-
-            tableVolunteer.setItems(adminModel.getSearchedVolunteer());
         });
     }
 

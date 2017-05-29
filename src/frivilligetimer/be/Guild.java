@@ -10,6 +10,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,7 +22,7 @@ public class Guild
 
     private int id;
     private final StringProperty name = new SimpleStringProperty();
-    private ArrayList<Volunteer> volunteers = new ArrayList<>(); 
+    private ObservableList<Volunteer> volunteers = FXCollections.observableArrayList(); 
     private ArrayList<Employee> employees = new ArrayList<>();
     private final IntegerProperty hoursInCurrentPeriod = new SimpleIntegerProperty();
 
@@ -70,7 +72,7 @@ public class Guild
     {
         volunteers.remove(volunteer);
     }
-    public ArrayList<Volunteer> getVolunteers()
+    public ObservableList<Volunteer> getVolunteers()
     {
         return volunteers;
     }
