@@ -235,7 +235,6 @@ public class StatisticViewController implements Initializable
         for (Map.Entry<java.sql.Date, Integer> lineChartValue : lineChartValues.entrySet())
         {
             hoursInCurrentPeriod += lineChartValue.getValue();
-            System.out.println(hoursInCurrentPeriod);
             currentVolunteer.getData().add(new XYChart.Data<>(lineChartValue.getKey().toString(), lineChartValue.getValue()));
         }
         volunteer.setHoursInCurrentPeriod(hoursInCurrentPeriod);
