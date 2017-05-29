@@ -634,5 +634,13 @@ public class AdminViewController implements Initializable {
         
         
     }
+
+    @FXML
+    private void handleMailClick()
+    {
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
+    }
     
 }
