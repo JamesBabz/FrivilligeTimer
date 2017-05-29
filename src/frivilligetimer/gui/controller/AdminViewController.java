@@ -24,14 +24,8 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -51,7 +45,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -66,7 +59,8 @@ import javafx.util.Callback;
  *
  * @author Bruger
  */
-public class AdminViewController implements Initializable {
+public class AdminViewController implements Initializable
+{
 
     @FXML
     private ImageView imageLogo;
@@ -120,7 +114,8 @@ public class AdminViewController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         setLogo();
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuildManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
@@ -134,9 +129,11 @@ public class AdminViewController implements Initializable {
         menuItemRemoveVolunteer.setVisible(false);
         populateTables();
         searchOnUpdate();
-        try {
+        try
+        {
             alertBox();
-        } catch (ParseException ex) {
+        } catch (ParseException ex)
+        {
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -144,7 +141,9 @@ public class AdminViewController implements Initializable {
     /**
      * Default contructor
      */
-    public AdminViewController() {
+    public AdminViewController()
+    {
+        this.currentVolunteerInView = new ArrayList<>();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
@@ -154,7 +153,8 @@ public class AdminViewController implements Initializable {
     /**
      * set the logo on AdimView
      */
-    private void setLogo() {
+    private void setLogo()
+    {
         Image imageMlogo = new Image("frivilligetimer/gui/image/Mlogo.png");
         imageLogo.setImage(imageMlogo);
     }
@@ -162,14 +162,16 @@ public class AdminViewController implements Initializable {
     /**
      * Sets the data from the model to the tables
      */
-    private void populateTables() {
+    private void populateTables()
+    {
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
         tableGuild.setItems(guildModel.getAllGuildsForTable());
     }
 
     @FXML
-    private void addVolunteer() {
+    private void addVolunteer()
+    {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
@@ -177,7 +179,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void addEmployee() {
+    private void addEmployee()
+    {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
@@ -185,7 +188,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void addGuild() {
+    private void addGuild()
+    {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
@@ -193,16 +197,20 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void handleDeleteVolunteer() {
+    private void handleDeleteVolunteer()
+    {
         selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getItems().remove(selectedVolunteer);
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.deleteVolunteer(selectedVolunteer);
 
         int selectedID = selectedVolunteer.getId();
-        for (Guild guild : guildModel.getAllGuildsForTable()) {
-            for (Volunteer volunteer : guild.getVolunteers()) {
-                if (volunteer.getId() == selectedID) {
+        for (Guild guild : guildModel.getAllGuildsForTable())
+        {
+            for (Volunteer volunteer : guild.getVolunteers())
+            {
+                if (volunteer.getId() == selectedID)
+                {
                     guild.removeVolunteer(volunteer);
                     break;
                 }
@@ -211,7 +219,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void handleDeleteGuild() {
+    private void handleDeleteGuild()
+    {
         Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
         tableGuild.getItems().remove(selectedItem);
         tableGuild.getSelectionModel().clearSelection();
@@ -219,7 +228,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void handleDeleteEmployee() {
+    private void handleDeleteEmployee()
+    {
         Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
         tableEmployee.getItems().remove(selectedItem);
         tableEmployee.getSelectionModel().clearSelection();
@@ -227,7 +237,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void editVolunteer() {
+    private void editVolunteer()
+    {
 
         Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getSelectionModel().clearSelection();
@@ -240,7 +251,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void editEmployee() {
+    private void editEmployee()
+    {
 
         Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
         tableEmployee.getSelectionModel().clearSelection();
@@ -253,7 +265,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void editGuild() {
+    private void editGuild()
+    {
 
         Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
         tableGuild.getSelectionModel().clearSelection();
@@ -266,7 +279,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void handleStatClick() {
+    private void handleStatClick()
+    {
         ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
@@ -280,30 +294,39 @@ public class AdminViewController implements Initializable {
      *
      * @param menu of all the guilds to be shown
      */
-    private void addVolunteerToGuild(Menu menu) {
+    private void addVolunteerToGuild(Menu menu)
+    {
         selectedVolunteer = tableVolunteer.selectionModelProperty().getValue().getSelectedItem();
         guildsSubMenu = new ArrayList<>();
-        for (Guild guild : tableGuild.getItems()) {
+        for (Guild guild : tableGuild.getItems())
+        {
             MenuItem item = new MenuItem(guild.getName());
             guildsSubMenu.add(item);
-            item.setOnAction(new EventHandler<ActionEvent>() {
+            item.setOnAction(new EventHandler<ActionEvent>()
+            {
                 @Override
-                public void handle(ActionEvent event) {
+                public void handle(ActionEvent event)
+                {
                     boolean isUnique = true;
-                    if (item.getText().equals(guild.getName())) {
-                        for (Volunteer volunteer : guild.getVolunteers()) {
-                            
-                            if (selectedVolunteer.getId() == volunteer.getId()) {
+                    if (item.getText().equals(guild.getName()))
+                    {
+                        for (Volunteer volunteer : guild.getVolunteers())
+                        {
+
+                            if (selectedVolunteer.getId() == volunteer.getId())
+                            {
                                 isUnique = false;
-                                    showErrorDialog("Fejl", "", "Denne person er allerede i dette laug."
-                                             );
+                                showErrorDialog("Fejl", "Dublering", "Denne person er allerede i dette laug.");
                             }
                         }
-                        if (isUnique) {
-                            
-                            try {
+                        if (isUnique)
+                        {
+
+                            try
+                            {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                            } catch (SQLException ex) {
+                            } catch (SQLException ex)
+                            {
                                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
@@ -317,7 +340,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void handleContextGuildMenu() {
+    private void handleContextGuildMenu()
+    {
         addVolunteerToGuild(menuAddVolToGuild);
 
     }
@@ -329,48 +353,65 @@ public class AdminViewController implements Initializable {
      *
      * @param menu
      */
-    private void addEmployeeToGuild(Menu menu) {
-        Employee selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
+    private void addEmployeeToGuild(Menu menu)
+    {
+        selectedEmployee = tableEmployee.selectionModelProperty().getValue().getSelectedItem();
         guildsSubMenu = new ArrayList<>();
-        for (Guild guild : tableGuild.getItems()) {
+        for (Guild guild : tableGuild.getItems())
+        {
             MenuItem item = new MenuItem(guild.getName());
             guildsSubMenu.add(item);
-            item.setOnAction(new EventHandler<ActionEvent>() {
+            menu.getItems().setAll(guildsSubMenu);
+            item.setOnAction(new EventHandler<ActionEvent>()
+            {
                 @Override
-                public void handle(ActionEvent event) {
+                public void handle(ActionEvent event)
+                {
                     boolean isUnique = true;
-                    if (item.getText().equals(guild.getName())) {
-                        for (Employee employee : guild.getEmployees()) {
-                            if (selectedEmployee.getId() == employee.getId()) {
+                        for (Employee employee : guild.getEmployees())
+                        {
+                            if (selectedEmployee.getId() == employee.getId())
+                            {
                                 isUnique = false;
-                               
+                                showErrorDialog("Fejl", "Dublering", "Denne person er allerede i dette laug.");
                             }
                         }
-                        if (isUnique) {
-                            try {
-                                guildModel.addEmployeeToGuild(guild, selectedEmployee);
-                             
-                                if (!colGuildManager.getText().equals("Medarbejdere")) {
-                                    populateTablesForCurrentGuild();
-                                    showEmployeesAssignedToGuild();
-                                }
-
-                            } catch (SQLException ex) {
-                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                        if (isUnique)
+                        {
+                            addEmployeeToGuildInDatabase(guild, selectedEmployee);
                         }
                     }
-                }
-
             });
-
         }
-        menu.getItems().setAll(guildsSubMenu);
+    }
 
+    /**
+     * Sends the guild and employee further to model -> manager -> database.
+     *
+     * @param guild
+     * @param selectedEmployee
+     */
+    private void addEmployeeToGuildInDatabase(Guild guild, Employee selectedEmployee)
+    {
+        try
+        {
+            guildModel.addEmployeeToGuild(guild, selectedEmployee);
+
+            if (!colGuildManager.getText().equals("Medarbejdere"))
+            {
+                populateTablesForCurrentGuild();
+                showEmployeesAssignedToGuild();
+            }
+
+        } catch (SQLException ex)
+        {
+            showErrorDialog("Database fejl", "Der skete en fejl", "Ingen forbindelse til databasen");
+        }
     }
 
     @FXML
-    private void handleContextGuildMenuForEmployee() {
+    private void handleContextGuildMenuForEmployee()
+    {
         addEmployeeToGuild(menuAddEmployeeToGuild);
     }
 
@@ -379,7 +420,6 @@ public class AdminViewController implements Initializable {
      * trough volunteermodel/manager -> db, and the list <volunteers> in be
      * Guild
      */
-
     private void removeVolunteerFromAssignedGuild()
     {
         selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
@@ -391,10 +431,14 @@ public class AdminViewController implements Initializable {
             tableVolunteer.getItems().remove(selectedVolunteer);
 
             int selectedID = selectedVolunteer.getId();
-            for (Guild guild : guildModel.getAllGuildsForTable()) {
-                for (Volunteer volunteer : guild.getVolunteers()) {
-                    if (guild.getId() == selectedGuild.getId()) {
-                        if (volunteer.getId() == selectedID) {
+            for (Guild guild : guildModel.getAllGuildsForTable())
+            {
+                for (Volunteer volunteer : guild.getVolunteers())
+                {
+                    if (guild.getId() == selectedGuild.getId())
+                    {
+                        if (volunteer.getId() == selectedID)
+                        {
                             guild.removeVolunteer(volunteer);
                             break;
                         }
@@ -405,7 +449,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void removeVolunteerFromGuild() {
+    private void removeVolunteerFromGuild()
+    {
         removeVolunteerFromAssignedGuild();
     }
 
@@ -413,7 +458,8 @@ public class AdminViewController implements Initializable {
      * remove selected Employee from the selected assigned guild removes trough
      * staffmodel/manager -> database, and and the list <employees> in BE guild
      */
-    private void removeEmployeeFromAssignedGuild() {
+    private void removeEmployeeFromAssignedGuild()
+    {
         selectedEmployee = tableEmployee.getSelectionModel().getSelectedItem();
         selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
         if (guildModel.getEmployeesInCurrentGuild().contains(selectedEmployee));
@@ -421,10 +467,14 @@ public class AdminViewController implements Initializable {
             staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
 
             int selectedID = selectedEmployee.getId();
-            for (Guild guild : guildModel.getAllGuildsForTable()) {
-                for (Employee employee : guild.getEmployees()) {
-                    if (guild.getId() == selectedGuild.getId()) {
-                        if (employee.getId() == selectedID) {
+            for (Guild guild : guildModel.getAllGuildsForTable())
+            {
+                for (Employee employee : guild.getEmployees())
+                {
+                    if (guild.getId() == selectedGuild.getId())
+                    {
+                        if (employee.getId() == selectedID)
+                        {
                             guild.removeEmployee(employee);
                             break;
                         }
@@ -439,7 +489,8 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void removeEmployeeFromGuild(ActionEvent event) {
+    private void removeEmployeeFromGuild(ActionEvent event)
+    {
 
         removeEmployeeFromAssignedGuild();
 
@@ -450,7 +501,8 @@ public class AdminViewController implements Initializable {
      * personer"
      */
     @FXML
-    private void ShowAllVolunteersInTable() {
+    private void ShowAllVolunteersInTable()
+    {
         tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
         colVolunteer.setText("Frivillige");
         menuItemRemoveVolunteer.setVisible(false);
@@ -465,8 +517,10 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void ShowVolunteersInCurrentGuild(MouseEvent event) {
-        if (event.getClickCount() == 2) {
+    private void ShowVolunteersInCurrentGuild(MouseEvent event)
+    {
+        if (event.getClickCount() == 2)
+        {
             populateTablesForCurrentGuild();
             showEmployeesAssignedToGuild();
             menuItemRemoveEmployee.setVisible(true);
@@ -478,7 +532,8 @@ public class AdminViewController implements Initializable {
     /**
      * Sets the employee and volunteer table for chosen guild
      */
-    private void populateTablesForCurrentGuild() {
+    private void populateTablesForCurrentGuild()
+    {
         Guild selectedGuild = tableGuild.getSelectionModel().getSelectedItem();
         colVolunteer.setText("Frivillige i " + selectedGuild.getName());
         colGuildManager.setText("Medarbejdere i " + selectedGuild.getName());
@@ -497,12 +552,16 @@ public class AdminViewController implements Initializable {
      * Selects the employees who is assigned to the chosen guild the table sets
      * them
      */
-    private void showEmployeesAssignedToGuild() {
+    private void showEmployeesAssignedToGuild()
+    {
         tableEmployee.getItems().clear();
         tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
-        for (Employee item : tableEmployee.getItems()) {
-            for (Employee employee : guildModel.getEmployeesInCurrentGuild()) {
-                if (item.getId() == employee.getId()) {
+        for (Employee item : tableEmployee.getItems())
+        {
+            for (Employee employee : guildModel.getEmployeesInCurrentGuild())
+            {
+                if (item.getId() == employee.getId())
+                {
 
                     setTextSizeOnEmployeesInCurrentGuild();
                 }
@@ -510,26 +569,35 @@ public class AdminViewController implements Initializable {
         }
     }
 
-    private void setTextSizeOnEmployeesInCurrentGuild() {
-        colGuildManager.setCellFactory(new Callback<TableColumn<Employee, String>, TableCell<Employee, String>>() {
+    private void setTextSizeOnEmployeesInCurrentGuild()
+    {
+        colGuildManager.setCellFactory(new Callback<TableColumn<Employee, String>, TableCell<Employee, String>>()
+        {
             @Override
-            public TableCell<Employee, String> call(TableColumn<Employee, String> param) {
-                return new TableCell<Employee, String>() {
+            public TableCell<Employee, String> call(TableColumn<Employee, String> param)
+            {
+                return new TableCell<Employee, String>()
+                {
 
                     @Override
-                    public void updateItem(String item, boolean empty) {
+                    public void updateItem(String item, boolean empty)
+                    {
                         super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            for (Employee employeeToMark : guildModel.getEmployeesInCurrentGuild()) {
+                        if (!isEmpty())
+                        {
+                            for (Employee employeeToMark : guildModel.getEmployeesInCurrentGuild())
+                            {
 
-                                if (item.equals(employeeToMark.getFullName())) {
+                                if (item.equals(employeeToMark.getFullName()))
+                                {
                                     this.setTextFill(Color.GREEN);
                                     this.setFont(Font.font(16));
 
                                 }
 
                             }
-                        } else {
+                        } else
+                        {
                             this.setTextFill(Color.valueOf("#323232"));
                             this.setFont(Font.font(USE_COMPUTED_SIZE));
 
@@ -542,26 +610,32 @@ public class AdminViewController implements Initializable {
     }
 
     @FXML
-    private void deleteAllInActive() {
+    private void deleteAllInActive()
+    {
         deleteInactiveVolunteers();
 
     }
 
-    private void deleteInactiveVolunteers() {
+    private void deleteInactiveVolunteers()
+    {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Slet inaktive");
         alert.setHeaderText("Er du sikker på, at du vil fjerne alle inaktive personer og laug?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
+        if (result.get() == ButtonType.OK)
+        {
             volunteerModel.deleteInactiveVolunteers();
-            try {
+            try
+            {
                 guildModel.deleteInactiveGuilds();
-            } catch (SQLException ex) {
+            } catch (SQLException ex)
+            {
                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
+        } else
+        {
             // ... user chose CANCEL or closed the dialog
         }
 
@@ -574,7 +648,8 @@ public class AdminViewController implements Initializable {
      * @param header The header - subtitle.
      * @param content The error message.
      */
-    private void showErrorDialog(String title, String header, String content) {
+    private void showErrorDialog(String title, String header, String content)
+    {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
@@ -582,15 +657,15 @@ public class AdminViewController implements Initializable {
 
         alert.showAndWait();
     }
-    
-             /**
+
+    /**
      * Shows an error dialog.
      *
      * @param title The title of the error.
      * @param header The header - subtitle.
      * @param content The error message.
      */
-     private void ShowReminderDialog(String title, String header, String content)
+    private void ShowReminderDialog(String title, String header, String content)
     {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -600,12 +675,10 @@ public class AdminViewController implements Initializable {
         alert.showAndWait();
     }
 
-
     /**
      * makes it possibel for the admin to search for Volunteers on first name,
      * last name and phonenummber
      */
-
     private void searchOnUpdate() 
     {
 
@@ -637,7 +710,6 @@ public class AdminViewController implements Initializable {
             }
         });
     }
-
 
     @FXML
     private void handleDragDetected(MouseEvent event)
@@ -713,39 +785,38 @@ public class AdminViewController implements Initializable {
         event.consume();
     }
 
-    
     private void alertBox() throws ParseException
     {
         Timer timer = new Timer();
-        
-        timer.schedule(new TimerTask(){
-            @Override
-            public void run() {
-               Platform.runLater(() -> {
-                             ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
 
-               });
-                
+        timer.schedule(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                Platform.runLater(() ->
+                {
+                    ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
+
+                });
+
             }
         }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-24"));
-        
-       
-        
-        
+
     }
 
     @FXML
     private void handleMailClick()
     {
         Guild guild = tableGuild.getSelectionModel().getSelectedItem();
-        if(guild != null)
+        if (guild != null)
         {
-            
-        guildModel.setSelectedGuild(guild);
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
+            guildModel.setSelectedGuild(guild);
+            ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+            vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
         }
     }
-    
+
 }
