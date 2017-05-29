@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EmailViewController">
-    
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EmailViewController">
+   <children>
+      <TilePane fx:id="tPane" hgap="5.0" layoutX="15.0" layoutY="28.0" prefHeight="281.0" prefWidth="585.0" tileAlignment="TOP_LEFT" />
+      <CheckBox fx:id="theAllCheckBox" layoutX="15.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleTheAllCheckBox" selected="true" text="Alle" />
+      <TextArea fx:id="allEmails" editable="false" layoutX="24.0" layoutY="307.0" prefHeight="75.0" prefWidth="405.0" wrapText="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="300.0" />
+      <Button layoutX="534.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleSendMail" prefHeight="25.0" prefWidth="132.0" text="Send email til valgte" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="23.0" />
+   </children>
 </AnchorPane>
