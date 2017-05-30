@@ -803,7 +803,7 @@ public class AdminViewController implements Initializable
                 });
 
             }
-        }, new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-24"));
+        }, new SimpleDateFormat("yyyy-MM-dd").parse("2018-01-24"));
 
     }
 
