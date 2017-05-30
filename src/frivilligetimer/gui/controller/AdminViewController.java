@@ -729,4 +729,18 @@ public class AdminViewController implements Initializable {
         
     }
 
+    @FXML
+    private void handleMailClick()
+    {
+        Guild guild = tableGuild.getSelectionModel().getSelectedItem();
+        if(guild != null)
+        {
+            
+        guildModel.setSelectedGuild(guild);
+        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+
+        vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
+        }
+    }
+    
 }
