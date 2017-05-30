@@ -5,9 +5,6 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.gui.model.GuildModel;
 import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,9 +16,9 @@ import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -36,7 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javax.xml.bind.Marshaller;
 
 /**
  * FXML Controller class
@@ -53,6 +49,7 @@ public class AddVolunteerHoursController implements Initializable
     private boolean isHourSet;
     private Guild selectedGuild;
     private final ToggleGroup group;
+    private final ViewGenerator vg;
 
     @FXML
     private TextField txtHours;
@@ -93,6 +90,7 @@ public class AddVolunteerHoursController implements Initializable
     {
         this.isHourSet = false;
         this.group = new ToggleGroup();
+        this.vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
     }
 
     /**
@@ -126,7 +124,7 @@ public class AddVolunteerHoursController implements Initializable
                 }
             }
         });
-
+        // updates hours based on guild selected
         group.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
         {
             @Override
@@ -139,7 +137,49 @@ public class AddVolunteerHoursController implements Initializable
 
     }
 
+    /**
+     * Populates all the fields when the view is opened
+     */
     private void populateFields()
+    {
+        checkIfManagerIsLoggedIn();
+        lblName.setText(volunteer.getFullName());
+        lblMail.setText(volunteer.getEmail());
+        lblNumber.setText(volunteer.getPhoneNum());
+
+        checkIfVolunteerIsInAGuild();
+        setImage();
+        if (selectedGuild != null)
+        {
+            populateHours();
+        }
+    }
+
+    /**
+     * If the volunteer is not in a guild, hours can not be added
+     */
+    private void checkIfVolunteerIsInAGuild()
+    {
+        if (selectedGuild == null && createRadioButtons())
+        {
+            txtHours.setDisable(true);
+            btnIncrease.setDisable(true);
+            btnDecrease.setDisable(true);
+            btnSave.setDisable(true);
+            lblguildError.setVisible(true);
+            lblHours.setVisible(false);
+        }
+        else
+        {
+            lblguildError.setVisible(false);
+            lblHours.setVisible(true);
+        }
+    }
+
+    /**
+     * If the manager is logged in there should be more options
+     */
+    private void checkIfManagerIsLoggedIn()
     {
         if (staffModel.getLevel() == 1)
         {
@@ -154,38 +194,13 @@ public class AddVolunteerHoursController implements Initializable
             pane.getChildren().remove(lblNote);
             pane.setPrefHeight(450);
         }
-        lblName.setText(volunteer.getFullName());
-        lblMail.setText(volunteer.getEmail());
-        lblNumber.setText(volunteer.getPhoneNum());
-        if (selectedGuild == null && createRadioButtons())
-        {
-//            if (createRadioButtons())
-//            {
-            txtHours.setDisable(true);
-            btnIncrease.setDisable(true);
-            btnDecrease.setDisable(true);
-            btnSave.setDisable(true);
-            lblguildError.setVisible(true);
-            lblHours.setVisible(false);
-//            }
-//            else
-//            {
-//                lblguildError.setVisible(false);
-//                lblHours.setVisible(true);
-//            }
-        }
-        else
-        {
-            lblguildError.setVisible(false);
-            lblHours.setVisible(true);
-        }
-        setImage();
-        if (selectedGuild != null)
-        {
-            populateHours();
-        }
     }
 
+    /**
+     * Gets all the guilds the volunteers is a part of
+     *
+     * @return - Returns a list of all the guilds
+     */
     private List<Guild> getAllGuildsForVolunteer()
     {
         List<Guild> guilds = new ArrayList<>();
@@ -202,6 +217,11 @@ public class AddVolunteerHoursController implements Initializable
         return guilds;
     }
 
+    /**
+     * Creates radiobuttons for each guild the volunteer is part of
+     *
+     * @return - Returns if succesful
+     */
     private boolean createRadioButtons()
     {
         List<Guild> guilds = getAllGuildsForVolunteer();
@@ -228,6 +248,9 @@ public class AddVolunteerHoursController implements Initializable
         return first;
     }
 
+    /**
+     * Sets the image of the Volunteer
+     */
     private void setImage()
     {
         Image image;
@@ -246,15 +269,18 @@ public class AddVolunteerHoursController implements Initializable
     private void handleSubtractHour()
     {
         int hours;
+        //If the hour field is empty, put a 0
         if (txtHours.getText().equals(""))
         {
             hours = 0;
             txtHours.setText("" + hours);
         }
+        //Else get the number from the field
         else
         {
             hours = Integer.parseInt(txtHours.getText());
         }
+        //If its not 0 subtract 1
         if (hours != 0)
         {
             hours--;
@@ -266,10 +292,12 @@ public class AddVolunteerHoursController implements Initializable
     private void handleAddHour()
     {
         int hours;
+        //If the hour field is empty, put a 1
         if (txtHours.getText().equals(""))
         {
-            hours = 0;
+            hours = 1;
         }
+        //Else add one hour to current number
         else
         {
             hours = Integer.parseInt(txtHours.getText());
@@ -278,6 +306,7 @@ public class AddVolunteerHoursController implements Initializable
         txtHours.setText("" + hours);
     }
 
+    
     @FXML
     private void handleSave()
     {
@@ -285,15 +314,17 @@ public class AddVolunteerHoursController implements Initializable
         {
             saveToDB();
         }
-        catch (SQLException | NumberFormatException ex)
+        catch (SQLException ex)
         {
-            Logger.getLogger(AddVolunteerHoursController.class.getName()).log(Level.SEVERE, null, ex);
+            vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
-
         close();
     }
 
-    private void saveToDB() throws SQLException, NumberFormatException
+    /**
+     * Saves the input to the database
+     */
+    private void saveToDB() throws SQLException
     {
         int id = volunteer.getId();
 
@@ -302,7 +333,9 @@ public class AddVolunteerHoursController implements Initializable
         {
             String pref = txtPref.getText();
             String note = txtNote.getText();
+
             volunteerModel.updateNoteAndPrefForVolunteer(id, pref, note);
+
             volunteer.setPreference(pref);
             volunteer.setNote(note);
         }
@@ -323,18 +356,25 @@ public class AddVolunteerHoursController implements Initializable
         close();
     }
 
+    /**
+     * Closes current window
+     */
     private void close()
     {
         Stage stage = (Stage) btnClose.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Checks the database if hours have been filled today
+     * and puts them in the hour field if so
+     */
     private void populateHours()
     {
         try
         {
             int hours;
-            hours = volunteerModel.getTodaysHours(volunteer.getId(),new Date(), selectedGuild.getId());
+            hours = volunteerModel.getTodaysHours(volunteer.getId(), new Date(), selectedGuild.getId());
             if (hours >= 0)
             {
                 isHourSet = true;
@@ -348,7 +388,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
-            Logger.getLogger(AddVolunteerHoursController.class.getName()).log(Level.SEVERE, null, ex);
+            vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
     }
 
