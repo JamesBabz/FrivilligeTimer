@@ -60,6 +60,8 @@ public class StaffModel
         }
 
         allEmployees = FXCollections.observableArrayList();
+        
+        setAllGuildManagersForTable();
     }
 
     public List<Manager> getAllManagers()
@@ -79,9 +81,12 @@ public class StaffModel
      */
     public ObservableList<Employee> getAllGuildManagersForTable()
     {
-        allEmployees.clear();
-        allEmployees.addAll(manager.getAllEmployees());
         return allEmployees;
+    }
+    
+    public void setAllGuildManagersForTable()
+    {
+        allEmployees.addAll(manager.getAllEmployees());
     }
 
     public void addEmployee(Employee employee) throws SQLException
