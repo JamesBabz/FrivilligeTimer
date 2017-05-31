@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -27,16 +28,22 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -71,6 +78,12 @@ public class TileViewController implements Initializable
     private Label lblWelcome;
     @FXML
     private Button btnLogOut;
+    @FXML
+    private ListView<String> listSearchResult;
+    @FXML
+    private TextField txtSearchField;
+    @FXML
+    private Label lblClearSearch;
 
     public TileViewController()
     {
@@ -94,7 +107,18 @@ public class TileViewController implements Initializable
         listGuilds.setItems(guildModel.getAllGuildNames());
         addListener();
         addAllVolunteerCells();
-
+        searchOnUpdate();
+        txtSearchField.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> listener, Boolean oldValue, Boolean newValue)
+            {
+                if (!newValue && !listSearchResult.isFocused())
+                {
+                    listSearchResult.visibleProperty().set(false);
+                }
+            }
+        });
     }
 
     private void addListener()
@@ -243,6 +267,49 @@ public class TileViewController implements Initializable
     private void handleLogOut()
     {
         staffModel.setLevel(2);
+    }
+
+    private void searchOnUpdate()
+    {
+        txtSearchField.textProperty().addListener(new ChangeListener<String>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> listener, String oldString, String newVal)
+            {
+                volunteerModel.getSearchedVolunteers().clear();
+                volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+
+                for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
+                {
+                    if (volunteer.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
+                            && !volunteerModel.getSearchedVolunteers().contains(volunteer))
+                    {
+                        volunteerModel.getSearchedVolunteers().add(volunteer);
+                    }
+                }
+
+                if (newVal != null && newVal.length() > 0)
+                {
+                    listSearchResult.visibleProperty().set(true);
+                }
+                else
+                {
+                    listSearchResult.visibleProperty().set(false);
+                }
+
+                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
+
+            }
+        });
+    }
+
+    @FXML
+    private void handleClearSearchField(MouseEvent event)
+    {
+        txtSearchField.clear();
     }
 
 }
