@@ -522,7 +522,6 @@ public class AdminViewController implements Initializable
             menuAddVolToGuild.setVisible(false);
             showShowEmailGuild.setVisible(true);
             tableEmployee.getSelectionModel().clearSelection();
-
         }
     }
 
@@ -552,7 +551,6 @@ public class AdminViewController implements Initializable
     private void showEmployeesAssignedToGuild()
     {
         tableEmployee.refresh();
-
         for (Employee item : tableEmployee.getItems())
         {
             for (Employee employee : guildModel.getEmployeesInCurrentGuild())
@@ -593,14 +591,13 @@ public class AdminViewController implements Initializable
                                 }
 
                             }
-                        }
-                        else
-                        {
-                            this.setTextFill(Color.valueOf("#323232"));
-                            this.setFont(Font.font(USE_COMPUTED_SIZE));
+                            {
+                                this.setTextFill(Color.valueOf("#323232"));
+                                this.setFont(Font.font(USE_COMPUTED_SIZE));
 
+                            }
+                            setText(item);
                         }
-                        setText(item);
                     }
                 };
             }
@@ -806,9 +803,10 @@ public class AdminViewController implements Initializable
                 @Override
                 public void run()
                 {
-                    Platform.runLater(() ->
-                    {
-                        ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
+                    Platform.runLater(()
+                            -> 
+                            {
+                                ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
                     });
                 }
             }, new SimpleDateFormat("yyyy-MM-dd").parse("2018-01-24"));
