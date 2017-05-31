@@ -137,9 +137,6 @@ public final class DBManager
 
             }
         }
-                for (Volunteer allInactiveVoluenteer : inactiveVolunteers) {
-            System.out.println(allInactiveVoluenteer.getFullName());
-        }
     }
 
     public void deleteInactiveVolunteers() throws SQLException
