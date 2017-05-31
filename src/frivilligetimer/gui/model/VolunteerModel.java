@@ -87,7 +87,7 @@ public class VolunteerModel
     public ObservableList<Volunteer> getAllInactiveVolunteers()
     {
         allInactiveVoluenteers.clear();
-        for (Volunteer volunteer : manager.getAllActiveVolunteers())
+        for (Volunteer volunteer : manager.getAllInactiveVolunteers())
         {
             allInactiveVoluenteers.add(volunteer);
         }

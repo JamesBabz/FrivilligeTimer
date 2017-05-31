@@ -516,16 +516,16 @@ public final class DBManager
 
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
-        String sql = "UPDATE People SET isActive = 0 AND date = ? WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0, InactiveSince = ? WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setInt(1, volunteer.getId());
+            ps.setInt(2, volunteer.getId());
             java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
-            ps.setDate(2, sqlDate);
+            ps.setDate(1, sqlDate);
             ps.executeUpdate();
             volunteers.remove(volunteer);
 
@@ -550,7 +550,7 @@ public final class DBManager
     
     public void deleteInactiveVolunteer(Volunteer volunteer) throws SQLException
     {
-       String sql = "DELETE from People WHERE isActive = 0";
+       String sql = "DELETE from People WHERE Id = ?";
 
         try (Connection con = cm.getConnection())
         {
