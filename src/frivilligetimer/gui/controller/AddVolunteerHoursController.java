@@ -316,6 +316,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
+            ViewGenerator vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
         close();
@@ -388,6 +389,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
+            ViewGenerator vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
     }

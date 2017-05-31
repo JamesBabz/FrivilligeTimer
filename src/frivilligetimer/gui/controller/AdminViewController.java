@@ -373,7 +373,6 @@ public class AdminViewController implements Initializable
             });
         }
     }
-
     /**
      * Sends the guild and employee further to model -> manager -> database.
      *
@@ -522,7 +521,6 @@ public class AdminViewController implements Initializable
             menuAddVolToGuild.setVisible(false);
             showShowEmailGuild.setVisible(true);
             tableEmployee.getSelectionModel().clearSelection();
-
         }
     }
 
@@ -552,7 +550,6 @@ public class AdminViewController implements Initializable
     private void showEmployeesAssignedToGuild()
     {
         tableEmployee.refresh();
-
         for (Employee item : tableEmployee.getItems())
         {
             for (Employee employee : guildModel.getEmployeesInCurrentGuild())
@@ -593,8 +590,6 @@ public class AdminViewController implements Initializable
                                 }
 
                             }
-                        }
-                        else
                         {
                             this.setTextFill(Color.valueOf("#323232"));
                             this.setFont(Font.font(USE_COMPUTED_SIZE));

@@ -45,6 +45,7 @@ public class VolunteerSingleCellController implements Initializable
     public VolunteerSingleCellController()
     {
         this.dataThread = new Thread(imageLoader());
+        dataThread.setDaemon(true);
         Platform.runLater(dataThread);
 
     }
