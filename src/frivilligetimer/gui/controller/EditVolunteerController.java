@@ -16,11 +16,14 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -49,6 +52,8 @@ public class EditVolunteerController implements Initializable
     private TextField txtPhoneNummer;
     @FXML
     private Button btnBrowseImage;
+    @FXML
+    private ImageView imgVolunteer;
 
     /**
      * Initializes the controller class.
@@ -62,6 +67,22 @@ public class EditVolunteerController implements Initializable
         model.getSelectedVolunteer();
 
         getCurrentInfo();
+        setImageOfVolunteer(volunteer);
+
+    }
+
+    private void setImageOfVolunteer(Volunteer volunteer)
+    {
+        if (volunteer.getImage() == null)
+        {
+            Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
+            imgVolunteer.setImage(image);
+
+        } else
+        {
+            Image image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
+            imgVolunteer.setImage(image);
+        }
     }
 
     private void getCurrentInfo()
@@ -89,12 +110,10 @@ public class EditVolunteerController implements Initializable
 
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -114,6 +133,9 @@ public class EditVolunteerController implements Initializable
 
         stage = (Stage) txtFirstName.getScene().getWindow();
         file = fileChooser.showOpenDialog(stage);
+
+        Image img = new Image("file:" + file.getAbsolutePath());
+        imgVolunteer.setImage(img);
 
     }
 

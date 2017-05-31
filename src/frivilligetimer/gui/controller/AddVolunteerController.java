@@ -8,6 +8,7 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
+import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -43,12 +46,18 @@ public class AddVolunteerController implements Initializable
     private TextField txtPhoneNumber;
     @FXML
     private Button btnBrowseImage;
-
-    private VolunteerManager manager;
+    @FXML
+    private ImageView imgVolunteer;
+    
     private VolunteerModel model;
+    private ImageManager iManager;
     private Stage stage;
     private final FileChooser fileChooser = new FileChooser();
     private File file;
+    
+    private VolunteerCellModel cellModel;
+ 
+
 
     /**
      * Initializes the controller class.
@@ -60,14 +69,20 @@ public class AddVolunteerController implements Initializable
         model = VolunteerModel.getInstance();
         try
         {
-            manager = new VolunteerManager();
-        }
-        catch (IOException | SQLException ex)
+            iManager = new ImageManager();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
+        imgVolunteer.setImage(image);
         validateData();
+        
+        
 
     }
 
@@ -76,14 +91,12 @@ public class AddVolunteerController implements Initializable
     {
         try
         {
-            Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
+                Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
 
             model.addVolunteer(volunteer);
 
             if (file != null)
             {
-                ImageManager iManager = new ImageManager();
-
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
 
@@ -108,7 +121,9 @@ public class AddVolunteerController implements Initializable
     {
         stage = (Stage) txtFirstName.getScene().getWindow();
         file = fileChooser.showOpenDialog(stage);
-
+        Image img = new Image("file:" + file.getAbsolutePath());
+        imgVolunteer.setImage(img);
+        
     }
 
     private static String firstName = "";
@@ -154,5 +169,7 @@ public class AddVolunteerController implements Initializable
             txtPhoneNumber.setText(phoneNumber);
         });
     }
+    
+
 
 }
