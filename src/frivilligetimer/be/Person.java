@@ -37,6 +37,7 @@ public abstract class Person
         this.phoneNum = phoneNum;
         this.email = email;
         this.image = image;
+        fullNameProperty();
     }
 
     /**
