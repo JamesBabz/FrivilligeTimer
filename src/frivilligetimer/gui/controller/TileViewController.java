@@ -334,24 +334,23 @@ public class TileViewController implements Initializable
     {
         String selectedVolunteer = listSearchResult.getSelectionModel().getSelectedItem();
 
-        if (volunteerModel.getSearchedVolunteers() != null)
+        if (event.getClickCount() == 1)
         {
-            if (event.getClickCount() == 1)
+            for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
             {
-
-                for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
+                if (volunteer.getFullName().equals(selectedVolunteer))
                 {
-                    if (volunteer.getFullName().equals(selectedVolunteer))
-                    {
-                        volunteerModel.setTileVolunteer(volunteer);
-                        ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
-                        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
-                        listSearchResult.visibleProperty().set(false);
-                        txtSearchField.clear();
-                    }
+                    volunteerModel.setTileVolunteer(volunteer);
+                    ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+                    vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+                    listSearchResult.visibleProperty().set(false);
+                    txtSearchField.clear();
+                    break;
                 }
+                
             }
         }
+
     }
 
 }
