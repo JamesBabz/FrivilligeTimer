@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -28,22 +27,18 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -108,17 +103,7 @@ public class TileViewController implements Initializable
         addListener();
         addAllVolunteerCells();
         searchOnUpdate();
-        txtSearchField.focusedProperty().addListener(new ChangeListener<Boolean>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> listener, Boolean oldValue, Boolean newValue)
-            {
-                if (!newValue && !listSearchResult.isFocused())
-                {
-                    listSearchResult.visibleProperty().set(false);
-                }
-            }
-        });
+
     }
 
     private void addListener()
@@ -271,20 +256,19 @@ public class TileViewController implements Initializable
 
     private void searchOnUpdate()
     {
+        int rowHeight = 24;
         txtSearchField.textProperty().addListener(new ChangeListener<String>()
         {
             @Override
             public void changed(ObservableValue<? extends String> listener, String oldString, String newVal)
             {
                 volunteerModel.getSearchedVolunteers().clear();
-                volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
-
+                
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
-                    if (volunteer.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
                             || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
+                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -301,7 +285,39 @@ public class TileViewController implements Initializable
                 }
 
                 listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
+                
+                if (volunteerModel.getSearchedVolunteerNames().size() < 13)
+                    listSearchResult.setPrefHeight(volunteerModel.getSearchedVolunteerNames().size() * rowHeight + 2);
+                else
+                    listSearchResult.setPrefHeight(300);
+                
+            }
+        });
 
+        txtSearchField.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> listener, Boolean oldValue, Boolean newValue)
+            {
+                if (!newValue && !listSearchResult.isFocused())
+                {
+                    listSearchResult.visibleProperty().set(false);
+                }
+                if ("Alle Laug".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
+                {
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                }
+                else
+                {
+                    for (Guild guild : guildModel.getAllGuilds())
+                    {
+                        if (guild.getName().equals(listGuilds.getSelectionModel().getSelectedItem()))
+                        {
+                            volunteerModel.setAllVolunteerInCurrentView(guild.getVolunteers());
+                            break;
+                        }
+                    }
+                }
             }
         });
     }
