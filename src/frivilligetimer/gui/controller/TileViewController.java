@@ -104,7 +104,7 @@ public class TileViewController implements Initializable
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
         btnLogOut.setVisible(false);
         lblWelcome.setVisible(false);
-        listGuilds.setItems(guildModel.getAllGuildNames(true));
+        listGuilds.setItems(guildModel.getAllGuildNames());
         addListener();
         addAllVolunteerCells();
         searchOnUpdate();
