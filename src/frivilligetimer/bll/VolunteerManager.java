@@ -45,6 +45,12 @@ public class VolunteerManager
     {
         return dbManager.getAllActiveVolunteers();
     }
+    
+    public List<Volunteer> getAllInactiveVolunteers()
+    {
+        return dbManager.getAllInactiveVolunteers();
+    }
+            
 
     public void addVolunteer(Volunteer volunteer) throws SQLException
     {
@@ -64,7 +70,19 @@ public class VolunteerManager
         }
     }
     
-    public void deleteInactiveVolunteer()
+    public void activeteVolunteer(Volunteer volunteer)
+    {
+        try
+        {
+            dbManager.activeteVolunteer(volunteer);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteInactiveVolunteers()
     {
         try {
             dbManager.deleteInactiveVolunteers();
@@ -83,6 +101,15 @@ public class VolunteerManager
             Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
      }
+     
+         public void deleteInactiveVolunteer(Volunteer volunteer)
+    {
+        try {
+            dbManager.deleteInactiveVolunteer(volunteer);
+        } catch (SQLException ex) {
+            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            }
 
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
