@@ -50,7 +50,7 @@
             </ScrollPane>
         </items>
       </SplitPane>
-      <ListView fx:id="listSearchResult" layoutX="196.0" layoutY="83.0" visible="false" />
+      <ListView fx:id="listSearchResult" layoutX="196.0" layoutY="83.0" prefHeight="300.0" prefWidth="248.0" visible="false" />
       <Label fx:id="lblWelcome" layoutX="407.0" layoutY="34.0" prefHeight="70.0" prefWidth="676.0" text="Velkommen ">
          <font>
             <Font size="48.0" />
