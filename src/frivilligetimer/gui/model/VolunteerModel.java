@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -35,6 +36,7 @@ public class VolunteerModel
     private final ObservableList<Volunteer> allInactiveVoluenteers;
     private ObservableList<Volunteer> searchedVolunteer;
     private ObservableList<Volunteer> allVolunteerInCurrentView;
+    private final ObservableList<String> volunteerNames;
 
     public static VolunteerModel getInstance()
     {
@@ -67,6 +69,7 @@ public class VolunteerModel
         searchedVolunteer = FXCollections.observableArrayList();
         allVolunteerInCurrentView = FXCollections.observableArrayList();
         allInactiveVoluenteers = FXCollections.observableArrayList();
+        volunteerNames = FXCollections.observableArrayList();
     }
 
     /**
@@ -202,5 +205,16 @@ public class VolunteerModel
     public void setAllVolunteerInCurrentView(ObservableList<Volunteer> allVolunteerInCurrentView)
     {
         this.allVolunteerInCurrentView = allVolunteerInCurrentView;
+    }
+    
+    public ObservableList<String> getSearchedVolunteerNames()
+    {
+        volunteerNames.clear();
+        
+        for (Volunteer volunteer : getSearchedVolunteers())
+        {
+            volunteerNames.add(volunteer.getFullName());
+        }
+        return volunteerNames;
     }
 }

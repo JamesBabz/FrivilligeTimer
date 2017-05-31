@@ -1,6 +1,7 @@
 package frivilligetimer.be;
 
 import java.awt.image.BufferedImage;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -35,12 +36,13 @@ public abstract class Person
         this.lastName.set(lastName);
         this.phoneNum = phoneNum;
         this.email = email;
-        this.fullName.setValue(firstName + " " + lastName);
         this.image = image;
+        fullNameProperty();
     }
 
     /**
      * Gets the id of this person.
+     *
      * @return the id.
      */
     public int getId()
@@ -50,6 +52,7 @@ public abstract class Person
 
     /**
      * Sets the id of this person.
+     *
      * @param id The id to assign to this person.
      */
     public void setId(int id)
@@ -59,6 +62,7 @@ public abstract class Person
 
     /**
      * Gets the first name of this person.
+     *
      * @return the first name.
      */
     public String getFirstName()
@@ -68,6 +72,7 @@ public abstract class Person
 
     /**
      * Sets the first name of this person.
+     *
      * @param value The first name to assign to this person.
      */
     public void setFirstName(String value)
@@ -78,6 +83,7 @@ public abstract class Person
     /**
      * Gets the first name of this person represented by an observable String
      * Property
+     *
      * @return a string property that represents this person's first name.
      */
     public StringProperty firstNameProperty()
@@ -87,6 +93,7 @@ public abstract class Person
 
     /**
      * Gets the last name of this person.
+     *
      * @return the last name.
      */
     public String getLastName()
@@ -96,13 +103,14 @@ public abstract class Person
 
     /**
      * Sets the last name of this person.
+     *
      * @param lastName A string value representing this person's last name.
      */
     public void setLastName(String lastName)
     {
         this.lastName.set(lastName);
     }
-    
+
     /**
      * Gets the last name of this person represented by an observable String
      * Property
@@ -116,6 +124,7 @@ public abstract class Person
 
     /**
      * Gets the phone number of this person.
+     *
      * @return the phone number represented by a string.
      */
     public String getPhoneNum()
@@ -125,13 +134,14 @@ public abstract class Person
 
     /**
      * Sets this person's phone number.
+     *
      * @param phoneNum The phone number to be assigned to this person.
      */
     public void setPhoneNum(String phoneNum)
     {
         this.phoneNum = phoneNum;
     }
-    
+
     /**
      * Gets the e-mail of this person.
      *
@@ -151,7 +161,7 @@ public abstract class Person
     {
         this.email = email;
     }
-    
+
     /**
      * Gets the full name of this person.
      *
@@ -180,11 +190,13 @@ public abstract class Person
      */
     public StringProperty fullNameProperty()
     {
+        this.fullName.bind(Bindings.concat(firstName , " " , lastName));
         return fullName;
     }
 
     /**
      * Gets the profile picture of this person.
+     *
      * @return a buffered image representing this person's profile picture.
      */
     public BufferedImage getImage()
@@ -194,6 +206,7 @@ public abstract class Person
 
     /**
      * Sets the profile picture of this person.
+     *
      * @param image A buffered image representing this person's profile picture.
      */
     public void setImage(BufferedImage image)

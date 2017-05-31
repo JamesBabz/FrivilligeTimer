@@ -31,8 +31,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -71,6 +73,12 @@ public class TileViewController implements Initializable
     private Label lblWelcome;
     @FXML
     private Button btnLogOut;
+    @FXML
+    private ListView<String> listSearchResult;
+    @FXML
+    private TextField txtSearchField;
+    @FXML
+    private Label lblClearSearch;
 
     public TileViewController()
     {
@@ -91,9 +99,11 @@ public class TileViewController implements Initializable
         volunteerBoard.prefWidthProperty().bind(containerForVolunteerBoard.widthProperty());
         btnLogOut.setVisible(false);
         lblWelcome.setVisible(false);
-        listGuilds.setItems(guildModel.getAllGuildNames(true));
+        listGuilds.setItems(guildModel.getAllGuildNames());
         addListener();
         addAllVolunteerCells();
+        searchOnUpdate();
+//        handleSearchSelection();
 
     }
 
@@ -243,6 +253,104 @@ public class TileViewController implements Initializable
     private void handleLogOut()
     {
         staffModel.setLevel(2);
+    }
+
+    private void searchOnUpdate()
+    {
+        int rowHeight = 24;
+        txtSearchField.textProperty().addListener(new ChangeListener<String>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> listener, String oldString, String newVal)
+            {
+                volunteerModel.getSearchedVolunteers().clear();
+
+                for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
+                {
+                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
+                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            && !volunteerModel.getSearchedVolunteers().contains(volunteer))
+                    {
+                        volunteerModel.getSearchedVolunteers().add(volunteer);
+                    }
+                }
+
+                if (newVal != null && newVal.length() > 0)
+                {
+                    listSearchResult.visibleProperty().set(true);
+                }
+
+                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
+
+                if (volunteerModel.getSearchedVolunteerNames().size() < 13)
+                {
+                    listSearchResult.setPrefHeight(volunteerModel.getSearchedVolunteerNames().size() * rowHeight + 2);
+                }
+                else
+                {
+                    listSearchResult.setPrefHeight(300);
+                }
+
+            }
+        });
+
+        txtSearchField.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> listener, Boolean oldValue, Boolean newValue)
+            {
+                if (!newValue && !listSearchResult.isFocused())
+                {
+                    listSearchResult.visibleProperty().set(false);
+                }
+                if ("Alle Laug".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
+                {
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                }
+                else
+                {
+                    for (Guild guild : guildModel.getAllGuilds())
+                    {
+                        if (guild.getName().equals(listGuilds.getSelectionModel().getSelectedItem()))
+                        {
+                            volunteerModel.setAllVolunteerInCurrentView(guild.getVolunteers());
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleClearSearchField(MouseEvent event)
+    {
+        txtSearchField.clear();
+    }
+
+    @FXML
+    private void handleSearchSelection(MouseEvent event)
+    {
+        String selectedVolunteer = listSearchResult.getSelectionModel().getSelectedItem();
+
+        if (event.getClickCount() == 1)
+        {
+            for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
+            {
+                if (volunteer.getFullName().equals(selectedVolunteer))
+                {
+                    volunteerModel.setTileVolunteer(volunteer);
+                    ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+                    vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+                    listSearchResult.visibleProperty().set(false);
+                    txtSearchField.clear();
+                    break;
+                }
+                
+            }
+        }
+
     }
 
 }

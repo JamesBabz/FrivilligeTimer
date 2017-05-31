@@ -15,7 +15,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+
+<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
       <BorderPane prefHeight="569.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -23,7 +24,7 @@
                <children>
                   <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button alignment="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis Alle Personer" VBox.vgrow="NEVER">
+                        <Button alignment="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#ShowAllVolunteersInTable" prefHeight="25.0" prefWidth="137.0" text="Vis alle personer" VBox.vgrow="NEVER">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Button>
@@ -117,7 +118,7 @@
                 <Menu mnemonicParsing="false" text="Vis">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleStatClick" text="Vis statistik..." />
-                        <MenuItem mnemonicParsing="false" onAction="#handleMailClick" text="Vis emails for valgte laug..." />
+                        <MenuItem fx:id="showShowEmailGuild" mnemonicParsing="false" onAction="#handleMailClick" text="Vis emails for lauget..." />
                      </items></Menu>
                 <Menu mnemonicParsing="false" text="Hjælp">
                   <items>

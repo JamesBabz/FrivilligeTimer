@@ -117,12 +117,8 @@ public class LoginViewController implements Initializable
      */
     private void showErrorDialog(String title, String header, String content)
     {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-
-        alert.showAndWait();
+        ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
+        vg.showAlertBox(Alert.AlertType.ERROR, title, header,content);
     }
 
     @FXML

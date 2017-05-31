@@ -65,6 +65,7 @@ public final class DBManager
 
         setAllPeople();
         setAllGuilds();
+        setAllEmployees();
         setAllVolunteersInGuilds();
         setAllEmployeesInGuilds();
     }
@@ -103,8 +104,7 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    }
-                    catch (IOException e)
+                    } catch (IOException e)
                     {
                         e.printStackTrace();
                     }
@@ -129,8 +129,7 @@ public final class DBManager
                         default:
                             break;
                     }
-                }
-                else if (level == 2)
+                } else if (level == 2)
                 {
                     Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
                     inactiveVolunteers.add(volunteer);
@@ -176,8 +175,7 @@ public final class DBManager
                 {
                     Guild guild = new Guild(id, name);
                     guilds.add(guild);
-                }
-                else
+                } else
                 {
                     Guild guild = new Guild(id, name);
                     inactiveGuilds.add(guild);
@@ -240,8 +238,7 @@ public final class DBManager
         try
         {
             setAllPeople();
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -261,8 +258,7 @@ public final class DBManager
         try
         {
             setAllPeople();
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -281,8 +277,7 @@ public final class DBManager
         try
         {
             setAllPeople();
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -299,23 +294,26 @@ public final class DBManager
      */
     public List<Employee> getAllEmployees()
     {
+
+        return employees;
+    }
+
+    public void setAllEmployees()
+    {
         employees.clear();
         try
         {
             setAllPeople();
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return employees;
     }
-
-    /**
-     * Gets all managers
-     *
-     * @return a list of all managers
-     */
+        /**
+         * Gets all managers
+         *
+         * @return a list of all managers
+         */
     public List<Manager> getAllManagers()
     {
         return managers;
@@ -407,8 +405,7 @@ public final class DBManager
         {
             lineChartValues.put((java.sql.Date) date.clone(), hours);
             date.setTime(date.getTime() + 86_400_000);
-        }
-        while (date.before(to));
+        } while (date.before(to));
         String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND uid = ? AND laugid = ?";
 
         try (Connection con = cm.getConnection())
@@ -469,6 +466,7 @@ public final class DBManager
             }
 
         }
+        
 
     }
 
@@ -512,6 +510,7 @@ public final class DBManager
                 employee.setId(ps.getGeneratedKeys().getInt(1));
             }
         }
+        employees.add(employee);
     }
 
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
