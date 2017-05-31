@@ -91,7 +91,7 @@ public class AdminViewController implements Initializable
     private MenuItem menuItemRemoveEmployee;
     @FXML
     private MenuItem showShowEmailGuild;
-        @FXML
+    @FXML
     private TextField txtSearchField;
 
     private final VolunteerModel volunteerModel;
@@ -103,7 +103,6 @@ public class AdminViewController implements Initializable
     private Guild selectedGuild;
 
     private List<MenuItem> guildsSubMenu;
-
 
     /**
      * Initializes the controller class.
@@ -314,7 +313,8 @@ public class AdminViewController implements Initializable
                             try
                             {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                            } catch (SQLException ex)
+                            }
+                            catch (SQLException ex)
                             {
                                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -392,7 +392,8 @@ public class AdminViewController implements Initializable
                 showEmployeesAssignedToGuild();
             }
 
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             showErrorDialog("Database fejl", "Der skete en fejl", "Ingen forbindelse til databasen");
         }
@@ -506,6 +507,7 @@ public class AdminViewController implements Initializable
 
         showShowEmailGuild.setVisible(false);
         tableGuild.getSelectionModel().clearSelection();
+        volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
     }
 
     @FXML
@@ -520,8 +522,7 @@ public class AdminViewController implements Initializable
             menuAddVolToGuild.setVisible(false);
             showShowEmailGuild.setVisible(true);
             tableEmployee.getSelectionModel().clearSelection();
-            
-            
+
         }
     }
 
@@ -551,7 +552,7 @@ public class AdminViewController implements Initializable
     private void showEmployeesAssignedToGuild()
     {
         tableEmployee.refresh();
-        
+
         for (Employee item : tableEmployee.getItems())
         {
             for (Employee employee : guildModel.getEmployeesInCurrentGuild())
@@ -592,7 +593,8 @@ public class AdminViewController implements Initializable
                                 }
 
                             }
-                        } else
+                        }
+                        else
                         {
                             this.setTextFill(Color.valueOf("#323232"));
                             this.setFont(Font.font(USE_COMPUTED_SIZE));
@@ -626,11 +628,13 @@ public class AdminViewController implements Initializable
             try
             {
                 guildModel.deleteInactiveGuilds();
-            } catch (SQLException ex)
+            }
+            catch (SQLException ex)
             {
                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else
+        }
+        else
         {
             // ... user chose CANCEL or closed the dialog
         }
@@ -677,27 +681,19 @@ public class AdminViewController implements Initializable
      */
     private void searchOnUpdate()
     {
-
         txtSearchField.textProperty().addListener(new ChangeListener<String>()
         {
             @Override
             public void changed(ObservableValue<? extends String> listener, String oldVal, String newVal)
             {
                 volunteerModel.getSearchedVolunteers().clear();
-                if (tableGuild.getSelectionModel().getSelectedItem() == null)
-                {
-                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
-                } else
-                {
-                    volunteerModel.setAllVolunteerInCurrentView(tableGuild.getSelectionModel().getSelectedItem().getVolunteers());
-                }
 
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
-                    if (volunteer.getFirstName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getLastName().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
                             || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
+                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                            //                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -706,6 +702,22 @@ public class AdminViewController implements Initializable
                 }
 
                 tableVolunteer.setItems(volunteerModel.getSearchedVolunteers());
+            }
+        });
+
+        txtSearchField.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> listener, Boolean oldValue, Boolean newValue)
+            {
+                if (tableGuild.getSelectionModel().getSelectedItem() == null)
+                {
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                }
+                else
+                {
+                    volunteerModel.setAllVolunteerInCurrentView(tableGuild.getSelectionModel().getSelectedItem().getVolunteers());
+                }
             }
         });
     }
@@ -801,7 +813,8 @@ public class AdminViewController implements Initializable
                 }
             }, new SimpleDateFormat("yyyy-MM-dd").parse("2018-01-24"));
 
-        } catch (ParseException ex)
+        }
+        catch (ParseException ex)
         {
             Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
