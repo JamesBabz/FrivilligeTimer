@@ -103,6 +103,7 @@ public class TileViewController implements Initializable
         addListener();
         addAllVolunteerCells();
         searchOnUpdate();
+//        handleSearchSelection();
 
     }
 
@@ -263,7 +264,7 @@ public class TileViewController implements Initializable
             public void changed(ObservableValue<? extends String> listener, String oldString, String newVal)
             {
                 volunteerModel.getSearchedVolunteers().clear();
-                
+
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
                     if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
@@ -279,18 +280,18 @@ public class TileViewController implements Initializable
                 {
                     listSearchResult.visibleProperty().set(true);
                 }
-                else
-                {
-                    listSearchResult.visibleProperty().set(false);
-                }
 
                 listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
-                
+
                 if (volunteerModel.getSearchedVolunteerNames().size() < 13)
+                {
                     listSearchResult.setPrefHeight(volunteerModel.getSearchedVolunteerNames().size() * rowHeight + 2);
+                }
                 else
+                {
                     listSearchResult.setPrefHeight(300);
-                
+                }
+
             }
         });
 
@@ -326,6 +327,31 @@ public class TileViewController implements Initializable
     private void handleClearSearchField(MouseEvent event)
     {
         txtSearchField.clear();
+    }
+
+    @FXML
+    private void handleSearchSelection(MouseEvent event)
+    {
+        String selectedVolunteer = listSearchResult.getSelectionModel().getSelectedItem();
+
+        if (volunteerModel.getSearchedVolunteers() != null)
+        {
+            if (event.getClickCount() == 1)
+            {
+
+                for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
+                {
+                    if (volunteer.getFullName().equals(selectedVolunteer))
+                    {
+                        volunteerModel.setTileVolunteer(volunteer);
+                        ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+                        vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+                        listSearchResult.visibleProperty().set(false);
+                        txtSearchField.clear();
+                    }
+                }
+            }
+        }
     }
 
 }
