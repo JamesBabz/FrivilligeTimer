@@ -807,9 +807,6 @@ public class AdminViewController implements Initializable
                 }
             }
 
-        }
-    }
-    
     @FXML
     private void ShowInactiveVolunteers()
     {
