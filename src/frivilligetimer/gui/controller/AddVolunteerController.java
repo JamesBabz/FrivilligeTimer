@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +24,7 @@ import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -48,16 +52,13 @@ public class AddVolunteerController implements Initializable
     private Button btnBrowseImage;
     @FXML
     private ImageView imgVolunteer;
-    
+
     private VolunteerModel model;
     private ImageManager iManager;
+    private ViewGenerator viewGenerator;
     private Stage stage;
     private final FileChooser fileChooser = new FileChooser();
     private File file;
-    
-    private VolunteerCellModel cellModel;
- 
-
 
     /**
      * Initializes the controller class.
@@ -81,32 +82,70 @@ public class AddVolunteerController implements Initializable
         Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
         imgVolunteer.setImage(image);
         validateData();
-        
-        
+        viewGenerator = new ViewGenerator(stage);
 
     }
 
     @FXML
     private void addVolunteer()
     {
+        
+        HashMap<TextField, Integer> list = new HashMap<>();
+        txtFirstName.setStyle("-fx-border-color: #0000");
+        txtLastName.setStyle("-fx-border-color: #0000");
+        txtEmail.setStyle("-fx-border-color: #0000");
+        
+
+        if (txtFirstName.getText().isEmpty())
+        {
+            list.put(txtFirstName, 0);
+        }
+        if (txtLastName.getText().isEmpty())
+        {
+            list.put(txtLastName, 0);
+        }
+        if (txtEmail.getText().isEmpty())
+        {
+            list.put(txtEmail, 0);
+        }
+
+        if (list.isEmpty())
+        {
+
+            addVolunteerToDB();
+        } else
+        {
+            for (Map.Entry<TextField, Integer> entry : list.entrySet())
+            {
+                if(entry.getValue() == 0)
+                {
+                    entry.getKey().setStyle("-fx-border-color : red");
+                } 
+            }
+        }
+        
+    }
+
+    private void addVolunteerToDB()
+    {
         try
         {
-                Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
-
-            model.addVolunteer(volunteer);
-
+            Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
+            
+            {
+                model.addVolunteer(volunteer);
+                cancel();
+            }
+            
             if (file != null)
             {
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-
-            cancel();
-        }
-        catch (SQLException | IOException ex)
+            
+        } catch (SQLException | IOException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @FXML
@@ -123,7 +162,7 @@ public class AddVolunteerController implements Initializable
         file = fileChooser.showOpenDialog(stage);
         Image img = new Image("file:" + file.getAbsolutePath());
         imgVolunteer.setImage(img);
-        
+
     }
 
     private static String firstName = "";
@@ -169,7 +208,5 @@ public class AddVolunteerController implements Initializable
             txtPhoneNumber.setText(phoneNumber);
         });
     }
-    
-
 
 }
