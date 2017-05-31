@@ -49,6 +49,7 @@ public class AddVolunteerHoursController implements Initializable
     private boolean isHourSet;
     private Guild selectedGuild;
     private final ToggleGroup group;
+    private final ViewGenerator vg;
 
     @FXML
     private TextField txtHours;
@@ -89,6 +90,7 @@ public class AddVolunteerHoursController implements Initializable
     {
         this.isHourSet = false;
         this.group = new ToggleGroup();
+        this.vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
     }
 
     /**
