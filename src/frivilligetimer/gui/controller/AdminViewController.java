@@ -373,6 +373,7 @@ public class AdminViewController implements Initializable
             });
         }
     }
+
     /**
      * Sends the guild and employee further to model -> manager -> database.
      *
@@ -590,12 +591,13 @@ public class AdminViewController implements Initializable
                                 }
 
                             }
-                        {
-                            this.setTextFill(Color.valueOf("#323232"));
-                            this.setFont(Font.font(USE_COMPUTED_SIZE));
+                            {
+                                this.setTextFill(Color.valueOf("#323232"));
+                                this.setFont(Font.font(USE_COMPUTED_SIZE));
 
+                            }
+                            setText(item);
                         }
-                        setText(item);
                     }
                 };
             }
@@ -801,9 +803,10 @@ public class AdminViewController implements Initializable
                 @Override
                 public void run()
                 {
-                    Platform.runLater(() ->
-                    {
-                        ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
+                    Platform.runLater(()
+                            -> 
+                            {
+                                ShowReminderDialog("Slet inaktive", "", "Husk at slette dine inaktive data");
                     });
                 }
             }, new SimpleDateFormat("yyyy-MM-dd").parse("2018-01-24"));
