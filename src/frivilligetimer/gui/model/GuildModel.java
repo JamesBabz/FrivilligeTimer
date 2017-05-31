@@ -58,12 +58,10 @@ public final class GuildModel
             manager = new GuildManager();
             volunteerManager = new VolunteerManager();
             staffManager = new StaffManager();
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -78,8 +76,11 @@ public final class GuildModel
         employeesInCurrentGuild = FXCollections.observableArrayList();
 
         setAllGuilds();
+        setAllVolunteers();
+        setAllEmployees();
         populateGuildsWithVolunteers();
         populateGuildsWithEmployees();
+        setAllGuildNames(true);
 
     }
 
@@ -106,16 +107,24 @@ public final class GuildModel
 
     private ObservableList<Volunteer> getAllVolunteers()
     {
+        return allVolunteers;
+    }
+
+    private void setAllVolunteers()
+    {
         allVolunteers.clear();
         allVolunteers.addAll(volunteerManager.getAllActiveVolunteers());
-        return allVolunteers;
     }
 
     private ObservableList<Employee> getAllEmployees()
     {
+        return allEmployees;
+    }
+
+    private void setAllEmployees()
+    {
         allEmployees.clear();
         allEmployees.addAll(staffManager.getAllEmployees());
-        return allEmployees;
     }
 
     public void addGuild(Guild guild) throws SQLException
@@ -240,12 +249,17 @@ public final class GuildModel
     /**
      * Gets all names of the guilds
      *
-     * @param includeAllField includes an All Guilds field for lists
      * @return Guild Names
      */
-    public ObservableList<String> getAllGuildNames(boolean includeAllField)
+    public ObservableList<String> getAllGuildNames()
+    {
+        return guildNames;
+    }
+
+    private void setAllGuildNames(boolean includeAllField)
     {
         guildNames.clear();
+        
         if (includeAllField)
         {
             guildNames.add("Alle Laug");
@@ -254,7 +268,6 @@ public final class GuildModel
         {
             guildNames.add(guild.getName());
         }
-        return guildNames;
     }
 
     public ObservableList<Volunteer> getVolunteersInCurrentGuild()
