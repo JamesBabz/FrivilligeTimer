@@ -22,10 +22,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -47,6 +49,13 @@ public class EmailViewController implements Initializable
     @FXML
     private TextArea allEmails;
 
+    public EmailViewController()
+    {
+        gModel = gModel.getInstance();
+        volHash = new HashMap<>();
+        selGuild = gModel.getAllGuilds().get(0);
+    }
+
     /**
      * Initializes the controller class.
      */
@@ -55,15 +64,6 @@ public class EmailViewController implements Initializable
     {
         tPane.prefWidthProperty().bind(anchorPane.widthProperty());
         createCheckBoxes();
-    }
-
-    public EmailViewController()
-    {
-        gModel = gModel.getInstance();
-        volHash = new HashMap<>();
-
-        selGuild = gModel.getAllGuilds().get(0);
-//        selGuild = gModel.getSelectedGuild();
     }
 
     private void createCheckBoxes()
@@ -150,12 +150,26 @@ public class EmailViewController implements Initializable
     @FXML
     private void handleSendMail()
     {
+        if (!allEmails.getText().isEmpty())
+        {
+            sendMail();
+        }
+        else
+        {
+            ViewGenerator vg = new ViewGenerator((Stage) tPane.getScene().getWindow());
+            vg.showAlertBox(Alert.AlertType.WARNING, "Ingen Modtagere", "Der er ikke valgt nogen modtagere",
+                    "Vælg venligst én eller flere modtagere fra listen over for at sende en mail");
+        }
+    }
+
+    private void sendMail()
+    {
         URI uri = null;
         String mails = allEmails.getText();
         mails = mails.replace(" ", "");
         try
         {
-            uri = new URI("mailto:"+mails);
+            uri = new URI("mailto:" + mails);
         }
         catch (URISyntaxException ex)
         {

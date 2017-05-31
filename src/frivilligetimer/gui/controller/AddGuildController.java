@@ -52,10 +52,12 @@ public class AddGuildController implements Initializable
         try
         {
             manager = new GuildManager();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,23 +70,22 @@ public class AddGuildController implements Initializable
 
         if (!txtLaug.getText().isEmpty())
         {
-         
+
             try
             {
                 model.addGuild(guild);
-            } catch (SQLException ex)
+            }
+            catch (SQLException ex)
             {
                 Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
             }
-     
+
             cancel();
-        } else
+        }
+        else
         {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Ingen information");
-            alert.setHeaderText("Udfyld laugets navn");
-            alert.setContentText("Når tekstfeltet er udfyldt, vil du kunne tilføje lauget");
-            alert.show();
+            ViewGenerator vg = new ViewGenerator((Stage) txtLaug.getScene().getWindow());
+            vg.showAlertBox(Alert.AlertType.INFORMATION, "Ingen information", "Udfyld laugets navn", "Når tekstfeltet er udfyldt, vil du kunne tilføje lauget");
         }
 
     }
