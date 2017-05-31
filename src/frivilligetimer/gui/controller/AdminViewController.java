@@ -32,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
@@ -93,7 +94,11 @@ public class AdminViewController implements Initializable
     private MenuItem showShowEmailGuild;
     @FXML
     private TextField txtSearchField;
-
+    @FXML
+    private TextField txtSearchField;
+    @FXML
+    private Button btnInactive;
+    
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
@@ -803,3 +808,39 @@ public class AdminViewController implements Initializable
             }
 
         }
+    }
+    
+    @FXML
+    private void ShowInactiveVolunteers()
+    {
+        for (Volunteer allInactiveVoluenteer : volunteerModel.getAllInactiveVolunteers()) {
+            System.out.println(allInactiveVoluenteer.getFullName());
+        }
+ 
+        tableVolunteer.setItems(volunteerModel.getAllInactiveVoluenteers());
+        colVolunteer.setText("Frivillige");
+        menuItemRemoveVolunteer.setVisible(false);
+        menuAddVolToGuild.setVisible(true);        
+    }
+    
+    @FXML
+    private void handleDeleteInactiveVolunteer()
+    {
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getItems().remove(selectedVolunteer);
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.deleteInactiveVolunteer(selectedVolunteer);
+    }
+    
+    @FXML
+    private void handleActivteVolunteer()
+    {
+        selectedVolunteer = tableVolunteer.getSelectionModel().getSelectedItem();
+        tableVolunteer.getItems().remove(selectedVolunteer);
+        tableVolunteer.getSelectionModel().clearSelection();
+        volunteerModel.activeteVolunteer(selectedVolunteer);  
+    }
+    
+    
+
+}
