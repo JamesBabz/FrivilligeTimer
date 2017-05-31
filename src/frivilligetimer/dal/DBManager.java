@@ -138,6 +138,9 @@ public final class DBManager
 
             }
         }
+                for (Volunteer allInactiveVoluenteer : inactiveVolunteers) {
+            System.out.println(allInactiveVoluenteer.getFullName());
+        }
     }
 
     public void deleteInactiveVolunteers() throws SQLException
@@ -252,6 +255,7 @@ public final class DBManager
      */
     public List<Volunteer> getAllInactiveVolunteers()
     {
+        
         volunteers.clear();
         inactiveVolunteers.clear();
         try
@@ -512,7 +516,25 @@ public final class DBManager
 
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
-        String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
+        String sql = "UPDATE People SET isActive = 0 AND date = ? WHERE ID = ?";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, volunteer.getId());
+            java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
+            ps.setDate(2, sqlDate);
+            ps.executeUpdate();
+            volunteers.remove(volunteer);
+
+        }
+    }
+    
+    public void activeteVolunteer(Volunteer volunteer) throws SQLException
+    {
+        String sql = "UPDATE People SET isActive = 1 WHERE ID = ?";
 
         try (Connection con = cm.getConnection())
         {
@@ -521,7 +543,23 @@ public final class DBManager
 
             ps.setInt(1, volunteer.getId());
             ps.executeUpdate();
-            volunteers.remove(volunteer);
+            inactiveVolunteers.remove(volunteer);
+
+        }
+    }
+    
+    public void deleteInactiveVolunteer(Volunteer volunteer) throws SQLException
+    {
+       String sql = "DELETE from People WHERE isActive = 0";
+
+        try (Connection con = cm.getConnection())
+        {
+            Statement st = con.createStatement();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setInt(1, volunteer.getId());
+            ps.executeUpdate();
+            inactiveVolunteers.clear();
 
         }
     }

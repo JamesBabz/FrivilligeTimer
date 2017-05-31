@@ -32,6 +32,7 @@ public class VolunteerModel
     private static VolunteerModel instance;
 
     private final ObservableList<Volunteer> allActiveVolunteers;
+    private final ObservableList<Volunteer> allInactiveVoluenteers;
     private ObservableList<Volunteer> searchedVolunteer;
     private ObservableList<Volunteer> allVolunteerInCurrentView;
 
@@ -65,6 +66,7 @@ public class VolunteerModel
         allActiveVolunteers = FXCollections.observableArrayList();
         searchedVolunteer = FXCollections.observableArrayList();
         allVolunteerInCurrentView = FXCollections.observableArrayList();
+        allInactiveVoluenteers = FXCollections.observableArrayList();
     }
 
     /**
@@ -81,12 +83,27 @@ public class VolunteerModel
         }
         return allActiveVolunteers;
     }
+    
+    public ObservableList<Volunteer> getAllInactiveVolunteers()
+    {
+        allInactiveVoluenteers.clear();
+        for (Volunteer volunteer : manager.getAllActiveVolunteers())
+        {
+            allInactiveVoluenteers.add(volunteer);
+        }
+        return allInactiveVoluenteers;
+    }
 
     public void addVolunteer(Volunteer volunteer) throws SQLException
     {
         allActiveVolunteers.add(volunteer);
         manager.addVolunteer(volunteer);
 
+    }
+    
+    public void deleteInactiveVolunteer(Volunteer volunteer)
+    {
+        manager.deleteInactiveVolunteer(volunteer);
     }
 
     public void deleteVolunteer(Volunteer volunteer)
@@ -95,10 +112,16 @@ public class VolunteerModel
         manager.deleteVolunteer(volunteer);
     }
     
+    public void activeteVolunteer(Volunteer volunteer)
+    {
+        allInactiveVoluenteers.remove(volunteer);
+        manager.activeteVolunteer(volunteer);
+    }
+    
     public void deleteInactiveVolunteers()
     {
         
-        manager.deleteInactiveVolunteer();
+        manager.deleteInactiveVolunteers();
     }
 
     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
@@ -164,6 +187,11 @@ public class VolunteerModel
     public ObservableList<Volunteer> getAllVolunteerInCurrentView()
     {
         return allVolunteerInCurrentView;
+    }
+    
+    public ObservableList<Volunteer> getAllInactiveVoluenteers()
+    {
+        return allInactiveVoluenteers;
     }
 
     public void setSearchedVolunteer(ObservableList<Volunteer> searchedVolunteer)
