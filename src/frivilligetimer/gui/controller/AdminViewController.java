@@ -13,17 +13,12 @@ import frivilligetimer.gui.model.StaffModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -38,7 +33,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -104,8 +98,19 @@ public class AdminViewController implements Initializable
     private Volunteer selectedVolunteer;
     private Employee selectedEmployee;
     private Guild selectedGuild;
+    private boolean isActiveShowing = true;
 
     private List<MenuItem> guildsSubMenu;
+    @FXML
+    private MenuItem Volunteradd;
+    @FXML
+    private MenuItem guildAdd;
+    @FXML
+    private ContextMenu contextGuild;
+    @FXML
+    private ContextMenu contextVolunteer;
+    @FXML
+    private ContextMenu contextEmployee;
 
     /**
      * Initializes the controller class.
@@ -490,25 +495,8 @@ public class AdminViewController implements Initializable
      * Shows all the volunteers in the table when the user click "Vis alle
      * personer"
      */
-    @FXML
-    private void ShowAllVolunteersInTable()
-    {
-        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
-        colVolunteer.setText("Frivillige");
-        menuItemRemoveVolunteer.setVisible(false);
-        menuAddVolToGuild.setVisible(true);
-
-        guildModel.getEmployeesInCurrentGuild().clear();
-        tableEmployee.getItems().clear();
-        staffModel.setAllGuildManagersForTable();
-        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
-        colGuildManager.setText("Medarbejdere");
-        menuItemRemoveEmployee.setVisible(false);
-
-        showShowEmailGuild.setVisible(false);
-        tableGuild.getSelectionModel().clearSelection();
-        volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
-    }
+    
+    
 
     @FXML
     private void ShowVolunteersInCurrentGuild(MouseEvent event)
@@ -752,7 +740,7 @@ public class AdminViewController implements Initializable
                 Dragboard db = event.getDragboard();
                 boolean success = false;
 
-                List<Guild> allGuilds = guildModel.getAllGuilds();
+                List<Guild> allGuilds = guildModel.getAllActiveGuilds();
                 Node node = event.getPickResult().getIntersectedNode();
                 if (node.toString().startsWith("Text"))
                 {
@@ -806,13 +794,37 @@ public class AdminViewController implements Initializable
             }
 
     @FXML
-    private void ShowInactiveVolunteers()
+    private void changeVolunteersInTable()
     {
- 
-        tableVolunteer.setItems(volunteerModel.getAllInactiveVoluenteers());
+        if(isActiveShowing)
+        {
+        showAllInactiveVolunteersInTable();
+        }
+        else
+        {
+        showAllActiveVolunteersInTable();
+        }
+        isActiveShowing = !isActiveShowing;
+        changeButtonText();
+        
+    }
+
+    private void showAllInactiveVolunteersInTable() {
+        tableVolunteer.setItems(volunteerModel.getAllInactiveVolunteers());
         colVolunteer.setText("Frivillige");
         menuItemRemoveVolunteer.setVisible(false);
-        menuAddVolToGuild.setVisible(true);        
+        menuAddVolToGuild.setVisible(true);
+    }
+
+    private void changeButtonText() {
+        if(!isActiveShowing)
+        {
+            btnInactive.setText("Vis aktive");
+        }
+        else
+        {
+            btnInactive.setText("Vis inaktive");
+        }
     }
     
     @FXML
@@ -832,7 +844,41 @@ public class AdminViewController implements Initializable
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.activeteVolunteer(selectedVolunteer);  
     }
-    
+
+        /**
+     * Shows all the volunteers in the table when the user click "Vis alle
+     * personer"
+     */
+    @FXML
+    private void showAllPeopleInTable() {
+        showAllActiveVolunteersInTable();
+
+        showAllActiveEmployeesInTable();
+
+        showShowEmailGuild.setVisible(false);
+        tableGuild.getSelectionModel().clearSelection();
+        volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+        isActiveShowing = true;
+        changeButtonText();
+    }
+
+    private void showAllActiveEmployeesInTable() {
+        guildModel.getEmployeesInCurrentGuild().clear();
+        tableEmployee.getItems().clear();
+        staffModel.setAllGuildManagersForTable();
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        colGuildManager.setText("Medarbejdere");
+        menuItemRemoveEmployee.setVisible(false);
+    }
+
+    private void showAllActiveVolunteersInTable() {
+        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
+        colVolunteer.setText("Frivillige");
+        menuItemRemoveVolunteer.setVisible(false);
+        menuAddVolToGuild.setVisible(true);
+    }
+   
+
     
 
 }

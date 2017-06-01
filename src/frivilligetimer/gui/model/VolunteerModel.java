@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -190,11 +189,6 @@ public class VolunteerModel
     public ObservableList<Volunteer> getAllVolunteerInCurrentView()
     {
         return allVolunteerInCurrentView;
-    }
-    
-    public ObservableList<Volunteer> getAllInactiveVoluenteers()
-    {
-        return allInactiveVoluenteers;
     }
 
     public void setSearchedVolunteer(ObservableList<Volunteer> searchedVolunteer)
