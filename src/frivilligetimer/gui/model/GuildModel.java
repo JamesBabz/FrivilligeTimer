@@ -36,7 +36,7 @@ public final class GuildModel
     private final ObservableList<Volunteer> allVolunteers;
     private final ObservableList<Employee> allEmployees;
     private final ObservableList<String> guildNames;
-    private ObservableList<Volunteer> volunteersInGuild;
+//    private ObservableList<Volunteer> volunteersInGuild;
     private ObservableList<Volunteer> volunteersInCurrentGuild;
     private ObservableList<Employee> employeesInGuild;
     private ObservableList<Employee> employeesInCurrentGuild;
@@ -69,9 +69,9 @@ public final class GuildModel
         allVolunteers = FXCollections.observableArrayList();
         allEmployees = FXCollections.observableArrayList();
         guildNames = FXCollections.observableArrayList();
-        volunteersInGuild = FXCollections.observableArrayList();
+//        volunteersInGuild = FXCollections.observableArrayList();
         volunteersInCurrentGuild = FXCollections.observableArrayList();
-        employeesInGuild = FXCollections.observableArrayList();
+//        employeesInGuild = FXCollections.observableArrayList();
         employeesInCurrentGuild = FXCollections.observableArrayList();
 
         setAllGuilds();
@@ -147,15 +147,22 @@ public final class GuildModel
 
     public void setVolunteersInGuild(Guild guild)
     {
-        volunteersInGuild.clear();
-        volunteersInGuild.addAll(guild.getVolunteers());
+//        volunteersInGuild.clear();
+//        volunteersInGuild.addAll(guild.getVolunteers());
+        
+        volunteersInCurrentGuild.clear();
+        volunteersInCurrentGuild.addAll(guild.getVolunteers());
     }
+    
 
-    public void setEmployeesInGuild(Guild guild)
-    {
-        employeesInGuild.clear();
-        employeesInGuild.addAll(guild.getEmployees());
-    }
+//    public void setEmployeesInGuild(Guild guild)
+//    {
+////        employeesInGuild.clear();
+////        employeesInGuild.addAll(guild.getEmployees());
+//        
+//        employeesInCurrentGuild.clear();
+//        employeesInCurrentGuild.setAll(guild.getEmployees());
+//    }
 
     public List<String> getEmployeesInguilds()
     {
@@ -169,7 +176,7 @@ public final class GuildModel
 
     public ObservableList<Volunteer> getVolunteersInGuild()
     {
-        return volunteersInGuild;
+        return volunteersInCurrentGuild;
     }
 
     public void editGuild(Guild guild) throws SQLException
