@@ -31,7 +31,6 @@ import javafx.stage.Stage;
  */
 public class EditVolunteerController implements Initializable
 {
-    private VolunteerManager manager;
     private VolunteerModel model;
     private Volunteer volunteer;
     private ViewHandler viewHandler;
