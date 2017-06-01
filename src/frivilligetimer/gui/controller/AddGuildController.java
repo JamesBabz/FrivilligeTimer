@@ -39,6 +39,7 @@ public class AddGuildController implements Initializable
     {
         model = GuildModel.getInstance();
         viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtLaug);
     }
 
     @FXML
