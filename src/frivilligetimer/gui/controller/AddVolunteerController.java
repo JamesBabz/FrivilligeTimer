@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -115,7 +113,8 @@ public class AddVolunteerController implements Initializable
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
             
-        } catch (SQLException | IOException ex)
+        } 
+        catch (SQLException | IOException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());
         }

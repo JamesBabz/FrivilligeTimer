@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -30,12 +28,14 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -47,6 +47,8 @@ public class StatisticViewController implements Initializable
 
     private final GuildModel guildModel;
     private final VolunteerModel volunteerModel;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     @FXML
     private TableView<Guild> tblGuildsOverview;
@@ -73,6 +75,7 @@ public class StatisticViewController implements Initializable
     {
         guildModel = GuildModel.getInstance();
         volunteerModel = VolunteerModel.getInstance();
+        viewHandler = new ViewHandler(stage);
     }
 
     /**
@@ -187,7 +190,8 @@ public class StatisticViewController implements Initializable
         }
         catch (SQLException | IOException ex)
         {
-            Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Diagram Fejl", "Fejl under oprettelse af diagram",
+                    "Der skete en fejl under oprettelse af det valgte diagram. prøv venligst igen.");
         }
         allGuildsSeries.getData().add(new XYChart.Data(guild.getName(), hours));
     }
@@ -258,7 +262,8 @@ public class StatisticViewController implements Initializable
         }
         catch (SQLException | IOException ex)
         {
-            Logger.getLogger(StatisticViewController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Diagram Fejl", "Fejl under oprettelse af diagram",
+                    "Der skete en fejl under oprettelse af det valgte diagram. prøv venligst igen.");
         }
 
         for (Map.Entry<java.sql.Date, Integer> lineChartValue : lineChartValues.entrySet())
