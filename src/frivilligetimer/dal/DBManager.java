@@ -11,6 +11,7 @@ import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.be.Person;
 import frivilligetimer.be.Volunteer;
+import frivilligetimer.gui.controller.ViewHandler;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
 /**
@@ -47,6 +48,8 @@ public final class DBManager
     private final List<Guild> inactiveGuilds;
     private final List<String> volunteersInGuild;
     private final List<String> employeesInGuild;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     /**
      * The default constructor for the database manager.
@@ -62,7 +65,7 @@ public final class DBManager
         this.inactiveGuilds = new ArrayList<>();
         this.volunteersInGuild = new ArrayList<>();
         this.employeesInGuild = new ArrayList<>();
-
+        viewHandler = new ViewHandler(stage);
         setAllPeople();
         setAllGuilds();
         setAllEmployees();
@@ -105,9 +108,10 @@ public final class DBManager
                     try
                     {
                         image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
-                        e.printStackTrace();
+                        viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl ved forbindelse til databasen", "Der skete en fejl i databasen" + e.getMessage());
                     }
                 }
 
@@ -130,7 +134,8 @@ public final class DBManager
                         default:
                             break;
                     }
-                } else if (level == 2)
+                }
+                else if (level == 2)
                 {
                     Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
                     inactiveVolunteers.add(volunteer);
@@ -173,7 +178,8 @@ public final class DBManager
                 {
                     Guild guild = new Guild(id, name);
                     guilds.add(guild);
-                } else
+                }
+                else
                 {
                     Guild guild = new Guild(id, name);
                     inactiveGuilds.add(guild);
@@ -236,9 +242,10 @@ public final class DBManager
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl ved forbindelse til databasen", "Der skete en fejl i databasen" + ex.getMessage());
         }
         return volunteers;
     }
@@ -250,15 +257,16 @@ public final class DBManager
      */
     public List<Volunteer> getAllInactiveVolunteers()
     {
-        
+
         volunteers.clear();
         inactiveVolunteers.clear();
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl ved forbindelse til databasen", "Der skete en fejl i databasen" + ex.getMessage());
         }
         return inactiveVolunteers;
     }
@@ -275,9 +283,10 @@ public final class DBManager
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl ved forbindelse til databasen", "Der skete en fejl i databasen" + ex.getMessage());
         }
         List<Volunteer> returnList = new ArrayList<>();
         returnList.addAll(volunteers);
@@ -302,16 +311,18 @@ public final class DBManager
         try
         {
             setAllPeople();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl ved forbindelse til databasen", "Der skete en fejl i databasen" + ex.getMessage());
         }
     }
-        /**
-         * Gets all managers
-         *
-         * @return a list of all managers
-         */
+
+    /**
+     * Gets all managers
+     *
+     * @return a list of all managers
+     */
     public List<Manager> getAllManagers()
     {
         return managers;
@@ -384,8 +395,6 @@ public final class DBManager
      * @param to The end date for the hours to pull
      * @param id the id of the person/guild
      * @param guildid
-     * @param isPerson True if you want hours for a person, false if you want it
-     * for a guild
      * @return Returns amount of hours in the period
      * @throws java.sql.SQLException
      * @throws java.io.IOException
@@ -403,7 +412,8 @@ public final class DBManager
         {
             lineChartValues.put((java.sql.Date) date.clone(), hours);
             date.setTime(date.getTime() + 86_400_000);
-        } while (date.before(to));
+        }
+        while (date.before(to));
         String sql = "SELECT date, hours from Hours WHERE date BETWEEN ? AND ? AND uid = ? AND laugid = ?";
 
         try (Connection con = cm.getConnection())
@@ -464,7 +474,6 @@ public final class DBManager
             }
 
         }
-        
 
     }
 
@@ -528,7 +537,7 @@ public final class DBManager
 
         }
     }
-    
+
     public void activeteVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "UPDATE People SET isActive = 1 WHERE ID = ?";
@@ -544,16 +553,16 @@ public final class DBManager
 
         }
     }
-    
+
     public void deleteInactiveVolunteer(Volunteer volunteer) throws SQLException
     {
-       String sql = "DELETE from People WHERE Id = ?";
+        String sql = "DELETE from People WHERE Id = ?";
 
         try (Connection con = cm.getConnection())
         {
             Statement st = con.createStatement();
             PreparedStatement ps = con.prepareStatement(sql);
-            
+
             ps.setInt(1, volunteer.getId());
             ps.executeUpdate();
             inactiveVolunteers.clear();

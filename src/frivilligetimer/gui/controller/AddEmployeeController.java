@@ -64,7 +64,8 @@ public class AddEmployeeController implements Initializable
         try
         {
             model.addEmployee(employee);
-        } catch (SQLException ex)
+        } 
+        catch (SQLException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
