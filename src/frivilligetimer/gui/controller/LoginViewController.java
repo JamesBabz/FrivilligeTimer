@@ -88,7 +88,7 @@ public class LoginViewController implements Initializable
                 {
                     staffModel.setLevel(0);
 
-                    ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
+                    ViewHandler vg = new ViewHandler((Stage) txtEmail.getScene().getWindow());
 
                     vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin View");
                     vg.setMaximized(true);
@@ -117,7 +117,7 @@ public class LoginViewController implements Initializable
      */
     private void showErrorDialog(String title, String header, String content)
     {
-        ViewGenerator vg = new ViewGenerator((Stage) txtEmail.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) txtEmail.getScene().getWindow());
         vg.showAlertBox(Alert.AlertType.ERROR, title, header,content);
     }
 

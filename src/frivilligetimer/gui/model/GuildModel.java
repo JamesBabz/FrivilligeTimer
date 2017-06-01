@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -295,5 +294,10 @@ public final class GuildModel
     {
         manager.deleteInactiveGuilds();
     }
+
+    public ObservableList<Guild> getAllActiveGuilds() {
+        return allActiveGuilds;
+    }
+    
 
 }

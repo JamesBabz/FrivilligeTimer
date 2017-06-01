@@ -152,7 +152,7 @@ public class EmailViewController implements Initializable
         }
         else
         {
-            ViewGenerator vg = new ViewGenerator((Stage) tPane.getScene().getWindow());
+            ViewHandler vg = new ViewHandler((Stage) tPane.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.WARNING, "Ingen Modtagere", "Der er ikke valgt nogen modtagere",
                     "Vælg venligst én eller flere modtagere fra listen over for at sende en mail");
         }
