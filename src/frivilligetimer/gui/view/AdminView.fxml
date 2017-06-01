@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
@@ -15,7 +20,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
+<AnchorPane id="AnchorPane" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="569.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.AdminViewController">
    <children>
       <BorderPane prefHeight="569.0" prefWidth="693.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -29,7 +34,7 @@
                            </VBox.margin></Button>
                         <TableView fx:id="tableGuild" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#ShowVolunteersInCurrentGuild" prefHeight="426.0" prefWidth="147.0" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn fx:id="colGuild" editable="false" prefWidth="136.0" resizable="false" text="Laug " />
+                            <TableColumn fx:id="colGuild" editable="false" prefWidth="136.0" resizable="false" sortable="false" text="Laug " />
                           </columns>
                            <contextMenu>
                               <ContextMenu fx:id="contextGuild">
@@ -75,7 +80,7 @@
                   </TableView>
                   <TableView fx:id="tableEmployee" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="colGuildManager" prefWidth="278.0" resizable="false" text="Medarbejdere" />
+                      <TableColumn fx:id="colGuildManager" editable="false" prefWidth="278.0" resizable="false" sortable="false" text="Medarbejdere" />
                     </columns>
                      <contextMenu>
                         <ContextMenu fx:id="contextEmployee">
@@ -120,11 +125,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleStatClick" text="Vis statistik..." />
                         <MenuItem fx:id="showShowEmailGuild" mnemonicParsing="false" onAction="#handleMailClick" text="Vis emails for lauget..." />
                      </items></Menu>
-                <Menu mnemonicParsing="false" text="Hjælp">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
               </menus>
             </MenuBar>
          </top>

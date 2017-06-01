@@ -10,7 +10,9 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,16 +78,22 @@ public class VolunteerModel
      *
      * @return a list of all volunteers
      */
-    public ObservableList<Volunteer> getAllVolunteersForTable()
+    public ObservableList<Volunteer> getAllVolunteersForTable(boolean sorted)
     {
         allActiveVolunteers.clear();
-        for (Volunteer volunteer : manager.getAllActiveVolunteers())
+        List<Volunteer> loopList = manager.getAllActiveVolunteers();
+        if (sorted)
+        {
+        loopList.sort((Volunteer t, Volunteer t1) -> t.getFirstName().compareTo(t1.getFirstName()));
+        }
+        for (Volunteer volunteer : loopList)
         {
             allActiveVolunteers.add(volunteer);
         }
+
         return allActiveVolunteers;
     }
-    
+
     public ObservableList<Volunteer> getAllInactiveVolunteers()
     {
         allInactiveVoluenteers.clear();
@@ -102,7 +110,7 @@ public class VolunteerModel
         manager.addVolunteer(volunteer);
 
     }
-    
+
     public void deleteInactiveVolunteer(Volunteer volunteer)
     {
         manager.deleteInactiveVolunteer(volunteer);
@@ -113,16 +121,16 @@ public class VolunteerModel
         allActiveVolunteers.remove(volunteer);
         manager.deleteVolunteer(volunteer);
     }
-    
+
     public void activeteVolunteer(Volunteer volunteer)
     {
         allInactiveVoluenteers.remove(volunteer);
         manager.activeteVolunteer(volunteer);
     }
-    
+
     public void deleteInactiveVolunteers()
     {
-        
+
         manager.deleteInactiveVolunteers();
     }
 
@@ -180,7 +188,7 @@ public class VolunteerModel
     {
         return manager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
     }
-    
+
     public ObservableList<Volunteer> getSearchedVolunteers()
     {
         return searchedVolunteer;
@@ -200,11 +208,11 @@ public class VolunteerModel
     {
         this.allVolunteerInCurrentView = allVolunteerInCurrentView;
     }
-    
+
     public ObservableList<String> getSearchedVolunteerNames()
     {
         volunteerNames.clear();
-        
+
         for (Volunteer volunteer : getSearchedVolunteers())
         {
             volunteerNames.add(volunteer.getFullName());

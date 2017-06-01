@@ -202,7 +202,7 @@ public class AddVolunteerHoursController implements Initializable
     private List<Guild> getAllGuildsForVolunteer()
     {
         List<Guild> guilds = new ArrayList<>();
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable(false))
         {
             for (Volunteer vol : guild.getVolunteers())
             {

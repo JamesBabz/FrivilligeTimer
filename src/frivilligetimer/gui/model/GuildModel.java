@@ -88,8 +88,12 @@ public final class GuildModel
      *
      * @return a list of all guilds
      */
-    public ObservableList<Guild> getAllGuildsForTable()
+    public ObservableList<Guild> getAllGuildsForTable(boolean sorted)
     {
+        if (sorted)
+        {
+        allActiveGuilds.sort((Guild t, Guild t1) -> t.getName().compareTo(t1.getName()));
+        }
         return allActiveGuilds;
     }
 
@@ -208,7 +212,7 @@ public final class GuildModel
             int uid = Integer.parseInt(data[0].trim());
             int laugid = Integer.parseInt(data[1].trim());
 
-            for (Guild guild : getAllGuildsForTable())
+            for (Guild guild : getAllGuildsForTable(false))
             {
                 if (laugid == guild.getId())
                 {
@@ -235,7 +239,7 @@ public final class GuildModel
             int uid = Integer.parseInt(data[0].trim());
             int laugid = Integer.parseInt(data[1].trim());
 
-            for (Guild guild : getAllGuildsForTable())
+            for (Guild guild : getAllGuildsForTable(false))
             {
                 if (laugid == guild.getId())
                 {

@@ -93,7 +93,7 @@ public class StatisticViewController implements Initializable
     {
         colGuildName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colGuildHours.setCellValueFactory(new PropertyValueFactory<>("hoursInCurrentPeriod"));
-        tblGuildsOverview.setItems(guildModel.getAllGuildsForTable());
+        tblGuildsOverview.setItems(guildModel.getAllGuildsForTable(true));
         colVolunteerName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colVolunteerHours.setCellValueFactory(new PropertyValueFactory<>("hoursInCurrentPeriod"));
         tblVolunteersOverview.setItems(guildModel.getVolunteersInGuild());
