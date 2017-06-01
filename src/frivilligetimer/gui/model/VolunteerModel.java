@@ -8,16 +8,16 @@ package frivilligetimer.gui.model;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.VolunteerManager;
+import frivilligetimer.gui.controller.ViewHandler;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 /**
  *
@@ -38,6 +38,8 @@ public class VolunteerModel
     private ObservableList<Volunteer> searchedVolunteer;
     private ObservableList<Volunteer> allVolunteerInCurrentView;
     private final ObservableList<String> volunteerNames;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     public static VolunteerModel getInstance()
     {
@@ -53,17 +55,14 @@ public class VolunteerModel
      */
     private VolunteerModel()
     {
+        viewHandler = new ViewHandler(stage);
         try
         {
             manager = new VolunteerManager();
         }
-        catch (IOException ex)
+        catch (IOException | SQLException ex)
         {
-            Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(VolunteerModel.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
         }
 
         allActiveVolunteers = FXCollections.observableArrayList();
@@ -84,7 +83,7 @@ public class VolunteerModel
         List<Volunteer> loopList = manager.getAllActiveVolunteers();
         if (sorted)
         {
-        loopList.sort((Volunteer t, Volunteer t1) -> t.getFirstName().compareTo(t1.getFirstName()));
+            loopList.sort((Volunteer t, Volunteer t1) -> t.getFirstName().compareTo(t1.getFirstName()));
         }
         for (Volunteer volunteer : loopList)
         {
@@ -113,30 +112,65 @@ public class VolunteerModel
 
     public void deleteInactiveVolunteer(Volunteer volunteer)
     {
-        manager.deleteInactiveVolunteer(volunteer);
+        try
+        {
+            manager.deleteInactiveVolunteer(volunteer);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public void deleteVolunteer(Volunteer volunteer)
     {
         allActiveVolunteers.remove(volunteer);
-        manager.deleteVolunteer(volunteer);
+        try
+        {
+            manager.deleteVolunteer(volunteer);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public void activeteVolunteer(Volunteer volunteer)
     {
         allInactiveVoluenteers.remove(volunteer);
-        manager.activeteVolunteer(volunteer);
+        try
+        {
+            manager.activeteVolunteer(volunteer);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public void deleteInactiveVolunteers()
     {
 
-        manager.deleteInactiveVolunteers();
+        try
+        {
+            manager.deleteInactiveVolunteers();
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
     {
-        manager.removeVolunteerFromAssignedGuild(volunteer, guild);
+        try
+        {
+            manager.removeVolunteerFromAssignedGuild(volunteer, guild);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public Volunteer getSelectedVolunteer()

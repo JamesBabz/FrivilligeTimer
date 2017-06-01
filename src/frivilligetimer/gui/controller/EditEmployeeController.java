@@ -80,7 +80,8 @@ public class EditEmployeeController implements Initializable
             try
             {
                 model.editEmployee(employee);
-            } catch (SQLException ex)
+            } 
+            catch (SQLException ex)
             {
                 viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
             }

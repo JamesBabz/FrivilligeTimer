@@ -12,8 +12,6 @@ import frivilligetimer.dal.DBManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -54,31 +52,19 @@ public class StaffManager
         dbManager.addEmployee(employee);
     }
 
-    public void removeEmployee(Employee employee)
+    public void removeEmployee(Employee employee) throws SQLException
     {
-        try
-        {
-            dbManager.deleteEmployee(employee);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(StaffManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dbManager.deleteEmployee(employee);
     }
 
     public void updateEmployee(Employee employee) throws SQLException
     {
         dbManager.updateEmployee(employee);
     }
-    
-      public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) 
-      {
-        try
-        {
-            dbManager.removeEmployeeFromAssignedGuild(employee, guild);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(StaffManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
+
+    public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
+    {
+        dbManager.removeEmployeeFromAssignedGuild(employee, guild);
+    }
 
 }
