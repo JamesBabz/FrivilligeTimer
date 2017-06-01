@@ -95,8 +95,6 @@ public class AdminViewController implements Initializable
     @FXML
     private TextField txtSearchField;
     @FXML
-    private TextField txtSearchField;
-    @FXML
     private Button btnInactive;
     
     private final VolunteerModel volunteerModel;
@@ -807,15 +805,9 @@ public class AdminViewController implements Initializable
                 }
             }
 
-        }
-    }
-    
     @FXML
     private void ShowInactiveVolunteers()
     {
-        for (Volunteer allInactiveVoluenteer : volunteerModel.getAllInactiveVolunteers()) {
-            System.out.println(allInactiveVoluenteer.getFullName());
-        }
  
         tableVolunteer.setItems(volunteerModel.getAllInactiveVoluenteers());
         colVolunteer.setText("Frivillige");
