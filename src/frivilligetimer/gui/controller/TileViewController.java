@@ -34,6 +34,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
@@ -103,7 +105,6 @@ public class TileViewController implements Initializable
         addListener();
         addAllVolunteerCells();
         searchOnUpdate();
-//        handleSearchSelection();
 
     }
 
@@ -332,25 +333,66 @@ public class TileViewController implements Initializable
     @FXML
     private void handleSearchSelection(MouseEvent event)
     {
-        String selectedVolunteer = listSearchResult.getSelectionModel().getSelectedItem();
 
         if (event.getClickCount() == 1)
         {
-            for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
-            {
-                if (volunteer.getFullName().equals(selectedVolunteer))
-                {
-                    volunteerModel.setTileVolunteer(volunteer);
-                    ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
-                    vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
-                    listSearchResult.visibleProperty().set(false);
-                    txtSearchField.clear();
-                    break;
-                }
-                
-            }
+            searchedVolunteers();
         }
 
+    }
+
+    private void searchedVolunteers()
+    {
+        String selectedVolunteer = listSearchResult.getSelectionModel().getSelectedItem();
+
+        for (Volunteer volunteer : volunteerModel.getSearchedVolunteers())
+        {
+            if (volunteer.getFullName().equals(selectedVolunteer))
+            {
+                volunteerModel.setTileVolunteer(volunteer);
+                ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+                vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
+                listSearchResult.visibleProperty().set(false);
+                txtSearchField.clear();
+                break;
+            }
+            
+        }
+    }
+
+    @FXML
+    private void handleSearchKeySelection(KeyEvent event)
+    {
+        String searchedResult = listSearchResult.getSelectionModel().getSelectedItem();
+        int searchedResultIndex = listSearchResult.getSelectionModel().getSelectedIndex();
+        if (event.getCode() == KeyCode.DOWN)
+        {
+            if (searchedResult == null || searchedResultIndex >= listSearchResult.itemsProperty().get().size() - 1)
+            {
+                listSearchResult.getSelectionModel().clearAndSelect(0);
+            }
+            else
+            {
+                listSearchResult.getSelectionModel().clearAndSelect(listSearchResult.getSelectionModel().getSelectedIndex() + 1);
+            }
+        }
+        
+        if (event.getCode() == KeyCode.UP)
+        {
+            if (searchedResult == null || searchedResultIndex <= 0)
+            {
+                listSearchResult.getSelectionModel().clearAndSelect(listSearchResult.itemsProperty().get().size() - 1);
+            }
+            else
+            {
+                listSearchResult.getSelectionModel().clearAndSelect(listSearchResult.getSelectionModel().getSelectedIndex() - 1);
+            }
+        }
+        
+        if (event.getCode() == KeyCode.ENTER)
+        {
+            searchedVolunteers();
+        }
     }
 
 }
