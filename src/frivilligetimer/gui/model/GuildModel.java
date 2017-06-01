@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -37,10 +36,8 @@ public final class GuildModel
     private final ObservableList<Volunteer> allVolunteers;
     private final ObservableList<Employee> allEmployees;
     private final ObservableList<String> guildNames;
-    private ObservableList<Volunteer> volunteersInGuild;
-    private ObservableList<Volunteer> volunteersInCurrentGuild;
-    private ObservableList<Employee> employeesInGuild;
-    private ObservableList<Employee> employeesInCurrentGuild;
+    private final ObservableList<Volunteer> volunteersInCurrentGuild;
+    private final ObservableList<Employee> employeesInCurrentGuild;
 
     public static GuildModel getInstance()
     {
@@ -70,9 +67,7 @@ public final class GuildModel
         allVolunteers = FXCollections.observableArrayList();
         allEmployees = FXCollections.observableArrayList();
         guildNames = FXCollections.observableArrayList();
-        volunteersInGuild = FXCollections.observableArrayList();
         volunteersInCurrentGuild = FXCollections.observableArrayList();
-        employeesInGuild = FXCollections.observableArrayList();
         employeesInCurrentGuild = FXCollections.observableArrayList();
 
         setAllGuilds();
@@ -89,8 +84,12 @@ public final class GuildModel
      *
      * @return a list of all guilds
      */
-    public ObservableList<Guild> getAllGuildsForTable()
+    public ObservableList<Guild> getAllGuildsForTable(boolean sorted)
     {
+        if (sorted)
+        {
+            allActiveGuilds.sort((Guild t, Guild t1) -> t.getName().compareTo(t1.getName()));
+        }
         return allActiveGuilds;
     }
 
@@ -148,14 +147,9 @@ public final class GuildModel
 
     public void setVolunteersInGuild(Guild guild)
     {
-        volunteersInGuild.clear();
-        volunteersInGuild.addAll(guild.getVolunteers());
-    }
 
-    public void setEmployeesInGuild(Guild guild)
-    {
-        employeesInGuild.clear();
-        employeesInGuild.addAll(guild.getEmployees());
+        volunteersInCurrentGuild.clear();
+        volunteersInCurrentGuild.addAll(guild.getVolunteers());
     }
 
     public List<String> getEmployeesInguilds()
@@ -170,7 +164,7 @@ public final class GuildModel
 
     public ObservableList<Volunteer> getVolunteersInGuild()
     {
-        return volunteersInGuild;
+        return volunteersInCurrentGuild;
     }
 
     public void editGuild(Guild guild) throws SQLException
@@ -202,7 +196,7 @@ public final class GuildModel
             int uid = Integer.parseInt(data[0].trim());
             int laugid = Integer.parseInt(data[1].trim());
 
-            for (Guild guild : getAllGuildsForTable())
+            for (Guild guild : getAllGuildsForTable(false))
             {
                 if (laugid == guild.getId())
                 {
@@ -229,7 +223,7 @@ public final class GuildModel
             int uid = Integer.parseInt(data[0].trim());
             int laugid = Integer.parseInt(data[1].trim());
 
-            for (Guild guild : getAllGuildsForTable())
+            for (Guild guild : getAllGuildsForTable(false))
             {
                 if (laugid == guild.getId())
                 {
@@ -259,7 +253,7 @@ public final class GuildModel
     private void setAllGuildNames(boolean includeAllField)
     {
         guildNames.clear();
-        
+
         if (includeAllField)
         {
             guildNames.add("Alle Laug");
@@ -294,6 +288,11 @@ public final class GuildModel
     public void deleteInactiveGuilds() throws SQLException
     {
         manager.deleteInactiveGuilds();
+    }
+
+    public ObservableList<Guild> getAllActiveGuilds()
+    {
+        return allActiveGuilds;
     }
 
 }

@@ -98,6 +98,7 @@ public final class DBManager
                 String password = rs.getString("Password");
                 byte[] imageBytes = rs.getBytes("ImageBinary");
                 Boolean isActive = rs.getBoolean("isActive");
+                Date inactiveSince = rs.getDate("InactiveSince");
                 BufferedImage image = null;
                 if (imageBytes != null)
                 {
@@ -123,7 +124,7 @@ public final class DBManager
                             employees.add(employee);
                             break;
                         case 2:
-                            Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
+                            Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
                             volunteers.add(volunteer);
                             break;
                         default:
@@ -131,7 +132,7 @@ public final class DBManager
                     }
                 } else if (level == 2)
                 {
-                    Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image);
+                    Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
                     inactiveVolunteers.add(volunteer);
                 }
 

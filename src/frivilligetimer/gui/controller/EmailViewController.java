@@ -16,8 +16,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,9 +35,9 @@ import javafx.stage.Stage;
 public class EmailViewController implements Initializable
 {
 
-    private GuildModel gModel;
-    private Guild selGuild;
-    private HashMap<String, String> volHash;
+    private final GuildModel gModel;
+    private final Guild selGuild;
+    private final HashMap<String, String> volHash;
     @FXML
     private TilePane tPane;
     @FXML
@@ -51,9 +49,12 @@ public class EmailViewController implements Initializable
 
     public EmailViewController()
     {
-        gModel = gModel.getInstance();
+        gModel = GuildModel.getInstance();
         volHash = new HashMap<>();
-        selGuild = gModel.getAllGuilds().get(0);
+//        ------- Til test -------
+//        selGuild = gModel.getAllGuilds().get(0);
+
+        selGuild = gModel.getSelectedGuild();
     }
 
     /**
@@ -104,20 +105,15 @@ public class EmailViewController implements Initializable
             {
                 updateText(true, volunteer.getFullName());
             }
-            for (Node node : tPane.getChildren())
-            {
-                CheckBox cBox = (CheckBox) node;
-                cBox.setSelected(true);
-            }
+
         }
-        else
+
+        for (Node node : tPane.getChildren())
         {
-            for (Node node : tPane.getChildren())
-            {
-                CheckBox cBox = (CheckBox) node;
-                cBox.setSelected(false);
-            }
+            CheckBox cBox = (CheckBox) node;
+            cBox.setSelected(theAllCheckBox.isSelected());
         }
+
     }
 
     private void updateText(boolean checked, String name)
@@ -156,7 +152,7 @@ public class EmailViewController implements Initializable
         }
         else
         {
-            ViewGenerator vg = new ViewGenerator((Stage) tPane.getScene().getWindow());
+            ViewHandler vg = new ViewHandler((Stage) tPane.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.WARNING, "Ingen Modtagere", "Der er ikke valgt nogen modtagere",
                     "Vælg venligst én eller flere modtagere fra listen over for at sende en mail");
         }
@@ -164,27 +160,24 @@ public class EmailViewController implements Initializable
 
     private void sendMail()
     {
-        URI uri = null;
+        URI uri;
         String mails = allEmails.getText();
         mails = mails.replace(" ", "");
-        try
-        {
-            uri = new URI("mailto:" + mails);
-        }
-        catch (URISyntaxException ex)
-        {
-            Logger.getLogger(EmailViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
         if (Desktop.isDesktopSupported())
         {
             try
             {
+                uri = new URI("mailto:" + mails);
                 Desktop.getDesktop().browse(uri);
             }
-            catch (IOException ex)
+            catch (URISyntaxException | IOException ex)
             {
-                Logger.getLogger(EmailViewController.class.getName()).log(Level.SEVERE, null, ex);
+                ViewHandler vg = new ViewHandler((Stage) tPane.getScene().getWindow());
+                vg.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl under åbning af mailprogram",
+                        "Der gik noget galt under oprettelse af forbindelsen til dit standard mailprogram. "
+                        + "Prøv igen eller marker dine emails og copier dem over i dit mailprogram");
             }
+
         }
     }
 

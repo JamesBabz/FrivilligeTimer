@@ -7,20 +7,17 @@ package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
-import frivilligetimer.bll.VolunteerManager;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,10 +31,9 @@ import javafx.stage.Stage;
  */
 public class EditVolunteerController implements Initializable
 {
-
-    private VolunteerManager manager;
     private VolunteerModel model;
     private Volunteer volunteer;
+    private ViewHandler viewHandler;
     private Stage stage;
     private final FileChooser fileChooser = new FileChooser();
     private File file;
@@ -51,8 +47,6 @@ public class EditVolunteerController implements Initializable
     @FXML
     private TextField txtPhoneNummer;
     @FXML
-    private Button btnBrowseImage;
-    @FXML
     private ImageView imgVolunteer;
 
     /**
@@ -63,11 +57,14 @@ public class EditVolunteerController implements Initializable
     {
         model = VolunteerModel.getInstance();
         volunteer = model.getSelectedVolunteer();
+        viewHandler = new ViewHandler(stage);
 
         model.getSelectedVolunteer();
 
         getCurrentInfo();
         setImageOfVolunteer(volunteer);
+        viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
 
     }
 
@@ -78,7 +75,8 @@ public class EditVolunteerController implements Initializable
             Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
             imgVolunteer.setImage(image);
 
-        } else
+        }
+        else
         {
             Image image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
             imgVolunteer.setImage(image);
@@ -96,10 +94,20 @@ public class EditVolunteerController implements Initializable
     @FXML
     private void handleUpdate()
     {
+        viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
+        if(viewHandler.getErrorRedLines() == 0)
+        {
         volunteer.setFirstName(txtFirstName.getText());
         volunteer.setLastName(txtLastName.getText());
         volunteer.setEmail(txtEmail.getText());
         volunteer.setPhoneNum(txtPhoneNummer.getText());
+            updateVolunteerInDB();
+        viewHandler.closeWindow(stage, txtEmail);
+        }
+    }
+
+    private void updateVolunteerInDB()
+    {
         try
         {
             model.editVolunteer(volunteer);
@@ -110,21 +118,21 @@ public class EditVolunteerController implements Initializable
 
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cancel();
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+        } 
+        catch (IOException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());
+        }
     }
 
     @FXML
     private void cancel()
     {
-        Stage stage = (Stage) txtFirstName.getScene().getWindow();
-        stage.close();
+        viewHandler.closeWindow(stage, txtEmail);
     }
 
     @FXML

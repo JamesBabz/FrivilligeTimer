@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="240.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frivilligetimer.gui.controller.EditEmployeeController">
    <children>
-      <Label layoutX="128.0" layoutY="14.0" text="Ændre Tovholder">
+      <Label layoutX="99.0" layoutY="14.0" text="Ændrer medarbejer">
          <font>
             <Font size="18.0" />
          </font>

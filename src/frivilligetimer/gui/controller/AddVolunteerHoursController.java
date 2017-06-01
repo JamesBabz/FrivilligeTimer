@@ -202,7 +202,7 @@ public class AddVolunteerHoursController implements Initializable
     private List<Guild> getAllGuildsForVolunteer()
     {
         List<Guild> guilds = new ArrayList<>();
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable(false))
         {
             for (Volunteer vol : guild.getVolunteers())
             {
@@ -314,7 +314,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
-            ViewGenerator vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
+            ViewHandler vg = new ViewHandler((Stage) lblName.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
         close();
@@ -387,7 +387,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
-            ViewGenerator vg = new ViewGenerator((Stage) lblName.getScene().getWindow());
+            ViewHandler vg = new ViewHandler((Stage) lblName.getScene().getWindow());
             vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
     }

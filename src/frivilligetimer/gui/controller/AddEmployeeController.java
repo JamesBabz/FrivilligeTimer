@@ -10,10 +10,9 @@ import frivilligetimer.gui.model.StaffModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -22,7 +21,8 @@ import javafx.stage.Stage;
  *
  * @author Jacob Enemark
  */
-public class AddEmployeeController implements Initializable {
+public class AddEmployeeController implements Initializable
+{
 
     @FXML
     private TextField txtFirstName;
@@ -32,37 +32,49 @@ public class AddEmployeeController implements Initializable {
     private TextField txtLastName;
     @FXML
     private TextField txtPhoneNummer;
-    
-    StaffModel model;
+
+    private StaffModel model;
+    private ViewHandler viewHandler;
+    private Stage stage;
 
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         model = StaffModel.getInstance();
-    }    
+        viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
+    }
 
-   
     @FXML
     private void addEmployee()
     {
-        Employee employee = new Employee(txtFirstName.getText(), txtLastName.getText(),  txtEmail.getText(), txtPhoneNummer.getText(), null);
-        try {
-            model.addEmployee(employee);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
+        if(viewHandler.getErrorRedLines() == 0)
+        {
+            addEmployeeToDB();
         }
+    }
 
-      cancel();
-
+    private void addEmployeeToDB()
+    {
+        Employee employee = new Employee(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null);
+        try
+        {
+            model.addEmployee(employee);
+        } catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+        }
+        viewHandler.closeWindow(stage, txtEmail);
     }
 
     @FXML
     private void cancel()
     {
-        Stage stage = (Stage) txtFirstName.getScene().getWindow();
-        stage.close();
+        viewHandler.closeWindow(stage, txtEmail);
     }
-    
+
 }
