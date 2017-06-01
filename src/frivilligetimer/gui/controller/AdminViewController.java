@@ -14,6 +14,7 @@ import frivilligetimer.gui.model.VolunteerModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -111,6 +112,16 @@ public class AdminViewController implements Initializable
     private ContextMenu contextVolunteer;
     @FXML
     private ContextMenu contextEmployee;
+    @FXML
+    private TableColumn<Volunteer, Date> colInactive;
+    @FXML
+    private MenuItem menuItemEditeVolunteer;
+    @FXML
+    private MenuItem menuItemDeleteInactive;
+    @FXML
+    private MenuItem menuItemActivetInactive;
+    @FXML
+    private MenuItem menuItemDeleteVolunteer;
 
     /**
      * Initializes the controller class.
@@ -122,17 +133,25 @@ public class AdminViewController implements Initializable
         colVolunteer.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuildManager.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colGuild.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colInactive.setCellValueFactory(new PropertyValueFactory<>("inactiveSinceString"));
 
         colGuild.prefWidthProperty().bind(tableGuild.widthProperty());
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
         colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
-        menuItemRemoveEmployee.setVisible(false);
-        menuItemRemoveVolunteer.setVisible(false);
-        showShowEmailGuild.setVisible(false);
+        setMenuItemsVisible();
+               
 
         populateTables();
         searchOnUpdate();
+    }
+
+    private void setMenuItemsVisible() {
+        menuItemRemoveEmployee.setVisible(false);
+        menuItemRemoveVolunteer.setVisible(false);
+        showShowEmailGuild.setVisible(false);
+        menuItemDeleteInactive.setVisible(false);
+        menuItemActivetInactive.setVisible(false);
     }
 
     /**
@@ -796,13 +815,16 @@ public class AdminViewController implements Initializable
     @FXML
     private void changeVolunteersInTable()
     {
+        
         if(isActiveShowing)
         {
         showAllInactiveVolunteersInTable();
+        showDateScinceInactive();
         }
         else
         {
         showAllActiveVolunteersInTable();
+        showOnlyVolunteers();
         }
         isActiveShowing = !isActiveShowing;
         changeButtonText();
@@ -811,9 +833,13 @@ public class AdminViewController implements Initializable
 
     private void showAllInactiveVolunteersInTable() {
         tableVolunteer.setItems(volunteerModel.getAllInactiveVolunteers());
-        colVolunteer.setText("Frivillige");
+        colVolunteer.setText("Inaktive Frivillige");
         menuItemRemoveVolunteer.setVisible(false);
-        menuAddVolToGuild.setVisible(true);
+        menuAddVolToGuild.setVisible(false);
+        menuItemDeleteVolunteer.setVisible(false);
+        menuItemEditeVolunteer.setVisible(false);
+        menuItemDeleteInactive.setVisible(true);
+        menuItemActivetInactive.setVisible(true);
     }
 
     private void changeButtonText() {
@@ -825,6 +851,7 @@ public class AdminViewController implements Initializable
         {
             btnInactive.setText("Vis inaktive");
         }
+        
     }
     
     @FXML
@@ -876,6 +903,22 @@ public class AdminViewController implements Initializable
         colVolunteer.setText("Frivillige");
         menuItemRemoveVolunteer.setVisible(false);
         menuAddVolToGuild.setVisible(true);
+        menuItemDeleteInactive.setVisible(false);
+        menuItemActivetInactive.setVisible(false);
+        menuItemDeleteVolunteer.setVisible(true);
+        menuItemEditeVolunteer.setVisible(true);
+    }
+    
+    private void showDateScinceInactive()
+    {
+        colVolunteer.prefWidthProperty().unbind();
+        colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
+        colInactive.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
+    }
+    
+    private void showOnlyVolunteers()
+    {
+        colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
     }
    
 
