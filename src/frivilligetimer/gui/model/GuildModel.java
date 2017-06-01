@@ -36,10 +36,8 @@ public final class GuildModel
     private final ObservableList<Volunteer> allVolunteers;
     private final ObservableList<Employee> allEmployees;
     private final ObservableList<String> guildNames;
-//    private ObservableList<Volunteer> volunteersInGuild;
-    private ObservableList<Volunteer> volunteersInCurrentGuild;
-    private ObservableList<Employee> employeesInGuild;
-    private ObservableList<Employee> employeesInCurrentGuild;
+    private final ObservableList<Volunteer> volunteersInCurrentGuild;
+    private final ObservableList<Employee> employeesInCurrentGuild;
 
     public static GuildModel getInstance()
     {
@@ -69,9 +67,7 @@ public final class GuildModel
         allVolunteers = FXCollections.observableArrayList();
         allEmployees = FXCollections.observableArrayList();
         guildNames = FXCollections.observableArrayList();
-//        volunteersInGuild = FXCollections.observableArrayList();
         volunteersInCurrentGuild = FXCollections.observableArrayList();
-//        employeesInGuild = FXCollections.observableArrayList();
         employeesInCurrentGuild = FXCollections.observableArrayList();
 
         setAllGuilds();
@@ -92,7 +88,7 @@ public final class GuildModel
     {
         if (sorted)
         {
-        allActiveGuilds.sort((Guild t, Guild t1) -> t.getName().compareTo(t1.getName()));
+            allActiveGuilds.sort((Guild t, Guild t1) -> t.getName().compareTo(t1.getName()));
         }
         return allActiveGuilds;
     }
@@ -151,22 +147,10 @@ public final class GuildModel
 
     public void setVolunteersInGuild(Guild guild)
     {
-//        volunteersInGuild.clear();
-//        volunteersInGuild.addAll(guild.getVolunteers());
-        
+
         volunteersInCurrentGuild.clear();
         volunteersInCurrentGuild.addAll(guild.getVolunteers());
     }
-    
-
-//    public void setEmployeesInGuild(Guild guild)
-//    {
-////        employeesInGuild.clear();
-////        employeesInGuild.addAll(guild.getEmployees());
-//        
-//        employeesInCurrentGuild.clear();
-//        employeesInCurrentGuild.setAll(guild.getEmployees());
-//    }
 
     public List<String> getEmployeesInguilds()
     {
@@ -269,7 +253,7 @@ public final class GuildModel
     private void setAllGuildNames(boolean includeAllField)
     {
         guildNames.clear();
-        
+
         if (includeAllField)
         {
             guildNames.add("Alle Laug");
@@ -306,9 +290,9 @@ public final class GuildModel
         manager.deleteInactiveGuilds();
     }
 
-    public ObservableList<Guild> getAllActiveGuilds() {
+    public ObservableList<Guild> getAllActiveGuilds()
+    {
         return allActiveGuilds;
     }
-    
 
 }
