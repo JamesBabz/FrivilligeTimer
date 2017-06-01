@@ -31,6 +31,13 @@ import javafx.stage.Stage;
  */
 public class EditVolunteerController implements Initializable
 {
+    private VolunteerManager manager;
+    private VolunteerModel model;
+    private Volunteer volunteer;
+    private ViewHandler viewHandler;
+    private Stage stage;
+    private final FileChooser fileChooser = new FileChooser();
+    private File file;
 
     @FXML
     private TextField txtFirstName;
@@ -64,6 +71,8 @@ public class EditVolunteerController implements Initializable
 
         getCurrentInfo();
         setImageOfVolunteer(volunteer);
+        viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
 
     }
 
@@ -74,7 +83,8 @@ public class EditVolunteerController implements Initializable
             Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
             imgVolunteer.setImage(image);
 
-        } else
+        }
+        else
         {
             Image image = SwingFXUtils.toFXImage(volunteer.getImage(), null);
             imgVolunteer.setImage(image);
@@ -116,10 +126,12 @@ public class EditVolunteerController implements Initializable
 
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
-        } catch (IOException ex)
+        } 
+        catch (IOException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());
         }

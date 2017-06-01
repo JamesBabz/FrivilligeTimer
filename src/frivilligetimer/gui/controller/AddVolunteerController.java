@@ -60,6 +60,7 @@ public class AddVolunteerController implements Initializable
     {
         setStartImgVolunteer();
         validateData();
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
     }
 
 
@@ -77,6 +78,7 @@ public class AddVolunteerController implements Initializable
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
+        
     }
     
         private void setStartImgVolunteer()
