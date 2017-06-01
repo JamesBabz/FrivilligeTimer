@@ -61,7 +61,7 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <TextField fx:id="txtSearchField" layoutX="195.0" layoutY="55.0" promptText="Søg..." />
+      <TextField fx:id="txtSearchField" layoutX="195.0" layoutY="55.0" onKeyPressed="#handleSearchKeySelection" promptText="Søg..." />
       <Label fx:id="lblClearSearch" layoutX="331.0" layoutY="59.0" onMouseClicked="#handleClearSearchField" text="x" />
    </children>
 </AnchorPane>

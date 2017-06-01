@@ -27,6 +27,9 @@ import javafx.stage.StageStyle;
 public class LoginViewController implements Initializable
 {
 
+    /**
+     *
+     */
     public final StaffModel staffModel;
 
     @FXML

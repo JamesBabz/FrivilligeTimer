@@ -8,11 +8,15 @@ package frivilligetimer.gui.controller;
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
 import frivilligetimer.bll.VolunteerManager;
+import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +24,11 @@ import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -43,9 +50,12 @@ public class AddVolunteerController implements Initializable
     private TextField txtPhoneNumber;
     @FXML
     private Button btnBrowseImage;
+    @FXML
+    private ImageView imgVolunteer;
 
-    private VolunteerManager manager;
     private VolunteerModel model;
+    private ImageManager iManager;
+    private ViewGenerator viewGenerator;
     private Stage stage;
     private final FileChooser fileChooser = new FileChooser();
     private File file;
@@ -60,40 +70,82 @@ public class AddVolunteerController implements Initializable
         model = VolunteerModel.getInstance();
         try
         {
-            manager = new VolunteerManager();
-        }
-        catch (IOException | SQLException ex)
+            iManager = new ImageManager();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
+        imgVolunteer.setImage(image);
         validateData();
+        viewGenerator = new ViewGenerator(stage);
 
     }
 
     @FXML
     private void addVolunteer()
     {
+        
+        HashMap<TextField, Integer> list = new HashMap<>();
+        txtFirstName.setStyle("-fx-border-color: #0000");
+        txtLastName.setStyle("-fx-border-color: #0000");
+        txtEmail.setStyle("-fx-border-color: #0000");
+        
+
+        if (txtFirstName.getText().isEmpty())
+        {
+            list.put(txtFirstName, 0);
+        }
+        if (txtLastName.getText().isEmpty())
+        {
+            list.put(txtLastName, 0);
+        }
+        if (txtEmail.getText().isEmpty())
+        {
+            list.put(txtEmail, 0);
+        }
+
+        if (list.isEmpty())
+        {
+
+            addVolunteerToDB();
+        } else
+        {
+            for (Map.Entry<TextField, Integer> entry : list.entrySet())
+            {
+                if(entry.getValue() == 0)
+                {
+                    entry.getKey().setStyle("-fx-border-color : red");
+                } 
+            }
+        }
+        
+    }
+
+    private void addVolunteerToDB()
+    {
         try
         {
             Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
-
-            model.addVolunteer(volunteer);
-
+            
+            {
+                model.addVolunteer(volunteer);
+                cancel();
+            }
+            
             if (file != null)
             {
-                ImageManager iManager = new ImageManager();
-
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-
-            cancel();
-        }
-        catch (SQLException | IOException ex)
+            
+        } catch (SQLException | IOException ex)
         {
             Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @FXML
@@ -108,6 +160,8 @@ public class AddVolunteerController implements Initializable
     {
         stage = (Stage) txtFirstName.getScene().getWindow();
         file = fileChooser.showOpenDialog(stage);
+        Image img = new Image("file:" + file.getAbsolutePath());
+        imgVolunteer.setImage(img);
 
     }
 
