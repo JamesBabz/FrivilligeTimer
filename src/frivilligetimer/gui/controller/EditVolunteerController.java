@@ -50,13 +50,6 @@ public class EditVolunteerController implements Initializable
     @FXML
     private ImageView imgVolunteer;
 
-    private VolunteerModel model;
-    private Volunteer volunteer;
-    private ViewHandler viewHandler;
-    private Stage stage;
-    private final FileChooser fileChooser = new FileChooser();
-    private File file;
-
     /**
      * Initializes the controller class.
      */
