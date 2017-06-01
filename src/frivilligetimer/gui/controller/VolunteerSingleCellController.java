@@ -63,7 +63,7 @@ public class VolunteerSingleCellController implements Initializable
     private void handleOpenHours()
     {
         model.setTileVolunteer(getModel().getVolunteer());
-        ViewGenerator vg = new ViewGenerator((Stage) pane.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) pane.getScene().getWindow());
         vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
 
     }

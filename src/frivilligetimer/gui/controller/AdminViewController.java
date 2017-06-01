@@ -162,25 +162,25 @@ public class AdminViewController implements Initializable
     @FXML
     private void addVolunteer()
     {
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
+        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Frivillig");
 
     }
 
     @FXML
     private void addEmployee()
     {
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Person");
+        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Medarbejder");
 
     }
 
     @FXML
     private void addGuild()
     {
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
 
@@ -234,9 +234,9 @@ public class AdminViewController implements Initializable
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.setSelectedVolunteer(selectedItem);
 
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Person");
+        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Frivillig");
 
     }
 
@@ -248,7 +248,7 @@ public class AdminViewController implements Initializable
         tableEmployee.getSelectionModel().clearSelection();
         staffModel.setSelectedEmployee(selectedItem);
 
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
 
@@ -262,7 +262,7 @@ public class AdminViewController implements Initializable
         tableGuild.getSelectionModel().clearSelection();
         guildModel.setSelectedGuild(selectedItem);
 
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
@@ -271,7 +271,7 @@ public class AdminViewController implements Initializable
     @FXML
     private void handleStatClick()
     {
-        ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
         vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
 
@@ -799,7 +799,7 @@ public class AdminViewController implements Initializable
                 {
 
                     guildModel.setSelectedGuild(selectedGuild);
-                    ViewGenerator vg = new ViewGenerator((Stage) btnMenu.getScene().getWindow());
+                    ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
                     vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
                 }
