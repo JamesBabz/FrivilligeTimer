@@ -31,7 +31,6 @@ import javafx.stage.Stage;
  */
 public class EditVolunteerController implements Initializable
 {
-    private VolunteerManager manager;
     private VolunteerModel model;
     private Volunteer volunteer;
     private ViewHandler viewHandler;
@@ -49,13 +48,6 @@ public class EditVolunteerController implements Initializable
     private TextField txtPhoneNummer;
     @FXML
     private ImageView imgVolunteer;
-
-    private VolunteerModel model;
-    private Volunteer volunteer;
-    private ViewHandler viewHandler;
-    private Stage stage;
-    private final FileChooser fileChooser = new FileChooser();
-    private File file;
 
     /**
      * Initializes the controller class.

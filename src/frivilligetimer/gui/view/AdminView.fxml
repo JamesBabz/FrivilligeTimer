@@ -50,7 +50,8 @@
                   </VBox>
                   <TableView fx:id="tableVolunteer" onDragDetected="#handleDragDetected" onDragOver="#handleDragOver" prefHeight="521.0" prefWidth="240.0" HBox.hgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="colVolunteer" prefWidth="260.0" resizable="false" text="Frivillige" />
+                      <TableColumn fx:id="colVolunteer" prefWidth="159.0" resizable="false" text="Frivillige" />
+                        <TableColumn fx:id="colInactive" prefWidth="93.0" text="Inaktive siden" />
                     </columns>
                      <contextMenu>
                         <ContextMenu fx:id="contextVolunteer">
@@ -61,10 +62,10 @@
                                  </items>
                               </Menu>
                               <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern Person Fra Laug" />
-                              <MenuItem mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer Person" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleDeleteInactiveVolunteer" text="Slet uaktive Person" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleActivteVolunteer" text="Aktiver uaktive Person" />
+                              <MenuItem fx:id="menuItemEditeVolunteer" mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer Person" />
+                              <MenuItem fx:id="menuItemDeleteVolunteer" mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
+                              <MenuItem fx:id="menuItemDeleteInactive" mnemonicParsing="false" onAction="#handleDeleteInactiveVolunteer" text="Slet Inaktiv Frivillig" />
+                              <MenuItem fx:id="menuItemActivetInactive" mnemonicParsing="false" onAction="#handleActivteVolunteer" text="Aktiver Inaktiv Frivillig" />
                            </items>
                         </ContextMenu>
                      </contextMenu>
