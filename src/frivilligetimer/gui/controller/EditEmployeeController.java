@@ -39,6 +39,8 @@ public class EditEmployeeController implements Initializable
     private StaffManager manager;
     private StaffModel model;
     private Employee employee;
+    private ViewHandler viewHandler;
+    private Stage stage;
 
     /**
      * Initializes the controller class.
@@ -52,6 +54,8 @@ public class EditEmployeeController implements Initializable
         model.getSelectedEmployee();
 
         getCurrentInfo();
+                 viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
     }
 
     private void getCurrentInfo()

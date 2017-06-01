@@ -33,6 +33,8 @@ public class EditGuildController implements Initializable
     private GuildManager manager;
     private GuildModel model;
     private Guild guild;
+    private ViewHandler viewHandler;
+    private Stage stage;
 
     /**
      * Initializes the controller class.
@@ -46,6 +48,8 @@ public class EditGuildController implements Initializable
         model.getSelectedGuild();
 
         getCurrentInfo();
+                 viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtLaug);
     }
 
     private void getCurrentInfo()
