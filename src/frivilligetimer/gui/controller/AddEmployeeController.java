@@ -10,8 +10,6 @@ import frivilligetimer.gui.model.StaffModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -47,6 +45,7 @@ public class AddEmployeeController implements Initializable
     {
         model = StaffModel.getInstance();
         viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
     }
 
     @FXML

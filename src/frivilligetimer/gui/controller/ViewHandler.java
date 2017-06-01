@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -61,7 +63,8 @@ public class ViewHandler
         try
         {
             root = loader.load();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(ViewHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,6 +147,32 @@ public class ViewHandler
     {
         stage = (Stage) txtField.getScene().getWindow();
         stage.close();
+    }
+
+    public void ReplaceFirstLetterInField(TextField... txtField)
+    {
+        for (TextField textField : txtField)
+        {
+            textField.textProperty().addListener(new ChangeListener<String>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (oldValue.isEmpty())
+                {
+                    textField.setText(newValue.toUpperCase());
+                }
+                else if (oldValue.charAt(oldValue.length() - 1) == ' ')
+                {
+                    char fLetter = newValue.charAt(newValue.length() - 1);
+                    String newText = newValue.substring(0, newValue.length() - 1);
+                    newText += String.valueOf(fLetter).toUpperCase();
+                    textField.setText(newText);
+                }
+            }
+        });
+        }
+        
     }
 
 }
