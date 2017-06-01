@@ -6,16 +6,13 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Employee;
-import frivilligetimer.bll.StaffManager;
 import frivilligetimer.gui.model.StaffModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -36,9 +33,11 @@ public class EditEmployeeController implements Initializable
     @FXML
     private TextField txtPhoneNumber;
 
-    private StaffManager manager;
     private StaffModel model;
     private Employee employee;
+    private ViewHandler viewHandler;
+
+    private Stage stage;
 
     /**
      * Initializes the controller class.
@@ -48,12 +47,16 @@ public class EditEmployeeController implements Initializable
     {
         model = StaffModel.getInstance();
         employee = model.getSelectedEmployee();
+        viewHandler = new ViewHandler(stage);
 
         model.getSelectedEmployee();
 
         getCurrentInfo();
     }
 
+    /**
+     * Gets the current info on the employee
+     */
     private void getCurrentInfo()
     {
         txtFirstName.setText(employee.getFirstName());
@@ -65,25 +68,29 @@ public class EditEmployeeController implements Initializable
     @FXML
     private void handleUpdate()
     {
-        employee.setFirstName(txtFirstName.getText());
-        employee.setLastName(txtLastName.getText());
-        employee.setEmail(txtEmail.getText());
-        employee.setPhoneNum(txtPhoneNumber.getText());
-        try
-        {
-            model.editEmployee(employee);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        cancel();
+        viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
+        if (viewHandler.getErrorRedLines() == 0)
+        {
+            employee.setFirstName(txtFirstName.getText());
+            employee.setLastName(txtLastName.getText());
+            employee.setEmail(txtEmail.getText());
+            employee.setPhoneNum(txtPhoneNumber.getText());
+            try
+            {
+                model.editEmployee(employee);
+            } catch (SQLException ex)
+            {
+                viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+            }
+
+            viewHandler.closeWindow(stage, txtEmail);
+        }
     }
 
     @FXML
     private void cancel()
     {
-        Stage stage = (Stage) txtFirstName.getScene().getWindow();
-        stage.close();
+        viewHandler.closeWindow(stage, txtEmail);
     }
 }
