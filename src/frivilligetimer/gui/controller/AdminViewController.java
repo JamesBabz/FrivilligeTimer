@@ -112,6 +112,8 @@ public class AdminViewController implements Initializable
     private Employee selectedEmployee;
     private Guild selectedGuild;
     private boolean isActiveShowing = true;
+    private ViewHandler viewHandler;
+    private Stage stage;
 
     private List<MenuItem> guildsSubMenu;
 
@@ -154,6 +156,7 @@ public class AdminViewController implements Initializable
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
+        viewHandler = new ViewHandler(stage);
     }
 
     /**
@@ -178,27 +181,24 @@ public class AdminViewController implements Initializable
     @FXML
     private void addVolunteer()
     {
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Frivillig");
+        viewHandler.generateView("/frivilligetimer/gui/view/AddVolunteer.fxml", false, StageStyle.DECORATED, true, "Tilføj Frivillig");
 
     }
 
     @FXML
     private void addEmployee()
     {
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
+      
 
-        vg.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Medarbejder");
+        viewHandler.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Medarbejder");
 
     }
 
     @FXML
     private void addGuild()
     {
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
-
-        vg.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
+        viewHandler.generateView("/frivilligetimer/gui/view/AddGuild.fxml", false, StageStyle.DECORATED, true, "Tilføj Laug");
 
     }
 
@@ -253,9 +253,8 @@ public class AdminViewController implements Initializable
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.setSelectedVolunteer(selectedItem);
 
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Frivillig");
+        viewHandler.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Frivillig");
 
     }
 
@@ -267,9 +266,8 @@ public class AdminViewController implements Initializable
         tableEmployee.getSelectionModel().clearSelection();
         staffModel.setSelectedEmployee(selectedItem);
 
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
+        viewHandler.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
 
     }
 
@@ -281,18 +279,16 @@ public class AdminViewController implements Initializable
         tableGuild.getSelectionModel().clearSelection();
         guildModel.setSelectedGuild(selectedItem);
 
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
+        viewHandler.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
     }
 
     @FXML
     private void handleStatClick()
     {
-        ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-        vg.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
+        viewHandler.generateView("/frivilligetimer/gui/view/StatisticView.fxml", false, StageStyle.DECORATED, true, "Statistik");
 
     }
 
@@ -325,7 +321,7 @@ public class AdminViewController implements Initializable
                             if (selectedVolunteer.getId() == volunteer.getId())
                             {
                                 isUnique = false;
-                                showErrorDialog("Fejl", "Dublering", "Denne person er allerede i dette laug.");
+                                viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Dublering", "Denne person er allerede i dette laug");
                             }
                         }
                         if (isUnique)
@@ -336,7 +332,7 @@ public class AdminViewController implements Initializable
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
                             } catch (SQLException ex)
                             {
-                                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+                                 viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
                             }
                         }
                     }
@@ -382,7 +378,7 @@ public class AdminViewController implements Initializable
                         if (selectedEmployee.getId() == employee.getId())
                         {
                             isUnique = false;
-                            showErrorDialog("Fejl", "Dublering", "Denne person er allerede i dette laug.");
+                            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Dublering", "Denne person er i dette laug");
                         }
                     }
                     if (isUnique)
@@ -414,7 +410,7 @@ public class AdminViewController implements Initializable
 
         } catch (SQLException ex)
         {
-            showErrorDialog("Database fejl", "Der skete en fejl", "Ingen forbindelse til databasen");
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
     }
 
@@ -614,8 +610,10 @@ public class AdminViewController implements Initializable
     {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Slet inaktive");
+        alert.setTitle("Slet");
+        alert.setContentText("Du er igang med at slette");
         alert.setHeaderText("Er du sikker på, at du vil fjerne alle inaktive personer og laug?");
+        
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK)
@@ -626,47 +624,9 @@ public class AdminViewController implements Initializable
                 guildModel.deleteInactiveGuilds();
             } catch (SQLException ex)
             {
-                Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
+                 viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
             }
-        } else
-        {
-            // ... user chose CANCEL or closed the dialog
-        }
-
-    }
-
-    /**
-     * Shows an error dialog.
-     *
-     * @param title The title of the error.
-     * @param header The header - subtitle.
-     * @param content The error message.
-     */
-    private void showErrorDialog(String title, String header, String content)
-    {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-
-        alert.showAndWait();
-    }
-
-    /**
-     * Shows an error dialog.
-     *
-     * @param title The title of the error.
-     * @param header The header - subtitle.
-     * @param content The error message.
-     */
-    private void ShowReminderDialog(String title, String header, String content)
-    {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-
-        alert.showAndWait();
+        } 
     }
 
     /**
@@ -687,7 +647,6 @@ public class AdminViewController implements Initializable
                     if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
                             || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
                             || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            //                            || volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -797,9 +756,8 @@ public class AdminViewController implements Initializable
         {
 
             guildModel.setSelectedGuild(selectedGuild);
-            ViewHandler vg = new ViewHandler((Stage) btnMenu.getScene().getWindow());
 
-            vg.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
+            viewHandler.generateView("/frivilligetimer/gui/view/EmailView.fxml", false, StageStyle.DECORATED, true, "Emails");
         }
     }
 
