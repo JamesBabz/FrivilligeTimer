@@ -6,16 +6,15 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Guild;
-import frivilligetimer.bll.GuildManager;
 import frivilligetimer.gui.model.GuildModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -30,9 +29,11 @@ public class EditGuildController implements Initializable
     @FXML
     private TextField txtLaug;
 
-    private GuildManager manager;
     private GuildModel model;
     private Guild guild;
+    private ViewHandler viewHandler;
+    
+    private Stage stage;
 
     /**
      * Initializes the controller class.
@@ -42,6 +43,7 @@ public class EditGuildController implements Initializable
     {
         model = GuildModel.getInstance();
         guild = model.getSelectedGuild();
+        viewHandler = new ViewHandler(stage);
 
         model.getSelectedGuild();
 
@@ -57,22 +59,28 @@ public class EditGuildController implements Initializable
     @FXML
     private void handleUpdate()
     {
+        if(!txtLaug.getText().isEmpty())
+        {
         guild.setName(txtLaug.getText());
         try
         {
             model.editGuild(guild);
         } catch (SQLException ex)
         {
-            Logger.getLogger(EditVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+              viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
         
-        cancel();
+        viewHandler.closeWindow(stage, txtLaug);
+        } else
+        {
+            txtLaug.setStyle("-fx-border-color: red");
+        }
+        
     }
 
     @FXML
     private void cancel()
     {
-             Stage stage = (Stage) txtLaug.getScene().getWindow();
-        stage.close();   
+            viewHandler.closeWindow(stage, txtLaug);
     }
 }
