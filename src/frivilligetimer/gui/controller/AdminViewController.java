@@ -91,6 +91,18 @@ public class AdminViewController implements Initializable
     private TextField txtSearchField;
     @FXML
     private Button btnInactive;
+    @FXML
+    private TableColumn<Volunteer, Date> colInactive;
+    @FXML
+    private MenuItem menuItemEditeVolunteer;
+    @FXML
+    private MenuItem menuItemDeleteInactive;
+    @FXML
+    private MenuItem menuItemActivetInactive;
+    @FXML
+    private MenuItem menuItemDeleteVolunteer;
+    @FXML
+    private Button btnShowAllPeople;
 
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
@@ -102,26 +114,6 @@ public class AdminViewController implements Initializable
     private boolean isActiveShowing = true;
 
     private List<MenuItem> guildsSubMenu;
-    @FXML
-    private MenuItem Volunteradd;
-    @FXML
-    private MenuItem guildAdd;
-    @FXML
-    private ContextMenu contextGuild;
-    @FXML
-    private ContextMenu contextVolunteer;
-    @FXML
-    private ContextMenu contextEmployee;
-    @FXML
-    private TableColumn<Volunteer, Date> colInactive;
-    @FXML
-    private MenuItem menuItemEditeVolunteer;
-    @FXML
-    private MenuItem menuItemDeleteInactive;
-    @FXML
-    private MenuItem menuItemActivetInactive;
-    @FXML
-    private MenuItem menuItemDeleteVolunteer;
 
     /**
      * Initializes the controller class.
@@ -140,13 +132,13 @@ public class AdminViewController implements Initializable
         colGuildManager.prefWidthProperty().bind(tableEmployee.widthProperty());
 
         setMenuItemsVisible();
-               
 
         populateTables();
         searchOnUpdate();
     }
 
-    private void setMenuItemsVisible() {
+    private void setMenuItemsVisible()
+    {
         menuItemRemoveEmployee.setVisible(false);
         menuItemRemoveVolunteer.setVisible(false);
         showShowEmailGuild.setVisible(false);
@@ -342,8 +334,7 @@ public class AdminViewController implements Initializable
                             try
                             {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
-                            }
-                            catch (SQLException ex)
+                            } catch (SQLException ex)
                             {
                                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -421,8 +412,7 @@ public class AdminViewController implements Initializable
                 showEmployeesAssignedToGuild();
             }
 
-        }
-        catch (SQLException ex)
+        } catch (SQLException ex)
         {
             showErrorDialog("Database fejl", "Der skete en fejl", "Ingen forbindelse til databasen");
         }
@@ -600,8 +590,7 @@ public class AdminViewController implements Initializable
                                 }
 
                             }
-                        }
-                        else
+                        } else
                         {
                             this.setTextFill(Color.valueOf("#323232"));
                             this.setFont(Font.font(USE_COMPUTED_SIZE));
@@ -635,13 +624,11 @@ public class AdminViewController implements Initializable
             try
             {
                 guildModel.deleteInactiveGuilds();
-            }
-            catch (SQLException ex)
+            } catch (SQLException ex)
             {
                 Logger.getLogger(AdminViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else
+        } else
         {
             // ... user chose CANCEL or closed the dialog
         }
@@ -720,8 +707,7 @@ public class AdminViewController implements Initializable
                 if (tableGuild.getSelectionModel().getSelectedItem() == null)
                 {
                     volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
-                }
-                else
+                } else
                 {
                     volunteerModel.setAllVolunteerInCurrentView(tableGuild.getSelectionModel().getSelectedItem().getVolunteers());
                 }
@@ -820,15 +806,20 @@ public class AdminViewController implements Initializable
     @FXML
     private void changeVolunteersInTable()
     {
-        if(isActiveShowing)
+        if (isActiveShowing)
         {
-        showAllInactiveVolunteersInTable();
-        showDateScinceInactive();
-        }
-        else
+            showAllInactiveVolunteersInTable();
+            showDateScinceInactive();
+            tableEmployee.setDisable(true);
+            tableGuild.setDisable(true);
+            btnShowAllPeople.setDisable(true);
+        } else
         {
-        showAllActiveVolunteersInTable();
-        showOnlyVolunteers();
+            showAllActiveVolunteersInTable();
+            showOnlyVolunteers();
+            tableEmployee.setDisable(false);
+            tableGuild.setDisable(false);
+            btnShowAllPeople.setDisable(false);
         }
         isActiveShowing = !isActiveShowing;
         changeButtonText();
@@ -852,12 +843,11 @@ public class AdminViewController implements Initializable
         if (!isActiveShowing)
         {
             btnInactive.setText("Vis aktive");
-        }
-        else
+        } else
         {
             btnInactive.setText("Vis inaktive");
         }
-        
+
     }
 
     @FXML
@@ -917,14 +907,14 @@ public class AdminViewController implements Initializable
         menuItemDeleteVolunteer.setVisible(true);
         menuItemEditeVolunteer.setVisible(true);
     }
-    
+
     private void showDateScinceInactive()
     {
         colVolunteer.prefWidthProperty().unbind();
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
         colInactive.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
     }
-    
+
     private void showOnlyVolunteers()
     {
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
