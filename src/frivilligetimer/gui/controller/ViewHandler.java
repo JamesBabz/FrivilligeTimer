@@ -1,12 +1,16 @@
 package frivilligetimer.gui.controller;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,11 +21,13 @@ import javafx.stage.StageStyle;
  *
  * @author sBirke
  */
-public class ViewGenerator
+public class ViewHandler
 {
 
     private Stage primaryStage;
     private Stage newStage;
+
+    private int listSize;
 
     /**
      * This is the default constructor for the ViewGenerator class.
@@ -29,7 +35,7 @@ public class ViewGenerator
      * @param primaryStage The primary stage, this is the parent stage to the
      * new view being instantiated.
      */
-    public ViewGenerator(Stage primaryStage)
+    public ViewHandler(Stage primaryStage)
     {
         this.primaryStage = primaryStage;
     }
@@ -55,10 +61,9 @@ public class ViewGenerator
         try
         {
             root = loader.load();
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
-            Logger.getLogger(ViewGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (closeCurrent)
         {
@@ -95,4 +100,50 @@ public class ViewGenerator
         alert.setContentText(content);
         alert.show();
     }
+
+    public void setErrorRedLines(TextField firstName, TextField lastName, TextField email)
+    {
+
+        HashMap<TextField, Integer> list = new HashMap<>();
+        firstName.setStyle("-fx-border-color: #0000");
+        lastName.setStyle("-fx-border-color: #0000");
+        email.setStyle("-fx-border-color: #0000");
+
+        if (firstName.getText().isEmpty())
+        {
+            list.put(firstName, 0);
+        }
+        if (lastName.getText().isEmpty())
+        {
+            list.put(lastName, 0);
+        }
+        if (email.getText().isEmpty())
+        {
+            list.put(email, 0);
+        }
+
+        {
+            for (Map.Entry<TextField, Integer> entry : list.entrySet())
+            {
+                if (entry.getValue() == 0)
+                {
+                    entry.getKey().setStyle("-fx-border-color : red");
+                }
+            }
+        }
+
+        listSize = list.size();
+    }
+
+    public int getErrorRedLines()
+    {
+        return listSize;
+    }
+
+    public void closeWindow(Stage stage, TextField txtField)
+    {
+        stage = (Stage) txtField.getScene().getWindow();
+        stage.close();
+    }
+
 }

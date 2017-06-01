@@ -6,20 +6,13 @@
 package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Guild;
-import frivilligetimer.bll.GuildManager;
 import frivilligetimer.gui.model.GuildModel;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -34,8 +27,9 @@ public class AddGuildController implements Initializable
     @FXML
     private TextField txtLaug;
 
-    GuildModel model;
-    GuildManager manager;
+    private GuildModel model;
+    private ViewHandler viewHandler;
+    private Stage stage;
 
     /**
      * Initializes the controller class.
@@ -43,24 +37,8 @@ public class AddGuildController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
-    }
-
-    public AddGuildController()
-    {
         model = GuildModel.getInstance();
-        try
-        {
-            manager = new GuildManager();
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        viewHandler = new ViewHandler(stage);
     }
 
     @FXML
@@ -71,30 +49,29 @@ public class AddGuildController implements Initializable
         if (!txtLaug.getText().isEmpty())
         {
 
-            try
-            {
-                model.addGuild(guild);
-            }
-            catch (SQLException ex)
-            {
-                Logger.getLogger(AddGuildController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            cancel();
-        }
-        else
+            addGuildToDB(guild);
+            viewHandler.closeWindow(stage, txtLaug);
+        } else
         {
-            ViewGenerator vg = new ViewGenerator((Stage) txtLaug.getScene().getWindow());
-            vg.showAlertBox(Alert.AlertType.INFORMATION, "Ingen information", "Udfyld laugets navn", "Når tekstfeltet er udfyldt, vil du kunne tilføje lauget");
+            txtLaug.setStyle("-fx-border-color: red");
         }
+    }
 
+    private void addGuildToDB(Guild guild)
+    {
+        try
+        {
+            model.addGuild(guild);
+        } catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+        }
     }
 
     @FXML
     private void cancel()
     {
-        Stage stage = (Stage) txtLaug.getScene().getWindow();
-        stage.close();
+        viewHandler.closeWindow(stage, txtLaug);
     }
 
 }
