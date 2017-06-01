@@ -103,7 +103,7 @@ public class AddVolunteerController implements Initializable
     {
         try
         {
-            Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(),txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
+            Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(),txtEmail.getText(), txtPhoneNumber.getText(), "", "", null, null);
             
             {
                 model.addVolunteer(volunteer);
