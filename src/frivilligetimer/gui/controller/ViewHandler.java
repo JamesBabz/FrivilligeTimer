@@ -149,6 +149,10 @@ public class ViewHandler
         stage.close();
     }
 
+    /**
+     * Replaces first letter with a capitol one
+     * @param txtField - The textfields where the replacement is needed
+     */
     public void ReplaceFirstLetterInField(TextField... txtField)
     {
         for (TextField textField : txtField)
