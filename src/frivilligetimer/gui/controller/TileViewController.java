@@ -166,7 +166,7 @@ public class TileViewController implements Initializable
     @FXML
     private void logOn()
     {
-        ViewGenerator viewGen = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+        ViewHandler viewGen = new ViewHandler((Stage) mainPane.getScene().getWindow());
 
         viewGen.generateView("/frivilligetimer/gui/view/Loginview.fxml", false, StageStyle.DECORATED, true, "Login");
     }
@@ -350,7 +350,7 @@ public class TileViewController implements Initializable
             if (volunteer.getFullName().equals(selectedVolunteer))
             {
                 volunteerModel.setTileVolunteer(volunteer);
-                ViewGenerator vg = new ViewGenerator((Stage) mainPane.getScene().getWindow());
+                ViewHandler vg = new ViewHandler((Stage) mainPane.getScene().getWindow());
                 vg.generateView("/frivilligetimer/gui/view/AddVolunteerHours.fxml", false, StageStyle.DECORATED, true, "Tilføj Timer");
                 listSearchResult.visibleProperty().set(false);
                 txtSearchField.clear();
