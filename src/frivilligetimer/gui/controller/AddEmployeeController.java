@@ -45,6 +45,7 @@ public class AddEmployeeController implements Initializable
     {
         model = StaffModel.getInstance();
         viewHandler = new ViewHandler(stage);
+        viewHandler.ReplaceFirstLetterInField(txtFirstName, txtLastName);
     }
 
     @FXML
