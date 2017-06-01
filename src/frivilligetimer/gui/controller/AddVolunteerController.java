@@ -7,8 +7,6 @@ package frivilligetimer.gui.controller;
 
 import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.ImageManager;
-import frivilligetimer.bll.VolunteerManager;
-import frivilligetimer.gui.model.VolunteerCellModel;
 import frivilligetimer.gui.model.VolunteerModel;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +19,7 @@ import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,19 +43,14 @@ public class AddVolunteerController implements Initializable
     @FXML
     private TextField txtPhoneNumber;
     @FXML
-    private Button btnBrowseImage;
-    @FXML
     private ImageView imgVolunteer;
-    
+
     private VolunteerModel model;
     private ImageManager iManager;
+    private ViewHandler viewHandler;
     private Stage stage;
     private final FileChooser fileChooser = new FileChooser();
     private File file;
-    
-    private VolunteerCellModel cellModel;
- 
-
 
     /**
      * Initializes the controller class.
@@ -65,55 +58,71 @@ public class AddVolunteerController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
-        model = VolunteerModel.getInstance();
+        setStartImgVolunteer();
+        validateData();
+    }
+
+
+    public AddVolunteerController()
+    {
+                model = VolunteerModel.getInstance();
+                 viewHandler = new ViewHandler(stage);
         try
         {
             iManager = new ImageManager();
         } catch (IOException ex)
         {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());
         } catch (SQLException ex)
         {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
-
+    }
+    
+        private void setStartImgVolunteer()
+    {
         Image image = new Image("/frivilligetimer/gui/image/profile-placeholder.png");
         imgVolunteer.setImage(image);
-        validateData();
-        
-        
-
     }
+    
+    
 
     @FXML
     private void addVolunteer()
     {
+        viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
+        if(viewHandler.getErrorRedLines() == 0)
+        {
+            addVolunteerToDB();
+        }
+    }
+
+    private void addVolunteerToDB()
+    {
         try
         {
-                Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
-
-            model.addVolunteer(volunteer);
-
+            Volunteer volunteer = new Volunteer(0, txtFirstName.getText(), txtLastName.getText(),txtEmail.getText(), txtPhoneNumber.getText(), "", "", null);
+            
+            {
+                model.addVolunteer(volunteer);
+                viewHandler.closeWindow(stage, txtEmail);
+            }
+            
             if (file != null)
             {
                 iManager.updateImage(volunteer, file.getAbsolutePath());
             }
-
-            cancel();
-        }
-        catch (SQLException | IOException ex)
+            
+        } catch (SQLException | IOException ex)
         {
-            Logger.getLogger(AddVolunteerController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());
         }
-
     }
 
     @FXML
     private void cancel()
     {
-        stage = (Stage) txtFirstName.getScene().getWindow();
-        stage.close();
+        viewHandler.closeWindow(stage, txtEmail);
     }
 
     @FXML
@@ -123,7 +132,7 @@ public class AddVolunteerController implements Initializable
         file = fileChooser.showOpenDialog(stage);
         Image img = new Image("file:" + file.getAbsolutePath());
         imgVolunteer.setImage(img);
-        
+
     }
 
     private static String firstName = "";
@@ -169,7 +178,5 @@ public class AddVolunteerController implements Initializable
             txtPhoneNumber.setText(phoneNumber);
         });
     }
-    
-
 
 }
