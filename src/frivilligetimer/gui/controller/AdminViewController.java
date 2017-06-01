@@ -178,9 +178,9 @@ public class AdminViewController implements Initializable
      */
     private void populateTables()
     {
-        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
-        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
-        tableGuild.setItems(guildModel.getAllGuildsForTable());
+        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable(true));
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable(true));
+        tableGuild.setItems(guildModel.getAllGuildsForTable(true));
     }
 
     @FXML
@@ -219,7 +219,7 @@ public class AdminViewController implements Initializable
         volunteerModel.deleteVolunteer(selectedVolunteer);
 
         int selectedID = selectedVolunteer.getId();
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable(false))
         {
             for (Volunteer volunteer : guild.getVolunteers())
             {
@@ -450,7 +450,7 @@ public class AdminViewController implements Initializable
             tableVolunteer.getItems().remove(selectedVolunteer);
 
             int selectedID = selectedVolunteer.getId();
-            for (Guild guild : guildModel.getAllGuildsForTable())
+            for (Guild guild : guildModel.getAllGuildsForTable(false))
             {
                 for (Volunteer volunteer : guild.getVolunteers())
                 {
@@ -486,7 +486,7 @@ public class AdminViewController implements Initializable
             staffModel.removeVolunteerFromAssignedGuild(selectedEmployee, selectedGuild);
 
             int selectedID = selectedEmployee.getId();
-            for (Guild guild : guildModel.getAllGuildsForTable())
+            for (Guild guild : guildModel.getAllGuildsForTable(false))
             {
                 for (Employee employee : guild.getEmployees())
                 {
@@ -719,7 +719,7 @@ public class AdminViewController implements Initializable
             {
                 if (tableGuild.getSelectionModel().getSelectedItem() == null)
                 {
-                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
                 }
                 else
                 {
@@ -891,7 +891,7 @@ public class AdminViewController implements Initializable
 
         showShowEmailGuild.setVisible(false);
         tableGuild.getSelectionModel().clearSelection();
-        volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+        volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
         isActiveShowing = true;
         changeButtonText();
     }
@@ -901,14 +901,14 @@ public class AdminViewController implements Initializable
         guildModel.getEmployeesInCurrentGuild().clear();
         tableEmployee.getItems().clear();
         staffModel.setAllGuildManagersForTable();
-        tableEmployee.setItems(staffModel.getAllGuildManagersForTable());
+        tableEmployee.setItems(staffModel.getAllGuildManagersForTable(true));
         colGuildManager.setText("Medarbejdere");
         menuItemRemoveEmployee.setVisible(false);
     }
 
     private void showAllActiveVolunteersInTable()
     {
-        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable());
+        tableVolunteer.setItems(volunteerModel.getAllVolunteersForTable(true));
         colVolunteer.setText("Frivillige");
         menuItemRemoveVolunteer.setVisible(false);
         menuAddVolToGuild.setVisible(true);

@@ -137,7 +137,7 @@ public class TileViewController implements Initializable
             @Override
             public Void call() throws Exception
             {
-                for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
+                for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable(false))
                 {
 
                     Platform.runLater(new Runnable()
@@ -236,7 +236,7 @@ public class TileViewController implements Initializable
      */
     private void addVolunteerCellForGuild()
     {
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable(false))
         {
             if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
             {
@@ -307,7 +307,7 @@ public class TileViewController implements Initializable
                 }
                 if ("Alle Laug".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
                 {
-                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
                 }
                 else
                 {

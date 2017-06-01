@@ -79,8 +79,12 @@ public class StaffModel
      *
      * @return a list of all employees
      */
-    public ObservableList<Employee> getAllGuildManagersForTable()
+    public ObservableList<Employee> getAllGuildManagersForTable(boolean sorted)
     {
+        if (sorted)
+        {
+        allEmployees.sort((Employee t, Employee t1) -> t.getFirstName().compareTo(t1.getFirstName()));
+        }
         return allEmployees;
     }
     
