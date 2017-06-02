@@ -31,20 +31,6 @@ public class Employee extends Person
     }
 
     /**
-     * Alternate constructor
-     *
-     * @param firstName The first name.
-     * @param lastName The last name.
-     * @param phoneNum The phone number.
-     * @param email The e-mail.
-     * @param image A buffered image.
-     */
-    public Employee(String firstName, String lastName, String phoneNum, String email, BufferedImage image)
-    {
-        super(0, firstName, lastName, email, phoneNum, image);
-    }
-
-    /**
      * Gets the employee's password as a non-encrypted literal string.
      *
      * @return the password.

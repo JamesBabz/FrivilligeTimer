@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -49,6 +47,8 @@ public class AddVolunteerHoursController implements Initializable
     private boolean isHourSet;
     private Guild selectedGuild;
     private final ToggleGroup group;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     @FXML
     private TextField txtHours;
@@ -89,6 +89,7 @@ public class AddVolunteerHoursController implements Initializable
     {
         this.isHourSet = false;
         this.group = new ToggleGroup();
+        viewHandler = new ViewHandler(stage);
     }
 
     /**
@@ -304,7 +305,6 @@ public class AddVolunteerHoursController implements Initializable
         txtHours.setText("" + hours);
     }
 
-    
     @FXML
     private void handleSave()
     {
@@ -314,8 +314,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
-            ViewHandler vg = new ViewHandler((Stage) lblName.getScene().getWindow());
-            vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
         close();
     }
@@ -341,7 +340,7 @@ public class AddVolunteerHoursController implements Initializable
 
         if (isHourSet)
         {
-            volunteerModel.updateHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()));
+            volunteerModel.updateHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()), guildId);
         }
         else
         {
@@ -365,8 +364,8 @@ public class AddVolunteerHoursController implements Initializable
     }
 
     /**
-     * Checks the database if hours have been filled today
-     * and puts them in the hour field if so
+     * Checks the database if hours have been filled today and puts them in the
+     * hour field if so
      */
     private void populateHours()
     {
@@ -387,8 +386,7 @@ public class AddVolunteerHoursController implements Initializable
         }
         catch (SQLException ex)
         {
-            ViewHandler vg = new ViewHandler((Stage) lblName.getScene().getWindow());
-            vg.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database Fejl", "Der skete en fejl med forbindelsen til databasem", ex.getMessage());
         }
     }
 

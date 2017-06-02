@@ -11,14 +11,15 @@ import frivilligetimer.be.Volunteer;
 import frivilligetimer.bll.GuildManager;
 import frivilligetimer.bll.StaffManager;
 import frivilligetimer.bll.VolunteerManager;
+import frivilligetimer.gui.controller.ViewHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 /**
  *
@@ -38,6 +39,8 @@ public final class GuildModel
     private final ObservableList<String> guildNames;
     private final ObservableList<Volunteer> volunteersInCurrentGuild;
     private final ObservableList<Employee> employeesInCurrentGuild;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     public static GuildModel getInstance()
     {
@@ -50,19 +53,16 @@ public final class GuildModel
 
     private GuildModel()
     {
+        viewHandler = new ViewHandler(stage);
         try
         {
             manager = new GuildManager();
             volunteerManager = new VolunteerManager();
             staffManager = new StaffManager();
-        } catch (IOException ex)
+        } catch (IOException | SQLException ex)
         {
-            Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(GuildModel.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
         }
-
         allActiveGuilds = FXCollections.observableArrayList();
         allVolunteers = FXCollections.observableArrayList();
         allEmployees = FXCollections.observableArrayList();
@@ -82,6 +82,7 @@ public final class GuildModel
     /**
      * Gets all guilds in tableview "laug"
      *
+     * @param sorted - If the returned list should be sorted
      * @return a list of all guilds
      */
     public ObservableList<Guild> getAllGuildsForTable(boolean sorted)
@@ -135,7 +136,14 @@ public final class GuildModel
     public void deleteGuild(Guild guild)
     {
         allActiveGuilds.remove(guild);
-        manager.deleteGuild(guild);
+        try
+        {
+            manager.deleteGuild(guild);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public void addVolunteerToGuild(Guild selectedGuild, Volunteer selectedVolunteer) throws SQLException
@@ -256,7 +264,7 @@ public final class GuildModel
 
         if (includeAllField)
         {
-            guildNames.add("Alle Laug");
+            guildNames.add("Alle Personer");
         }
         for (Guild guild : manager.getAllActiveGuilds())
         {

@@ -34,8 +34,8 @@
                            <contextMenu>
                               <ContextMenu fx:id="contextGuild">
                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#editGuild" text="Ændrer laug" />
-                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet laug" />
+                                    <MenuItem mnemonicParsing="false" onAction="#editGuild" text="Ændrer " />
+                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteGuild" text="Slet " />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -53,7 +53,7 @@
                         <HBox alignment="TOP_RIGHT" prefHeight="10.0" prefWidth="200.0" spacing="50.0">
                            <children>
                               <Button fx:id="btnInactive" mnemonicParsing="false" onAction="#changeVolunteersInTable" prefHeight="25.0" prefWidth="84.0" text="Vis inaktive" />
-                              <TextField fx:id="txtSearchField" prefHeight="25.0" prefWidth="145.0" promptText="Søg" />
+                              <TextField fx:id="txtSearchField" prefHeight="25.0" prefWidth="145.0" promptText="Søg..." />
                            </children>
                         </HBox>
                         <TableView fx:id="tableVolunteer" onDragDetected="#handleDragDetected" onDragOver="#handleDragOver" prefHeight="521.0" prefWidth="240.0" VBox.vgrow="ALWAYS">
@@ -64,16 +64,16 @@
                            <contextMenu>
                               <ContextMenu fx:id="contextVolunteer">
                                  <items>
-                                    <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj Person Til Laug">
+                                    <Menu fx:id="menuAddVolToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenu" text="Tilføj til laug">
                                        <items>
                                           <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                                        </items>
                                     </Menu>
-                                    <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern Person Fra Laug" />
-                                    <MenuItem fx:id="menuItemEditeVolunteer" mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer Person" />
-                                    <MenuItem fx:id="menuItemDeleteVolunteer" mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Slet Person" />
-                                    <MenuItem fx:id="menuItemDeleteInactive" mnemonicParsing="false" onAction="#handleDeleteInactiveVolunteer" text="Slet Inaktiv Frivillig" />
-                                    <MenuItem fx:id="menuItemActivetInactive" mnemonicParsing="false" onAction="#handleActivteVolunteer" text="Aktiver Inaktiv Frivillig" />
+                                    <MenuItem fx:id="menuItemRemoveVolunteer" mnemonicParsing="false" onAction="#removeVolunteerFromGuild" text="Fjern fra laug" />
+                                    <MenuItem fx:id="menuItemEditeVolunteer" mnemonicParsing="false" onAction="#editVolunteer" text="Ændrer " />
+                                    <MenuItem fx:id="menuItemDeleteVolunteer" mnemonicParsing="false" onAction="#handleDeleteVolunteer" text="Gør inaktiv" />
+                                    <MenuItem fx:id="menuItemActivetInactive" mnemonicParsing="false" onAction="#handleActivteVolunteer" text="Aktivér" />
+                                    <MenuItem fx:id="menuItemDeleteInactive" mnemonicParsing="false" onAction="#handleDeleteInactiveVolunteer" text="Slet " />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
@@ -95,14 +95,14 @@
                            <contextMenu>
                               <ContextMenu fx:id="contextEmployee">
                                 <items>
-                                    <Menu fx:id="menuAddEmployeeToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenuForEmployee" text="Tilføj Medarbejder Til Laug">
+                                    <Menu fx:id="menuAddEmployeeToGuild" mnemonicParsing="false" onShowing="#handleContextGuildMenuForEmployee" text="Tilføj til laug">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                       </items>
                                     </Menu>
-                                    <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændrer Medarbejder" />
-                                    <MenuItem fx:id="menuItemRemoveEmployee" mnemonicParsing="false" onAction="#removeEmployeeFromGuild" text="Fjern Medarbejder Fra Laug" />
-                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet Person" />
+                                    <MenuItem mnemonicParsing="false" onAction="#editEmployee" text="Ændrer " />
+                                    <MenuItem fx:id="menuItemRemoveEmployee" mnemonicParsing="false" onAction="#removeEmployeeFromGuild" text="Fjern fra laug" />
+                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteEmployee" text="Slet " />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
