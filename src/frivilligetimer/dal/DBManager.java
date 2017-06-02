@@ -115,30 +115,30 @@ public final class DBManager
                     }
                 }
 
-                if (isActive)
+                switch (level)
                 {
-                    switch (level)
-                    {
-                        case 0:
-                            Manager manager = new Manager(id, fName, lName, phonenum, email, password, image);
-                            managers.add(manager);
-                            break;
-                        case 1:
-                            Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
-                            employees.add(employee);
-                            break;
-                        case 2:
+                    case 0:
+                        Manager manager = new Manager(id, fName, lName, phonenum, email, password, image);
+                        managers.add(manager);
+                        break;
+                    case 1:
+                        Employee employee = new Employee(id, fName, lName, phonenum, email, password, image);
+                        employees.add(employee);
+                        break;
+                    case 2:
+                        if (isActive)
+                        {
                             Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
                             volunteers.add(volunteer);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (level == 2)
-                {
-                    Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
-                    inactiveVolunteers.add(volunteer);
+                        }
+                        else
+                        {
+                            Volunteer volunteer = new Volunteer(id, fName, lName, phonenum, email, preference, note, image, inactiveSince);
+                            inactiveVolunteers.add(volunteer);
+                        }
+                        break;
+                    default:
+                        break;
                 }
 
             }
