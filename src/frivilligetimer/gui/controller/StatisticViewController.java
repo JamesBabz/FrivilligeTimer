@@ -107,7 +107,7 @@ public class StatisticViewController implements Initializable
      */
     private void initiateComboBox()
     {
-        cmbGuilds.getItems().add("Alle Laug");
+        cmbGuilds.getItems().add("Alle Personer");
         cmbGuilds.getItems().addAll(guildModel.getAllGuilds());
         cmbGuilds.getSelectionModel().selectFirst();
     }
@@ -322,7 +322,7 @@ public class StatisticViewController implements Initializable
         Calendar to = Calendar.getInstance();
         from.setTime(Date.from(dpFrom.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         to.setTime(Date.from(dpTo.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        if ("Alle Laug".equals(cmbGuilds.getValue()))
+        if ("Alle Personer".equals(cmbGuilds.getValue()))
         {
             setValuesForGuilds(from.getTime(), to.getTime());
         }
