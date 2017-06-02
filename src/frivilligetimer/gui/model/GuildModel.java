@@ -264,7 +264,7 @@ public final class GuildModel
 
         if (includeAllField)
         {
-            guildNames.add("Alle Laug");
+            guildNames.add("Alle Personer");
         }
         for (Guild guild : manager.getAllActiveGuilds())
         {

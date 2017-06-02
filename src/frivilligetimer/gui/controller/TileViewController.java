@@ -220,7 +220,7 @@ public class TileViewController implements Initializable
     private void updateVolunteerCells()
     {
         volunteerBoard.getChildren().remove(0, volunteerBoard.getChildren().size());
-        if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Laug"))
+        if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Personer"))
         {
             guildModel.setSelectedGuild(null);
             addAllVolunteerCells();
@@ -304,7 +304,7 @@ public class TileViewController implements Initializable
                 {
                     listSearchResult.visibleProperty().set(false);
                 }
-                if ("Alle Laug".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
+                if ("Alle Personer".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
                 {
                     volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
                 }
