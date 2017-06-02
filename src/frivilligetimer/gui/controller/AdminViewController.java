@@ -42,6 +42,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -509,7 +510,7 @@ public class AdminViewController implements Initializable
     @FXML
     private void ShowVolunteersInCurrentGuild(MouseEvent event)
     {
-        if (event.getClickCount() == 2)
+        if (event.getButton() == MouseButton.PRIMARY)
         {
             populateTablesForCurrentGuild();
             showEmployeesAssignedToGuild();
@@ -638,9 +639,8 @@ public class AdminViewController implements Initializable
 
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
-                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
-                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                    if (volunteer.getFirstName().toLowerCase().startsWith(newVal.toLowerCase())
+                            || volunteer.getLastName().toLowerCase().startsWith(newVal.toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -648,7 +648,7 @@ public class AdminViewController implements Initializable
                     }
                 }
 
-                tableVolunteer.setItems(volunteerModel.getSearchedVolunteers());
+                tableVolunteer.setItems(volunteerModel.getSearchedVolunteers().sorted());
             }
         });
 
@@ -762,16 +762,12 @@ public class AdminViewController implements Initializable
         {
             showAllInactiveVolunteersInTable();
             showDateScinceInactive();
-            tableEmployee.setDisable(true);
-            tableGuild.setDisable(true);
-            btnShowAllPeople.setDisable(true);
+
         } else
         {
             showAllActiveVolunteersInTable();
             showOnlyVolunteers();
-            tableEmployee.setDisable(false);
-            tableGuild.setDisable(false);
-            btnShowAllPeople.setDisable(false);
+
         }
         isActiveShowing = !isActiveShowing;
         changeButtonText();
@@ -788,6 +784,9 @@ public class AdminViewController implements Initializable
         menuItemEditeVolunteer.setVisible(false);
         menuItemDeleteInactive.setVisible(true);
         menuItemActivetInactive.setVisible(true);
+        tableEmployee.setDisable(true);
+        tableGuild.setDisable(true);
+        btnShowAllPeople.setDisable(true);
     }
 
     private void changeButtonText()
@@ -862,7 +861,6 @@ public class AdminViewController implements Initializable
 
     private void showDateScinceInactive()
     {
-        colVolunteer.prefWidthProperty().unbind();
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
         colInactive.prefWidthProperty().bind(tableVolunteer.widthProperty().divide(2));
     }
@@ -870,6 +868,9 @@ public class AdminViewController implements Initializable
     private void showOnlyVolunteers()
     {
         colVolunteer.prefWidthProperty().bind(tableVolunteer.widthProperty());
+        tableEmployee.setDisable(false);
+        tableGuild.setDisable(false);
+        btnShowAllPeople.setDisable(false);
     }
 
 }
