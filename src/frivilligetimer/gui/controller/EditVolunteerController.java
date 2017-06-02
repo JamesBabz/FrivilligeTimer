@@ -31,6 +31,7 @@ import javafx.stage.Stage;
  */
 public class EditVolunteerController implements Initializable
 {
+
     private VolunteerModel model;
     private Volunteer volunteer;
     private ViewHandler viewHandler;
@@ -95,14 +96,14 @@ public class EditVolunteerController implements Initializable
     private void handleUpdate()
     {
         viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
-        if(viewHandler.getErrorRedLines() == 0)
+        if (viewHandler.getErrorRedLines() == 0)
         {
-        volunteer.setFirstName(txtFirstName.getText());
-        volunteer.setLastName(txtLastName.getText());
-        volunteer.setEmail(txtEmail.getText());
-        volunteer.setPhoneNum(txtPhoneNummer.getText());
+            volunteer.setFirstName(txtFirstName.getText());
+            volunteer.setLastName(txtLastName.getText());
+            volunteer.setEmail(txtEmail.getText());
+            volunteer.setPhoneNum(txtPhoneNummer.getText());
             updateVolunteerInDB();
-        viewHandler.closeWindow(stage, txtEmail);
+            viewHandler.closeWindow(stage, txtEmail);
         }
     }
 
@@ -122,7 +123,7 @@ public class EditVolunteerController implements Initializable
         catch (SQLException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
-        } 
+        }
         catch (IOException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en fejl", ex.getMessage());

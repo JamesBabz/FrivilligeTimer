@@ -14,8 +14,6 @@ import frivilligetimer.gui.model.VolunteerModel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -50,10 +49,11 @@ import javafx.stage.StageStyle;
 public class TileViewController implements Initializable
 {
 
-//    private VolunteerCellBoardModel boardModel;
     private final VolunteerModel volunteerModel;
     private final GuildModel guildModel;
     private final StaffModel staffModel;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     @FXML
     private MenuBar btnMenu;
@@ -84,10 +84,10 @@ public class TileViewController implements Initializable
 
     public TileViewController()
     {
-//        boardModel = VolunteerCellBoardModel.getInstance();
         volunteerModel = VolunteerModel.getInstance();
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
+        viewHandler = new ViewHandler(stage);
 
     }
 
@@ -137,7 +137,7 @@ public class TileViewController implements Initializable
             @Override
             public Void call() throws Exception
             {
-                for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable())
+                for (Volunteer volunteer : volunteerModel.getAllVolunteersForTable(false))
                 {
 
                     Platform.runLater(new Runnable()
@@ -193,7 +193,7 @@ public class TileViewController implements Initializable
         }
         catch (IOException ex)
         {
-            Logger.getLogger(TileViewController.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.WARNING, "Celle fejl", "Celle kunne ikke oprettes", "Der skete en fejl da cellerne skulle oprettes");
         }
     }
 
@@ -220,7 +220,7 @@ public class TileViewController implements Initializable
     private void updateVolunteerCells()
     {
         volunteerBoard.getChildren().remove(0, volunteerBoard.getChildren().size());
-        if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Laug"))
+        if (listGuilds.getSelectionModel().getSelectedItem().equals("Alle Personer"))
         {
             guildModel.setSelectedGuild(null);
             addAllVolunteerCells();
@@ -236,7 +236,7 @@ public class TileViewController implements Initializable
      */
     private void addVolunteerCellForGuild()
     {
-        for (Guild guild : guildModel.getAllGuildsForTable())
+        for (Guild guild : guildModel.getAllGuildsForTable(false))
         {
             if (listGuilds.getSelectionModel().getSelectedItem().equals(guild.getName()))
             {
@@ -268,9 +268,8 @@ public class TileViewController implements Initializable
 
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
-                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
-                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                    if (volunteer.getFirstName().toLowerCase().startsWith(newVal.toLowerCase())
+                            || volunteer.getLastName().toLowerCase().startsWith(newVal.toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -282,7 +281,7 @@ public class TileViewController implements Initializable
                     listSearchResult.visibleProperty().set(true);
                 }
 
-                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
+                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames().sorted());
 
                 if (volunteerModel.getSearchedVolunteerNames().size() < 13)
                 {
@@ -305,9 +304,9 @@ public class TileViewController implements Initializable
                 {
                     listSearchResult.visibleProperty().set(false);
                 }
-                if ("Alle Laug".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
+                if ("Alle Personer".equals(listGuilds.getSelectionModel().getSelectedItem()) || listGuilds.getSelectionModel().getSelectedItem() == null)
                 {
-                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable());
+                    volunteerModel.setAllVolunteerInCurrentView(volunteerModel.getAllVolunteersForTable(true));
                 }
                 else
                 {
@@ -356,7 +355,7 @@ public class TileViewController implements Initializable
                 txtSearchField.clear();
                 break;
             }
-            
+
         }
     }
 
@@ -376,7 +375,7 @@ public class TileViewController implements Initializable
                 listSearchResult.getSelectionModel().clearAndSelect(listSearchResult.getSelectionModel().getSelectedIndex() + 1);
             }
         }
-        
+
         if (event.getCode() == KeyCode.UP)
         {
             if (searchedResult == null || searchedResultIndex <= 0)
@@ -388,7 +387,7 @@ public class TileViewController implements Initializable
                 listSearchResult.getSelectionModel().clearAndSelect(listSearchResult.getSelectionModel().getSelectedIndex() - 1);
             }
         }
-        
+
         if (event.getCode() == KeyCode.ENTER)
         {
             searchedVolunteers();

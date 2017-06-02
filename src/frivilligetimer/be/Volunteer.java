@@ -50,6 +50,8 @@ public class Volunteer extends Person {
      * @param preference, the prefernce the volunteer has, that the employee can
      * write down
      * @param note, a note that the employee kan write about a volunteer
+     * @param image The image for the volunteer
+     * @param inactiveSince The date the volunteer became inactive
      */
     public Volunteer(int id, String firstName, String lastName, String phoneNum, String email, String preference, String note, BufferedImage image, Date inactiveSince) {
         super(id, firstName, lastName, phoneNum, email, image);
@@ -62,10 +64,6 @@ public class Volunteer extends Person {
         } else {
             inactiveSinceString.set(inactiveSince.toString());
         }
-    }
-
-    public Volunteer(String firstName, String lastName, String phoneNum, String email, BufferedImage image) {
-        super(0, firstName, lastName, phoneNum, email, image);
     }
 
     public String getPreference() {
