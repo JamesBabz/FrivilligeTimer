@@ -82,6 +82,7 @@ public final class GuildModel
     /**
      * Gets all guilds in tableview "laug"
      *
+     * @param sorted - If the returned list should be sorted
      * @return a list of all guilds
      */
     public ObservableList<Guild> getAllGuildsForTable(boolean sorted)

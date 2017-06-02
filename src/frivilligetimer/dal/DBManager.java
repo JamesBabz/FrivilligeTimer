@@ -49,7 +49,7 @@ public final class DBManager
     private final List<String> volunteersInGuild;
     private final List<String> employeesInGuild;
     private Stage stage;
-    private ViewHandler viewHandler;
+    private final ViewHandler viewHandler;
 
     /**
      * The default constructor for the database manager.
@@ -145,6 +145,11 @@ public final class DBManager
         }
     }
 
+    /**
+     * Deletes all inactive volunteers in the database
+     *
+     * @throws SQLException
+     */
     public void deleteInactiveVolunteers() throws SQLException
     {
         String sql = "DELETE from People WHERE isActive = 0";
@@ -160,6 +165,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Creates all the guilds from the database
+     *
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void setAllGuilds() throws SQLServerException, SQLException
     {
         String sql = "SELECT * FROM Guilds";
@@ -190,9 +201,15 @@ public final class DBManager
         }
     }
 
+    /**
+     * Populates all the guilds with the volunteers
+     *
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void setAllVolunteersInGuilds() throws SQLServerException, SQLException
     {
-        String sql = " SELECT* FROM AssignedGuilds";
+        String sql = " SELECT * FROM AssignedGuilds";
 
         try (Connection con = cm.getConnection())
         {
@@ -210,6 +227,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Populates all the guilds with the employees
+     *
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void setAllEmployeesInGuilds() throws SQLServerException, SQLException
     {
         String sql = " SELECT* FROM AssignedGuilds";
@@ -361,16 +384,35 @@ public final class DBManager
         return returnList;
     }
 
+    /**
+     * Gets all volunteers in guild
+     *
+     * @return - list of volunteers
+     */
     public List<String> getVolunteersInGuild()
     {
         return volunteersInGuild;
     }
 
+    /**
+     * Gets all employees in guild
+     *
+     * @return - list of employees
+     */
     public List<String> getEmployeesInGuild()
     {
         return employeesInGuild;
     }
 
+    /**
+     * Gets a volunteers hours for a specific day and guild
+     *
+     * @param id - The volunteers id
+     * @param date - The date for the hours
+     * @param guildid - The guild id
+     * @return - amount of hours
+     * @throws SQLException
+     */
     public int getTodaysHours(int id, Date date, int guildid) throws SQLException
     {
         String sql = "SELECT hours FROM Hours WHERE uid = " + id + " AND date = '" + new java.sql.Date(date.getTime()).toString() + "' AND laugid = " + guildid;
@@ -393,9 +435,9 @@ public final class DBManager
      *
      * @param from The start date for the hours to pull
      * @param to The end date for the hours to pull
-     * @param id the id of the person/guild
-     * @param guildid
-     * @return Returns amount of hours in the period
+     * @param id the id of the person
+     * @param guildid - The guild id
+     * @return - Returns a map of dates with corresponding hours
      * @throws java.sql.SQLException
      * @throws java.io.IOException
      */
@@ -434,6 +476,15 @@ public final class DBManager
         return lineChartValues;
     }
 
+    /**
+     *
+     * @param from The start date for the hours to pull
+     * @param to The end date for the hours to pull
+     * @param id the id of the guild
+     * @return Returns amount of hours in the period
+     * @throws java.sql.SQLException
+     * @throws java.io.IOException
+     */
     public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
     {
         java.sql.Date sqlFrom = new java.sql.Date(from.getTime());
@@ -459,6 +510,13 @@ public final class DBManager
         return hours;
     }
 
+    /**
+     * Adds a guild to the database
+     *
+     * @param guild - the guild to add
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void addGuild(Guild guild) throws SQLServerException, SQLException
     {
         String sql = "INSERT INTO Guilds (Name) VALUES( ?)";
@@ -477,6 +535,13 @@ public final class DBManager
 
     }
 
+    /**
+     * Adds a volunteer to the database
+     *
+     * @param volunteer - The volunteer to add
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void addVolunteer(Volunteer volunteer) throws SQLServerException, SQLException
     {
         String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 2)";
@@ -498,6 +563,13 @@ public final class DBManager
         }
     }
 
+    /**
+     * Adds an employee to the database
+     *
+     * @param employee - The employee to add
+     * @throws SQLServerException
+     * @throws SQLException
+     */
     public void addEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "INSERT INTO People (FirstName, LastName, PhoneNum, Email, Position) VALUES (?, ?, ?, ?, 1)";
@@ -520,6 +592,12 @@ public final class DBManager
         employees.add(employee);
     }
 
+    /**
+     * Deletes a volunteer from the database
+     *
+     * @param volunteer - The volunteer to delete
+     * @throws SQLException
+     */
     public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "UPDATE People SET isActive = 0, InactiveSince = ? WHERE ID = ?";
@@ -538,7 +616,13 @@ public final class DBManager
         }
     }
 
-    public void activeteVolunteer(Volunteer volunteer) throws SQLException
+    /**
+     * Reactivates a formerly deactivated volunteer
+     *
+     * @param volunteer - The volunteer to activate
+     * @throws SQLException
+     */
+    public void activateVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "UPDATE People SET isActive = 1 WHERE ID = ?";
 
@@ -554,6 +638,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Delete a volunteer completely
+     *
+     * @param volunteer - The volunteer to delete
+     * @throws SQLException
+     */
     public void deleteInactiveVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "DELETE from People WHERE Id = ?";
@@ -570,6 +660,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Remove a volunteer from all guilds
+     *
+     * @param volunteer - The volunteer to remove
+     * @throws SQLException
+     */
     public void removeVolunteerFromGuilds(Volunteer volunteer) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ?";
@@ -584,7 +680,13 @@ public final class DBManager
         }
     }
 
-    public void deleteGuild(Guild guild) throws SQLException
+    /**
+     * Deactivates a guild
+     *
+     * @param guild - the guild to deactivate
+     * @throws SQLException
+     */
+    public void deactivateGuild(Guild guild) throws SQLException
     {
         String sql = "UPDATE Guilds SET isActive = 0 WHERE ID = ?";
 
@@ -600,6 +702,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Removes all volunteers from a guild
+     *
+     * @param guild - The guild to be emptied
+     * @throws SQLException
+     */
     public void removeVolunteersFromAssignedGuild(Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE laugid =?";
@@ -614,6 +722,13 @@ public final class DBManager
         }
     }
 
+    /**
+     * Remove a specific volunteer from a specific guild
+     *
+     * @param volunteer - The volunteer to remove
+     * @param guild - The guild to remove from
+     * @throws SQLException
+     */
     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
@@ -629,6 +744,13 @@ public final class DBManager
         }
     }
 
+    /**
+     * Remove a specific employee from a specific guild
+     *
+     * @param employee - The employee to remove
+     * @param guild - The guild to remove from
+     * @throws SQLException
+     */
     public void removeEmployeeFromAssignedGuild(Employee employee, Guild guild) throws SQLException
     {
         String sql = "DELETE from AssignedGuilds WHERE uid = ? AND laugid = ?";
@@ -644,7 +766,13 @@ public final class DBManager
         }
     }
 
-    public void deleteEmployee(Employee employee) throws SQLServerException, SQLException
+    /**
+     * Deactivates an employee
+     * @param employee - The employee to deactivate
+     * @throws SQLServerException
+     * @throws SQLException
+     */
+    public void deactivateEmployee(Employee employee) throws SQLServerException, SQLException
     {
         String sql = "UPDATE People SET isActive = 0 WHERE ID = ?";
 
@@ -682,6 +810,12 @@ public final class DBManager
         }
     }
 
+    /**
+     * Adds an employee to a guild
+     * @param laugid - The guild id
+     * @param uid - The employee id
+     * @throws SQLException 
+     */
     public void addEmployeeToGuild(int laugid, int uid) throws SQLException
     {
         String sql = "INSERT INTO AssignedGuilds (uid, laugid) VALUES (?,?) ";
@@ -698,6 +832,11 @@ public final class DBManager
         }
     }
 
+    /**
+     * Updates a specific volunteer
+     * @param volunteer - The volunteer to update
+     * @throws SQLException 
+     */
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
         String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
@@ -714,6 +853,11 @@ public final class DBManager
         }
     }
 
+    /**
+     * Updates a specific employee
+     * @param employee - The employee to update
+     * @throws SQLException 
+     */
     public void updateEmployee(Employee employee) throws SQLException
     {
         String sql = "UPDATE People SET FIRSTNAME = ?, LASTNAME = ?, PHONENUM = ?, EMAIL = ? WHERE ID = ?";
@@ -731,6 +875,11 @@ public final class DBManager
 
     }
 
+    /**
+     * Updates a specific guild
+     * @param guild - The guild to update
+     * @throws SQLException 
+     */
     public void updateGuild(Guild guild) throws SQLException
     {
         String sql = "UPDATE Guilds SET Name = ? WHERE id = ?";
@@ -747,10 +896,10 @@ public final class DBManager
     }
 
     /**
-     * Updates the database with a student image represented by binary data.
+     * Updates the database with an image represented by binary data.
      *
-     * @param person
-     * @param localImagePath
+     * @param person - The person who needs the image set
+     * @param localImagePath - The path of the image
      * @throws IOException
      * @throws SQLException
      */
@@ -773,6 +922,14 @@ public final class DBManager
         }
     }
 
+    /**
+     * Adds hours for the volunteer for a specific day
+     * @param uid - The volunteer id
+     * @param date - The date where the hours should be added
+     * @param hours - the amount of hours to add
+     * @param guildId - The id of the guild where the hours should be added
+     * @throws SQLException 
+     */
     public void addHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
         String sql = "INSERT INTO Hours (uid, date, hours, laugid) VALUES (?,?,?,?)";
@@ -789,6 +946,13 @@ public final class DBManager
 
     }
 
+    /**
+     * Updates already set hours
+     * @param uid - The volunteer id
+     * @param date - The date to change the hours for
+     * @param hours - The new amount of hours to be set
+     * @throws SQLException 
+     */
     public void updateHoursForVolunteer(int uid, Date date, int hours) throws SQLException
     {
         String sql = "UPDATE Hours SET hours = ? WHERE uid = ? AND date = ?";
@@ -803,6 +967,13 @@ public final class DBManager
         }
     }
 
+    /**
+     * Updates a votlunteers notes and preferences
+     * @param id - The volunteer id
+     * @param pref - The String of preferences
+     * @param note - The note to set
+     * @throws SQLException 
+     */
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
     {
         String sql = "UPDATE People SET Note = ?, Preference = ? WHERE id = ?";
@@ -816,6 +987,11 @@ public final class DBManager
         }
     }
 
+    /**
+     * Permanently delete inactive guilds
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public void deleteInactiveGuilds() throws SQLServerException, SQLException
     {
         String sql = "DELETE from Guilds WHERE isActive = 0";

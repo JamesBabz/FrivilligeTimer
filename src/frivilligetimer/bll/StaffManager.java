@@ -54,7 +54,7 @@ public class StaffManager
 
     public void removeEmployee(Employee employee) throws SQLException
     {
-        dbManager.deleteEmployee(employee);
+        dbManager.deactivateEmployee(employee);
     }
 
     public void updateEmployee(Employee employee) throws SQLException

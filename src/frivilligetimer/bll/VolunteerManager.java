@@ -62,7 +62,7 @@ public class VolunteerManager
 
     public void activeteVolunteer(Volunteer volunteer) throws SQLException
     {
-        dbManager.activeteVolunteer(volunteer);
+        dbManager.activateVolunteer(volunteer);
     }
 
     public void deleteInactiveVolunteers() throws SQLException
