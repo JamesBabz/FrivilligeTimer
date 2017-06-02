@@ -268,9 +268,8 @@ public class TileViewController implements Initializable
 
                 for (Volunteer volunteer : volunteerModel.getAllVolunteerInCurrentView())
                 {
-                    if (volunteer.getFullName().toLowerCase().contains(newVal.toLowerCase())
-                            || volunteer.getPhoneNum().trim().toLowerCase().contains(newVal.trim().toLowerCase())
-                            || volunteer.getEmail().trim().toLowerCase().contains(newVal.trim().toLowerCase())
+                    if (volunteer.getFirstName().toLowerCase().startsWith(newVal.toLowerCase())
+                            || volunteer.getLastName().toLowerCase().startsWith(newVal.toLowerCase())
                             && !volunteerModel.getSearchedVolunteers().contains(volunteer))
                     {
                         volunteerModel.getSearchedVolunteers().add(volunteer);
@@ -282,7 +281,7 @@ public class TileViewController implements Initializable
                     listSearchResult.visibleProperty().set(true);
                 }
 
-                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames());
+                listSearchResult.itemsProperty().set(volunteerModel.getSearchedVolunteerNames().sorted());
 
                 if (volunteerModel.getSearchedVolunteerNames().size() < 13)
                 {
