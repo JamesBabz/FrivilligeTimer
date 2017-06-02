@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -136,15 +137,6 @@ public class AdminViewController implements Initializable
         searchOnUpdate();
     }
 
-    private void setMenuItemsVisible()
-    {
-        menuItemRemoveEmployee.setVisible(false);
-        menuItemRemoveVolunteer.setVisible(false);
-        showShowEmailGuild.setVisible(false);
-        menuItemDeleteInactive.setVisible(false);
-        menuItemActivetInactive.setVisible(false);
-    }
-
     /**
      * Default contructor
      */
@@ -154,6 +146,15 @@ public class AdminViewController implements Initializable
         guildModel = GuildModel.getInstance();
         staffModel = StaffModel.getInstance();
         viewHandler = new ViewHandler(stage);
+    }
+
+    private void setMenuItemsVisible()
+    {
+        menuItemRemoveEmployee.setVisible(false);
+        menuItemRemoveVolunteer.setVisible(false);
+        showShowEmailGuild.setVisible(false);
+        menuItemDeleteInactive.setVisible(false);
+        menuItemActivetInactive.setVisible(false);
     }
 
     /**
@@ -186,7 +187,6 @@ public class AdminViewController implements Initializable
     @FXML
     private void addEmployee()
     {
-      
 
         viewHandler.generateView("/frivilligetimer/gui/view/AddEmployee.fxml", false, StageStyle.DECORATED, true, "Tilføj Medarbejder");
 
@@ -237,9 +237,19 @@ public class AdminViewController implements Initializable
     private void handleDeleteEmployee()
     {
         Employee selectedItem = tableEmployee.getSelectionModel().getSelectedItem();
-        tableEmployee.getItems().remove(selectedItem);
-        tableEmployee.getSelectionModel().clearSelection();
-        staffModel.deleteEmployee(selectedItem);
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Slet");
+        alert.setHeaderText("Du er igang med at slette");
+        alert.setContentText("Vil du slette denne medarbjeder?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK)
+        {
+            tableEmployee.getItems().remove(selectedItem);
+            tableEmployee.getSelectionModel().clearSelection();
+            staffModel.deleteEmployee(selectedItem);
+        }
+
     }
 
     @FXML
@@ -249,7 +259,6 @@ public class AdminViewController implements Initializable
         Volunteer selectedItem = tableVolunteer.getSelectionModel().getSelectedItem();
         tableVolunteer.getSelectionModel().clearSelection();
         volunteerModel.setSelectedVolunteer(selectedItem);
-
 
         viewHandler.generateView("/frivilligetimer/gui/view/EditVolunteer.fxml", false, StageStyle.DECORATED, true, "Ændrer Frivillig");
 
@@ -263,7 +272,6 @@ public class AdminViewController implements Initializable
         tableEmployee.getSelectionModel().clearSelection();
         staffModel.setSelectedEmployee(selectedItem);
 
-
         viewHandler.generateView("/frivilligetimer/gui/view/EditEmployee.fxml", false, StageStyle.DECORATED, true, "Ændrer Medarbejder");
 
     }
@@ -275,7 +283,6 @@ public class AdminViewController implements Initializable
         Guild selectedItem = tableGuild.getSelectionModel().getSelectedItem();
         tableGuild.getSelectionModel().clearSelection();
         guildModel.setSelectedGuild(selectedItem);
-
 
         viewHandler.generateView("/frivilligetimer/gui/view/EditGuild.fxml", false, StageStyle.DECORATED, true, "Ændrer Laug");
 
@@ -304,6 +311,7 @@ public class AdminViewController implements Initializable
         {
             MenuItem item = new MenuItem(guild.getName());
             guildsSubMenu.add(item);
+            menu.getItems().setAll(guildsSubMenu);
             item.setOnAction(new EventHandler<ActionEvent>()
             {
                 @Override
@@ -323,22 +331,18 @@ public class AdminViewController implements Initializable
                         }
                         if (isUnique)
                         {
-
                             try
                             {
                                 guildModel.addVolunteerToGuild(guild, selectedVolunteer);
                             } catch (SQLException ex)
                             {
-                                 viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+                                viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
                             }
                         }
                     }
                 }
             });
-
         }
-        menu.getItems().setAll(guildsSubMenu);
-
     }
 
     @FXML
@@ -549,7 +553,6 @@ public class AdminViewController implements Initializable
             {
                 if (item.getId() == employee.getId())
                 {
-
                     setTextSizeOnEmployeesInCurrentGuild();
                 }
             }
@@ -565,7 +568,6 @@ public class AdminViewController implements Initializable
             {
                 return new TableCell<Employee, String>()
                 {
-
                     @Override
                     public void updateItem(String item, boolean empty)
                     {
@@ -574,20 +576,16 @@ public class AdminViewController implements Initializable
                         {
                             for (Employee employeeToMark : guildModel.getEmployeesInCurrentGuild())
                             {
-
                                 if (item.equals(employeeToMark.getFullName()))
                                 {
                                     this.setTextFill(Color.GREEN);
                                     this.setFont(Font.font(16));
-
                                 }
-
                             }
                         } else
                         {
                             this.setTextFill(Color.valueOf("#323232"));
                             this.setFont(Font.font(USE_COMPUTED_SIZE));
-
                         }
                         setText(item);
                     }
@@ -610,7 +608,6 @@ public class AdminViewController implements Initializable
         alert.setTitle("Slet");
         alert.setContentText("Du er igang med at slette");
         alert.setHeaderText("Er du sikker på, at du vil fjerne alle inaktive personer og laug?");
-        
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK)
@@ -619,12 +616,11 @@ public class AdminViewController implements Initializable
             try
             {
                 guildModel.deleteInactiveGuilds();
-            } 
-            catch (SQLException ex)
+            } catch (SQLException ex)
             {
-                 viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+                viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
             }
-        } 
+        }
     }
 
     /**
