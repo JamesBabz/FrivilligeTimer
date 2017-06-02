@@ -49,7 +49,7 @@ public class GuildManager
     public void deleteGuild(Guild guild) throws SQLException
     {
         dbManager.removeVolunteersFromAssignedGuild(guild);
-        dbManager.deleteGuild(guild);
+        dbManager.deactivateGuild(guild);
     }
 
     public void addVolunteerToGuild(int laugid, int uid) throws SQLException
