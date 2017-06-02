@@ -340,7 +340,7 @@ public class AddVolunteerHoursController implements Initializable
 
         if (isHourSet)
         {
-            volunteerModel.updateHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()));
+            volunteerModel.updateHoursForVolunteer(id, new Date(), Integer.parseInt(txtHours.getText()), guildId);
         }
         else
         {

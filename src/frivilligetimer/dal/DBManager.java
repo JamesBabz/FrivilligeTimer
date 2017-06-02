@@ -951,11 +951,12 @@ public final class DBManager
      * @param uid - The volunteer id
      * @param date - The date to change the hours for
      * @param hours - The new amount of hours to be set
+     * @param guildId the value of guildId
      * @throws SQLException 
      */
-    public void updateHoursForVolunteer(int uid, Date date, int hours) throws SQLException
+    public void updateHoursForVolunteer(int uid, Date date, int hours, int guildId) throws SQLException
     {
-        String sql = "UPDATE Hours SET hours = ? WHERE uid = ? AND date = ?";
+        String sql = "UPDATE Hours SET hours = ? WHERE uid = ? AND date = ? AND laugid = ?";
         try (Connection con = cm.getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -963,6 +964,7 @@ public final class DBManager
             ps.setInt(2, uid);
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             ps.setDate(3, sqlDate);
+            ps.setInt(4, guildId);
             ps.executeUpdate();
         }
     }
