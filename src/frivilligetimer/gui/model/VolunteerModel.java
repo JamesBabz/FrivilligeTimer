@@ -208,9 +208,9 @@ public class VolunteerModel
         return manager.getTodaysHours(id, date, guildid);
     }
 
-    public void updateHoursForVolunteer(int id, Date date, int hours) throws SQLException
+    public void updateHoursForVolunteer(int id, Date date, int hours, int guildId) throws SQLException
     {
-        manager.updateHoursForVolunteers(id, date, hours);
+        manager.updateHoursForVolunteers(id, date, hours, guildId);
     }
 
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
