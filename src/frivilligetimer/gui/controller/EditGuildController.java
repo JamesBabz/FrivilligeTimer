@@ -10,8 +10,6 @@ import frivilligetimer.gui.model.GuildModel;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -47,7 +45,7 @@ public class EditGuildController implements Initializable
         model.getSelectedGuild();
 
         getCurrentInfo();
-                 viewHandler = new ViewHandler(stage);
+        viewHandler = new ViewHandler(stage);
         viewHandler.ReplaceFirstLetterInField(txtLaug);
     }
 
@@ -60,28 +58,30 @@ public class EditGuildController implements Initializable
     @FXML
     private void handleUpdate()
     {
-        if(!txtLaug.getText().isEmpty())
+        if (!txtLaug.getText().isEmpty())
         {
-        guild.setName(txtLaug.getText());
-        try
-        {
-            model.editGuild(guild);
-        } catch (SQLException ex)
-        {
-              viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+            guild.setName(txtLaug.getText());
+            try
+            {
+                model.editGuild(guild);
+            }
+            catch (SQLException ex)
+            {
+                viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
+            }
+
+            viewHandler.closeWindow(stage, txtLaug);
         }
-        
-        viewHandler.closeWindow(stage, txtLaug);
-        } else
+        else
         {
             txtLaug.setStyle("-fx-border-color: red");
         }
-        
+
     }
 
     @FXML
     private void cancel()
     {
-            viewHandler.closeWindow(stage, txtLaug);
+        viewHandler.closeWindow(stage, txtLaug);
     }
 }

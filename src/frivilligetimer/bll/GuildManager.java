@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -38,7 +35,7 @@ public class GuildManager
     {
         return dbManager.getAllActiveGuilds();
     }
-    
+
     public List<Guild> getAllGuilds()
     {
         return dbManager.getAllGuilds();
@@ -49,16 +46,10 @@ public class GuildManager
         dbManager.addGuild(guild);
     }
 
-    public void deleteGuild(Guild guild)
+    public void deleteGuild(Guild guild) throws SQLException
     {
-        try
-        {
-             dbManager.removeVolunteersFromAssignedGuild(guild);
-            dbManager.deleteGuild(guild);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(GuildManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dbManager.removeVolunteersFromAssignedGuild(guild);
+        dbManager.deactivateGuild(guild);
     }
 
     public void addVolunteerToGuild(int laugid, int uid) throws SQLException
@@ -70,27 +61,30 @@ public class GuildManager
     {
         return dbManager.getVolunteersInGuild();
     }
-    
-    public void updateGuild(Guild guild) throws SQLException {
+
+    public void updateGuild(Guild guild) throws SQLException
+    {
         dbManager.updateGuild(guild);
     }
 
     public void addEmployeeToGuild(int laugid, int uid) throws SQLException
     {
         dbManager.addEmployeeToGuild(laugid, uid);
-        
+
     }
-    
+
     public List<String> getEmployeesInGuild()
     {
         return dbManager.getEmployeesInGuild();
     }
-    
-    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException{
+
+    public int getWorkedHoursInPeriodForGuild(Date from, Date to, int id) throws SQLException, IOException
+    {
         return dbManager.getWorkedHoursInPeriodForGuild(from, to, id);
     }
 
-    public void deleteInactiveGuilds() throws SQLException {
-       dbManager.deleteInactiveGuilds();
+    public void deleteInactiveGuilds() throws SQLException
+    {
+        dbManager.deleteInactiveGuilds();
     }
 }

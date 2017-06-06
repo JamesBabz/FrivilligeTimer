@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A class that holds data about the people.
@@ -45,71 +43,42 @@ public class VolunteerManager
     {
         return dbManager.getAllActiveVolunteers();
     }
-    
+
     public List<Volunteer> getAllInactiveVolunteers()
     {
         return dbManager.getAllInactiveVolunteers();
     }
-            
 
     public void addVolunteer(Volunteer volunteer) throws SQLException
     {
         dbManager.addVolunteer(volunteer);
     }
 
-    public void deleteVolunteer(Volunteer volunteer)
+    public void deleteVolunteer(Volunteer volunteer) throws SQLException
     {
-        try
-        {
-            dbManager.removeVolunteerFromGuilds(volunteer);
-            dbManager.deleteVolunteer(volunteer);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dbManager.removeVolunteerFromGuilds(volunteer);
+        dbManager.deleteVolunteer(volunteer);
     }
-    
-    public void activeteVolunteer(Volunteer volunteer)
+
+    public void activeteVolunteer(Volunteer volunteer) throws SQLException
     {
-        try
-        {
-            dbManager.activeteVolunteer(volunteer);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dbManager.activateVolunteer(volunteer);
     }
-    
-    public void deleteInactiveVolunteers()
+
+    public void deleteInactiveVolunteers() throws SQLException
     {
-        try {
-            dbManager.deleteInactiveVolunteers();
-        } catch (SQLException ex) {
-            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            }
-    
-     public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild)
-     {
-        try
-        {
-            dbManager.removeVolunteerFromAssignedGuild(volunteer, guild);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-     }
-     
-         public void deleteInactiveVolunteer(Volunteer volunteer)
+        dbManager.deleteInactiveVolunteers();
+    }
+
+    public void removeVolunteerFromAssignedGuild(Volunteer volunteer, Guild guild) throws SQLException
     {
-        try {
-            dbManager.deleteInactiveVolunteer(volunteer);
-        } catch (SQLException ex) {
-            Logger.getLogger(VolunteerManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            }
+        dbManager.removeVolunteerFromAssignedGuild(volunteer, guild);
+    }
+
+    public void deleteInactiveVolunteer(Volunteer volunteer) throws SQLException
+    {
+        dbManager.deleteInactiveVolunteer(volunteer);
+    }
 
     public void updateVolunteer(Volunteer volunteer) throws SQLException
     {
@@ -126,17 +95,18 @@ public class VolunteerManager
         return dbManager.getTodaysHours(id, date, guildid);
     }
 
-    public void updateHoursForVolunteers(int id, Date date, int hours) throws SQLException
+    public void updateHoursForVolunteers(int id, Date date, int hours, int guildId) throws SQLException
     {
-        dbManager.updateHoursForVolunteer(id, date, hours);
+        dbManager.updateHoursForVolunteer(id, date, hours, guildId);
     }
 
     public void updateNoteAndPrefForVolunteer(int id, String pref, String note) throws SQLException
     {
         dbManager.updateNoteAndPrefForVolunteer(id, pref, note);
     }
-    
-    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException{
+
+    public TreeMap<java.sql.Date, Integer> getWorkedHoursInPeriodForVolunteer(Date from, Date to, int id, int guildid) throws SQLException, IOException
+    {
         return dbManager.getWorkedHoursInPeriodForVolunteer(from, to, id, guildid);
     }
 }

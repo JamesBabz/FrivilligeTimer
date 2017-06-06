@@ -9,15 +9,16 @@ import frivilligetimer.be.Employee;
 import frivilligetimer.be.Guild;
 import frivilligetimer.be.Manager;
 import frivilligetimer.bll.StaffManager;
+import frivilligetimer.gui.controller.ViewHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 /**
  *
@@ -30,6 +31,8 @@ public class StaffModel
     StaffManager manager;
     private final IntegerProperty level = new SimpleIntegerProperty();
     private Employee loggedInAs;
+    private Stage stage;
+    private ViewHandler viewHandler;
 
     public Employee selectedEmployee;
 
@@ -46,21 +49,18 @@ public class StaffModel
 
     private StaffModel()
     {
+        viewHandler = new ViewHandler(stage);
         try
         {
             manager = new StaffManager();
         }
-        catch (IOException ex)
+        catch (IOException | SQLException ex)
         {
-            Logger.getLogger(StaffModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(StaffModel.class.getName()).log(Level.SEVERE, null, ex);
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
         }
 
         allEmployees = FXCollections.observableArrayList();
-        
+
         setAllGuildManagersForTable();
     }
 
@@ -79,11 +79,15 @@ public class StaffModel
      *
      * @return a list of all employees
      */
-    public ObservableList<Employee> getAllGuildManagersForTable()
+    public ObservableList<Employee> getAllGuildManagersForTable(boolean sorted)
     {
+        if (sorted)
+        {
+            allEmployees.sort((Employee t, Employee t1) -> t.getFirstName().compareTo(t1.getFirstName()));
+        }
         return allEmployees;
     }
-    
+
     public void setAllGuildManagersForTable()
     {
         allEmployees.addAll(manager.getAllEmployees());
@@ -98,7 +102,14 @@ public class StaffModel
     public void deleteEmployee(Employee employee)
     {
         allEmployees.remove(employee);
-        manager.removeEmployee(employee);
+        try
+        {
+            manager.removeEmployee(employee);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
 
     public Employee getSelectedEmployee()
@@ -143,9 +154,14 @@ public class StaffModel
 
     public void removeVolunteerFromAssignedGuild(Employee selectedEmployee, Guild selectedGuild)
     {
-        manager.removeEmployeeFromAssignedGuild(selectedEmployee, selectedGuild);
+        try
+        {
+            manager.removeEmployeeFromAssignedGuild(selectedEmployee, selectedGuild);
+        }
+        catch (SQLException ex)
+        {
+            viewHandler.showAlertBox(Alert.AlertType.ERROR, "Database fejl", "Databasen kunne ikke kontaktes", ex.getMessage());
+        }
     }
-    
-    
 
 }

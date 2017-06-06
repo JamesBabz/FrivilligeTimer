@@ -1,11 +1,8 @@
 package frivilligetimer.gui.controller;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -54,7 +51,6 @@ public class ViewHandler
      * @param isModal If false the parent stage can be interacted with
      * regardless of which view is in focus.
      * @param title
-     * @throws IOException
      */
     public void generateView(String viewPath, boolean closeCurrent, StageStyle style, boolean isModal, String title)
     {
@@ -66,7 +62,7 @@ public class ViewHandler
         }
         catch (IOException ex)
         {
-            Logger.getLogger(ViewHandler.class.getName()).log(Level.SEVERE, null, ex);
+            showAlertBox(Alert.AlertType.ERROR, "Fejl", "Fejl under oprettelse", "Vinduet kunne ikke oprettes");
         }
         if (closeCurrent)
         {
@@ -149,30 +145,35 @@ public class ViewHandler
         stage.close();
     }
 
+    /**
+     * Replaces first letter with a capitol one
+     *
+     * @param txtField - The textfields where the replacement is needed
+     */
     public void ReplaceFirstLetterInField(TextField... txtField)
     {
         for (TextField textField : txtField)
         {
             textField.textProperty().addListener(new ChangeListener<String>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
             {
-                if (oldValue.isEmpty())
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
                 {
-                    textField.setText(newValue.toUpperCase());
+                    if (oldValue.isEmpty())
+                    {
+                        textField.setText(newValue.toUpperCase());
+                    }
+                    else if (oldValue.charAt(oldValue.length() - 1) == ' ')
+                    {
+                        char fLetter = newValue.charAt(newValue.length() - 1);
+                        String newText = newValue.substring(0, newValue.length() - 1);
+                        newText += String.valueOf(fLetter).toUpperCase();
+                        textField.setText(newText);
+                    }
                 }
-                else if (oldValue.charAt(oldValue.length() - 1) == ' ')
-                {
-                    char fLetter = newValue.charAt(newValue.length() - 1);
-                    String newText = newValue.substring(0, newValue.length() - 1);
-                    newText += String.valueOf(fLetter).toUpperCase();
-                    textField.setText(newText);
-                }
-            }
-        });
+            });
         }
-        
+
     }
 
 }

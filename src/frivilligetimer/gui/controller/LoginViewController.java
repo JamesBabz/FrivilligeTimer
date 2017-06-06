@@ -90,7 +90,7 @@ public class LoginViewController implements Initializable
 
                     ViewHandler vg = new ViewHandler((Stage) txtEmail.getScene().getWindow());
 
-                    vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin View");
+                    vg.generateView("/frivilligetimer/gui/view/AdminView.fxml", true, StageStyle.DECORATED, false, "Admin");
                     vg.setMaximized(true);
                     succes = true;
                     close();

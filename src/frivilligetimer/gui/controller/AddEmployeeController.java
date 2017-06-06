@@ -52,7 +52,7 @@ public class AddEmployeeController implements Initializable
     private void addEmployee()
     {
         viewHandler.setErrorRedLines(txtFirstName, txtLastName, txtEmail);
-        if(viewHandler.getErrorRedLines() == 0)
+        if (viewHandler.getErrorRedLines() == 0)
         {
             addEmployeeToDB();
         }
@@ -60,11 +60,12 @@ public class AddEmployeeController implements Initializable
 
     private void addEmployeeToDB()
     {
-        Employee employee = new Employee(txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null);
+        Employee employee = new Employee(0, txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtPhoneNummer.getText(), null, null);
         try
         {
             model.addEmployee(employee);
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             viewHandler.showAlertBox(Alert.AlertType.ERROR, "Fejl", "Der skete en database fejl", "Ingen forbindelse til database");
         }
